@@ -113,3 +113,18 @@ XMLscene.prototype.display = function () {
 
 };
 
+XMLscene.prototype.changeView = function() {
+	for(var i = 0; i < this.graph.views.length; i++) {
+
+		if( this.graph.views[i].id == this.currentCamera ) {
+			if( i == (this.graph.views.length-1) )
+				this.currentCamera = this.graph.views[0];
+			else
+				this.currentCamera = this.graph.views[i+1];
+			
+			this.camera = new CGFcamera(this.graph.views[i+1].angle, this.graph.views[i+1].near, this.graph.views[i+1].far, this.graph.views[i+1].from , this.graph.views[i+1].to);
+			this.myInterface.setActiveCamera(this.camera);
+			break;
+		}
+	}
+};

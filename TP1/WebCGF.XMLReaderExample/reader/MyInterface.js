@@ -23,11 +23,11 @@ MyInterface.prototype.init = function(application) {
 	this.gui = new dat.GUI();	
 
 	//ver erro!!!
-	for(var i = 0; i < this.scene.graph.nLights; i++) {
+	/*for(var i = 0; i < this.scene.graph.nLights; i++) {
 		var groupLights = this.gui.addFolder ( 'Light '+ (i+1) );
 		groupLights.add(this.scene, 'enabled');
 		groupLights.add(this.scene, 'disabled');
-	}
+	}*/
 	
 	return true;
 };
@@ -49,7 +49,7 @@ MyInterface.prototype.processKeyUp = function(event) {
 	switch (code)
 	{
 		case (77): 		// M key
-			//this.scene.
+			this.scene.changeViews();
 			break;
 		case (86): 		// V key
 			//this.scene.
@@ -73,7 +73,7 @@ MyInterface.prototype.processKeyDown = function(event) {
 	switch (code)
 	{
 		case (77): 		// M key
-			//this.scene.drone.turn( 1 );
+			this.scene.changeViews();
 			break;
 		case (86): 		// V key
 			//this.scene.drone.turn( -1 );

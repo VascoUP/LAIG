@@ -13,12 +13,6 @@ Graph.prototype.addNode = function( node ) {
 	this.nodes.push(node);
 };
 
-Graph.prototype.display = function( ) {
-	for( var i = 0; i < this.nodes.length; i++ ) {
-		var h 
-	}
-}
-
 Graph.prototype.connectedGraph = function( ) {
 	for( var i = 0; i < this.nodes.length; i++ ) {
 		if( this.idHead == this.nodes[i] ) {
@@ -60,7 +54,7 @@ Graph.prototype.connectedGraph = function( node ) {
 
 Graph.prototype.drawScene = function( ) {
 	for( var i = 0; i < this.nodes.length; i++ ) {
-		if( this.idHead == this.nodes[i] ) {
+		if( this.idHead == this.nodes[i].id ) {
 			this.drawScene( this.nodes[i] );
 			break;
 		}

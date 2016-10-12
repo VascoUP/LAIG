@@ -28,7 +28,9 @@ MyRectangle.prototype.initBuffers = function (x1, y1, x2, y2) {
 
 	this.indices = [
         2, 1, 0,
-		3, 2, 0
+		3, 2, 0,
+        0, 1, 2,
+        0, 2, 3
     ];
 
     this.normals = [

@@ -31,7 +31,7 @@ XMLscene.prototype.init = function (application) {
 
     this.currentCamera = 0;
 
-	this.object = new MySphere(this, 0.5, 5, 5);
+	this.object = new MySphere(this, 0.5, 20, 20);
 };
 
 XMLscene.prototype.initLights = function () {

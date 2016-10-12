@@ -292,11 +292,14 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	if (lights == null || lights.length != 1 || nnodes < 1) 
 		return "Illumination error";
 
-	var light_elem = lights[0].getElementsByTagName('omni');
+	var nOmni = lights[0].getElementsByTagName('omni').length;
+	if( nOmni < 1 )
+		return "You need at least one omni light";
 
-	for( var i = 0; i < light_elem.length; i++ ) {
-		var light = light_elem[i];
-		var id = this.reader.getString(light_elem[i], 'id');
+	for( var i = 0; i < lights[0].children.length; i++ ) {
+
+		var light = lights[0].children[i];
+		var id = this.reader.getString(light, 'id');
 
 
 		for( var j = 0; j < this.scene.lights.length; j++)
@@ -357,113 +360,39 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		this.scene.lights[this.nLights].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
 		this.scene.lights[this.nLights].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
 		this.scene.lights[this.nLights].setSpecular(specular_r, specular_g, specular_b, specular_a);
+
+
+		var type = lights[0].children[i].tagName;
+		if( type == 'spot' ) {
+			var targets = light.getElementsByTagName('target');
+
+			if( targets.length < 1 || locations.length < 1 || ambients.length < 1 || diffuses.length < 1 || speculars < 1 )
+				return "Lights -> Spot -> Missing required information.";
+
+			if( targets.length > 1 )
+				console.warn("Lights -> Spot -> Only 1 location is needed.");
+
+			var target_x = this.reader.getFloat(targets[0], 'x');
+			var target_y = this.reader.getFloat(targets[0], 'y');
+			var target_z = this.reader.getFloat(targets[0], 'z');
+
+			if( target_x == 'undefined' || target_y == 'undefined' || target_z  == 'undefined' )
+				return "Lights -> Spot -> Location -> Missing required information.";
+
+			this.scene.lights[this.nLights].setSpotCutOff( this.reader.getFloat(light, 'angle') );
+			this.scene.lights[this.nLights].setSpotExponent( this.reader.getFloat(light, 'exponent') );
+			this.scene.lights[this.nLights].setSpotDirection( target_x - location_x, target_y - location_y, target_z - location_z );
+		}
+
 		this.scene.lights[this.nLights].update();
 
-		if( this.reader.getBoolean(light_elem[i], 'enabled') )
+		if( this.reader.getBoolean(light,  'enabled') )
 			this.scene.lights[this.nLights].enable();
 		else
 			this.scene.lights[this.nLights].disable();
 
 		this.nLights++;
 	}
-
-	light_elem = lights[0].getElementsByTagName('spot');
-
-	for( var i = 0; i < light_elem.length; i++ ) {
-
-		var light = light_elem[i];
-		var id = this.reader.getString(light_elem[i], 'id');
-
-		for( var j = 0; j < this.scene.lights.length; j++)
-			/* Check whether the id of all lights is the same */
-			if( this.scene.lights[j].id == id )
-				return "Lights -> There are 2 lights with the same id";
-
-		//var li = new CGFlight( this.scene, this.nLights );
-		var targets = light.getElementsByTagName('target');
-		var locations = light.getElementsByTagName('location');
-		var ambients = light.getElementsByTagName('ambient');
-		var diffuses = light.getElementsByTagName('diffuse');
-		var speculars = light.getElementsByTagName('specular');
-
-
-		if( targets.length < 1 || locations.length < 1 || ambients.length < 1 || diffuses.length < 1 || speculars < 1 )
-			return "Lights -> Spot -> Missing required information.";
-
-		if( targets.length > 1 )
-			console.warn("Lights -> Spot -> Only 1 location is needed.");
-
-		var target_x = this.reader.getFloat(targets[0], 'x');
-		var target_y = this.reader.getFloat(targets[0], 'y');
-		var target_z = this.reader.getFloat(targets[0], 'z');
-
-		if( target_x == 'undefined' || target_y == 'undefined' || target_z  == 'undefined' )
-			return "Lights -> Spot -> Location -> Missing required information.";
-
-		if( locations.length > 1 )
-			console.warn("Lights -> Spot -> Only 1 location is needed.");
-
-		var location_x = this.reader.getFloat(locations[0], 'x');
-		var location_y = this.reader.getFloat(locations[0], 'y');
-		var location_z = this.reader.getFloat(locations[0], 'z');
-		var location_w = this.reader.getFloat(locations[0], 'w');
-
-		if( location_x == 'undefined' || location_y == 'undefined' || location_z == 'undefined' || location_w == 'undefined' )
-			return "Lights -> Spot -> Location -> Missing required information.";
-
-		if( ambients.length > 1 )
-			console.warn("Lights -> Omni -> Only 1 location is needed.");
-
-		var ambient_r = this.reader.getFloat(ambients[0], 'r');
-		var ambient_g = this.reader.getFloat(ambients[0], 'g');
-		var ambient_b = this.reader.getFloat(ambients[0], 'b');
-		var ambient_a = this.reader.getFloat(ambients[0], 'a');
-
-		if( ambient_r == 'undefined' || ambient_g == 'undefined' || ambient_b == 'undefined' || ambient_a == 'undefined' )
-			return "Lights -> Spot -> Location -> Missing required information.";
-
-		if( diffuses.length > 1 )
-			console.warn("Lights -> Spot -> Only 1 location is needed.");
-
-		var diffuse_r = this.reader.getFloat(diffuses[0], 'r');
-		var diffuse_g = this.reader.getFloat(diffuses[0], 'g');
-		var diffuse_b = this.reader.getFloat(diffuses[0], 'b');
-		var diffuse_a = this.reader.getFloat(diffuses[0], 'a');
-
-		if( diffuse_r == 'undefined' || diffuse_g == 'undefined' || diffuse_b == 'undefined' || diffuse_a == 'undefined' )
-			return "Lights -> Spot -> Location -> Missing required information.";
-
-		if( speculars.length > 1 )
-			console.warn("Lights -> Spot -> Only 1 location is needed.");
-
-		var specular_r = this.reader.getFloat(speculars[0], 'r');
-		var specular_g = this.reader.getFloat(speculars[0], 'g');
-		var specular_b = this.reader.getFloat(speculars[0], 'b');
-		var specular_a = this.reader.getFloat(speculars[0], 'a');
-
-		if( specular_r == 'undefined' || specular_g == 'undefined' || specular_b == 'undefined' || specular_a == 'undefined' )
-			return "Lights -> Spot -> Location -> Missing required information.";
-
-		this.scene.lights[this.nLights].setPosition(location_x, location_y, location_z, location_w);
-		this.scene.lights[this.nLights].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-		this.scene.lights[this.nLights].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
-		this.scene.lights[this.nLights].setSpecular(specular_r, specular_g, specular_b, specular_a);
-
-		this.scene.lights[this.nLights].setSpotCutOff( this.reader.getFloat(light_elem[i], 'angle') );
-		this.scene.lights[this.nLights].setSpotExponent( this.reader.getFloat(light_elem[i], 'exponent') );
-		this.scene.lights[this.nLights].setSpotDirection( target_x - location_x, target_y - location_y, target_z - location_z );
-
-		this.scene.lights[this.nLights].update();
-
-		if(this.reader.getBoolean(light_elem[i], 'enabled'))
-			this.scene.lights[this.nLights].enable();
-
-		else
-			this.scene.lights[this.nLights].disable();
-
-		this.nLights++;
-	}
-
 };
 
 MySceneGraph.prototype.parseTextures = function(rootElement) {
@@ -473,8 +402,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 
 		TO DO:
 			?
-	*/
-	
+	*/	
 	var texture = rootElement.getElementsByTagName('textures');
 	
 	if (texture == null || texture.length != 1) 
@@ -647,8 +575,6 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 				z = this.reader.getFloat(transform_elems.children[k], 'z');
 				this.transformations[this.transformations.length - 1].addTransform(transformation, [x, y, z]);
 			}
-
-			console.debug(this.transformations[this.transformations.length - 1]);
 		}
 	}
 };
@@ -713,10 +639,10 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 				var base, top, heigth, slices, stacks;
 				base = this.reader.getFloat(prim_elems.children[0], 'base');
 				top = this.reader.getFloat(prim_elems.children[0], 'top');
-				heigth = this.reader.getFloat(prim_elems.children[0], 'heigth');
+				height = this.reader.getFloat(prim_elems.children[0], 'height');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
 				stacks = this.reader.getInteger(prim_elems.children[0], 'stacks');
-				this.primitives.push(new MyCylinder(this.scene, base, top, height, slice, stacks));
+				this.primitives.push(new MyCylinder(this.scene, base, top, height, slices, stacks));
 				break;
 			case 'sphere':
 				var radius, slices, stacks;

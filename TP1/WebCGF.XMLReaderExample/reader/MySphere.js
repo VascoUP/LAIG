@@ -67,7 +67,7 @@
 
 			for(var i = 0; i < this.slices; i++) {
 				this.vertices.push( xCoord * r, yCoord * r, zCoord );
-				this.normals.push( r * Math.cos(ang), r * Math.sin(ang), zCoord );
+				this.normals.push( Math.cos(ang), Math.sin(ang), Math.sin(zAng) );
 
 				ang += dAng;
 

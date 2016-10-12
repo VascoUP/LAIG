@@ -59,7 +59,7 @@
             <specular r="0.4" g="0.3" b="0.5" a="1.0" />
         </omni>
 
-        <omni id="l3" enabled="0" >
+        <omni id="l3" enabled="1" >
             <location x="2" y="2" z="2" w="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
             <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
@@ -143,10 +143,20 @@
         <primitive id="p2">
            
             <!-- apenas pode existir UMA das seguintes tags: -->
+            <!--     rectangle, triangle, cylinder, sphere, torus --> 
+            <!-- os parametros devem ser interpretados, genericamente como -->
+            <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas --> 
+            <sphere radius="1.3" slices="50" stacks="50" />
+            
+        </primitive>
+
+        <primitive id="p3">
+           
+            <!-- apenas pode existir UMA das seguintes tags: -->
             <!--     rectangle, triangle, cylinder, sphere, torus -->
             <!-- os parametros devem ser interpretados, genericamente como-->
             <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
-            <sphere radius="1.3" slices="10" stacks="10" />
+            <cylinder base="0.5" top="0" height="0.8" slices="10" stacks="5" />
             
         </primitive>
         

@@ -101,7 +101,7 @@ XMLscene.prototype.display = function () {
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it
 	if (this.graph.loadedOk) {
-		for(var i = 0; i < 2; i++)
+		for(var i = 0; i < this.graph.nLights; i++)
 			this.lights[i].update();
 	};
 

@@ -49,10 +49,9 @@ MyInterface.prototype.processKeyUp = function(event) {
 	switch (code)
 	{
 		case (77): 		// M key
-			this.scene.changeViews();
 			break;
 		case (86): 		// V key
-			//this.scene.
+			this.scene.changeView();
 			break;
 		
 	};	
@@ -62,7 +61,7 @@ MyInterface.prototype.processKeyUp = function(event) {
  * processKeyboard
  * @param event {Event}
  */
-MyInterface.prototype.processKeyDown = function(event) {
+/*MyInterface.prototype.processKeyDown = function(event) {
 
 	CGFinterface.prototype.processKeyDown.call(this, event);
 	
@@ -73,11 +72,10 @@ MyInterface.prototype.processKeyDown = function(event) {
 	switch (code)
 	{
 		case (77): 		// M key
-			this.scene.changeViews();
 			break;
 		case (86): 		// V key
-			//this.scene.drone.turn( -1 );
+			this.scene.changeView();
 			break;
 	};	
-};
+};*/
 

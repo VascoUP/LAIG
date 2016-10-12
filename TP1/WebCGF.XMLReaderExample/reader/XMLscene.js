@@ -115,14 +115,19 @@ XMLscene.prototype.display = function () {
 
 XMLscene.prototype.changeView = function() {
 	for(var i = 0; i < this.graph.views.length; i++) {
-
 		if( this.graph.views[i].id == this.currentCamera ) {
-			if( i == (this.graph.views.length-1) )
-				this.currentCamera = this.graph.views[0];
-			else
-				this.currentCamera = this.graph.views[i+1];
+			var indice;
+			if( i == (this.graph.views.length-1) ) {
+				indice = 0;
+				this.currentCamera = this.graph.views[0].id;
+			}
 			
-			this.camera = new CGFcamera(this.graph.views[i+1].angle, this.graph.views[i+1].near, this.graph.views[i+1].far, this.graph.views[i+1].from , this.graph.views[i+1].to);
+			else {
+				indice = i + 1;
+				this.currentCamera = this.graph.views[i+1].id;
+			}
+			
+			this.camera = new CGFcamera(this.graph.views[indice].angle, this.graph.views[indice].near, this.graph.views[indice].far, this.graph.views[indice].from , this.graph.views[indice].to);
 			this.myInterface.setActiveCamera(this.camera);
 			break;
 		}

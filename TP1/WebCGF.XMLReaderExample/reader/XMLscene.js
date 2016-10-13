@@ -133,3 +133,7 @@ XMLscene.prototype.changeView = function() {
 		}
 	}
 };
+
+XMLscene.prototype.changeMaterial = function() {
+	
+}

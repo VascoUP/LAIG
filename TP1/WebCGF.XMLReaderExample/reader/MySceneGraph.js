@@ -565,6 +565,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 			if( transformation == 'rotate' ) {
 				var axis, angle;
 				angle = this.reader.getFloat(transform_elems.children[k], 'angle');
+				angle = (angle*Math.PI)/180;
 				axis = this.reader.getString(transform_elems.children[k], 'axis');
 				this.transformations[this.transformations.length - 1].addTransform(transformation, [axis, angle]);
 			}

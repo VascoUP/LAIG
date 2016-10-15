@@ -56,23 +56,23 @@
 	for(var j = 1; j < this.stacks; j++) {
 		if(j == 1) {
 			this.vertices.push(xCoord, yCoord, zCoord);
-			this.normals.push(0, -1, 0);
+			this.normals.push(0, 0, -1);
 			this.texCoords.push( 0.5 * dS , 0.5 * dT );
 
 			zAng += dZAng;
-			xCoord = 1;
-			yCoord = 0;
 			zCoord = this.radius * Math.sin(zAng);
 			r = this.radius * Math.cos(zAng);
+			xCoord = r;
+			yCoord = 0;
 
 			for(var i = 0; i < this.slices; i++) {
-				this.vertices.push( xCoord * r, yCoord * r, zCoord );
-				this.normals.push(r * Math.cos(ang), r * Math.sin(ang), zCoord );
+				this.vertices.push( xCoord, yCoord, zCoord );
+				this.normals.push( xCoord / this.radius, yCoord / this.radius, zCoord / this.radius );
 
 				ang += dAng;
 
-				yCoord = Math.sin(ang);
-				xCoord = Math.cos(ang);
+				yCoord = Math.sin(ang) * r;
+				xCoord = Math.cos(ang) * r;
 
 				counter++;
 
@@ -87,8 +87,8 @@
  			var s = 0.0;
 
 			for (var i = 0; i < this.slices; i++) {
-				this.vertices.push(xCoord * r, yCoord * r, zCoord);
-				this.normals.push( r * Math.cos(ang), r * Math.sin(ang), zCoord );
+				this.vertices.push(xCoord, yCoord, zCoord);
+				this.normals.push( xCoord / this.radius, yCoord / this.radius, zCoord / this.radius );
 				this.texCoords.push(((xCoord * r) / 2 + 0.5) * dS, ((yCoord * r) / 2 + 0.5) *  dT );
 
 				counter++;
@@ -105,8 +105,8 @@
 
 				ang += dAng;
 
-				yCoord = Math.sin(ang);
-				xCoord = Math.cos(ang);
+				yCoord = Math.sin(ang) * r;
+				xCoord = Math.cos(ang) * r;
 			}
 		}
 
@@ -130,12 +130,14 @@
  		else {
 			ang = 0;
 			zAng += dZAng;
-			xCoord = 1;
-			yCoord = 0;
 			zCoord = this.radius * Math.sin(zAng);
 			r = this.radius * Math.cos(zAng);
+			xCoord = r;
+			yCoord = 0;
 		}
 	}
+
+	console.debug(this.normals);
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();

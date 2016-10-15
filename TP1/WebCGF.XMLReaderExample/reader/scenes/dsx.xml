@@ -1,0 +1,453 @@
+<dsx>
+    <scene root="a1" axis_length="2" />
+    
+    
+    <views default="p1" >
+
+        <perspective id="p1" near="0.4" far="500" angle="10">
+
+            <from x="20" y="20" z="20" />
+            <to x="0" y="0" z="0" />
+
+        </perspective>
+
+        <perspective id="p2" near="0.4" far="200" angle="40">
+
+            <from x="10" y="10" z="10" />
+            <to x="0" y="3" z="0" />
+
+        </perspective>        
+
+        <perspective id="d1" near="0.2" far="400" angle="30">
+
+            <from x="-20" y="10" z="5" />
+            <to x="0" y="3" z="0" />
+
+        </perspective>
+
+    </views>
+    
+
+    <illumination doublesided="0" local="1" >
+    
+        <ambient r="0.1" g="0.1" b="0.1" a="255" />
+        <background r="0.2" g="0.2" b="0.8" a="1.0" />
+        <ambient r="0.05" g="0.05" b="0.05" a="1.0" />
+        
+    </illumination>
+    
+    
+    <lights>
+
+        <omni id="l1" enabled="1" >
+
+            <location x="-5" y="-5" z="-5" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="0.4" g="0.3" b="0.5" a="1.0" />
+
+        </omni>
+
+        <omni id="l3" enabled="1" >
+
+            <location x="2" y="2" z="2" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+
+        </omni>
+        
+        <spot id="l2" enabled="1" angle="1.47" exponent="10">
+
+            <target x="0" y="0" z="0" />
+            <location x="-2" y="2" z="2" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="0.7" g="0.4" b="0.2" a="1.0" />
+            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+
+        </spot>
+    </lights>
+    
+    
+    <textures>
+
+        <texture id="t1" file="resources/WoodTexture.jpg" length_s="1" length_t="1" />
+        <texture id="g1" file="resources/FoliageTexture.jpg" length_s="1" length_t="1" />
+        <texture id="t2" file="resources/RockTexture.jpg" length_s="1" length_t="1" />
+        
+    </textures>
+
+    
+    <materials>
+    
+        <material id="m1" >
+
+            <emission r="0" g="0" b="0" a="255" />
+            <ambient r="200" g="200" b="10" a="255" />
+            <diffuse r="200" g="200" b="10" a="255" />
+            <specular r="10" g="10" b="10" a="255" />
+            <shininess value="10" />
+
+        </material>
+            
+        <material id="m2" >
+
+            <emission r="0" g="0" b="0" a="255" />
+            <ambient r="150" g="150" b="150" a="255" />
+            <diffuse r="150" g="150" b="150" a="255" />
+            <specular r="10" g="10" b="10" a="255" />
+            <shininess value="10" />
+
+        </material>
+
+        <material id="t1" >
+
+            <emission r="0" g="0" b="0" a="255" />
+            <ambient r="150" g="150" b="150" a="255" />
+            <diffuse r="150" g="150" b="150" a="255" />
+            <specular r="10" g="10" b="10" a="255" />
+            <shininess value="10" />
+
+        </material>
+
+        <material id="e1" >
+
+            <emission r="10" g="200" b="10" a="255" />
+            <ambient r="10" g="200" b="10" a="255" />
+            <diffuse r="10" g="100" b="10" a="255" />
+            <specular r="10" g="100" b="10" a="255" />
+            <shininess value="20" />
+
+        </material>
+
+    </materials>
+    
+    
+    <transformations>
+    
+        <transformation id="t1">
+
+           <translate x="5" y="1" z="0" />
+           <rotate axis="x" angle="3.14" />
+           <scale x="2" y="2" z="2" />
+
+        </transformation>
+        
+    </transformations>
+    
+    
+    <primitives>
+    
+        <primitive id="p1">
+
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
+            
+        </primitive>
+
+        <primitive id="p2">
+
+            <sphere radius="1" slices="20" stacks="20" />
+            
+        </primitive>
+
+        <primitive id="p3">
+
+            <cylinder base="0.5" top="0" height="0.8" slices="10" stacks="10" />
+            
+        </primitive>
+
+        <primitive id="p3">
+
+            <cylinder base="1" top="1" height="1" slices="10" stacks="10" />
+            
+        </primitive>
+
+        <primitive id="p3">
+
+            <torus inner="1" outer="1.3" slices="20" loops="40" />
+            
+        </primitive>
+        
+    </primitives>
+    
+    
+    <components>
+        
+        <component id="a1">
+        
+            <transformation>
+
+                <translate x="0" y="2" z="-1" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="m1" />
+
+            </materials>
+
+            <texture id="t1" />
+
+            <children>
+
+                <componentref id="t1" />
+                
+            </children>
+            
+        </component>
+
+        <component id="t1">
+        
+            <transformation>
+
+                <translate x="1" y="0" z="0" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <componentref id="t11" />
+                <componentref id="t12" />
+                <componentref id="t13" />
+                
+            </children>
+            
+        </component>
+        
+        <component id="t11">
+        
+            <transformation>
+
+                <scale x="1" y="0.5" z="1" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <componentref id="t111" />
+                <componentref id="t112" />
+                
+            </children>
+            
+        </component>
+
+        <component id="t12">
+        
+            <transformation>
+
+                <scale x="1" y="0.2" z="1" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <componentref id="t121" />
+                <componentref id="t122" />
+                
+            </children>
+            
+        </component>
+
+        <component id="t13">
+        
+            <transformation>
+
+                <scale x="0.2" y="0.5" z="1" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <componentref id="t131" />
+                <componentref id="t132" />
+                
+            </children>
+            
+        </component>
+
+        <component id="t111">
+        
+            <transformation>
+
+                <translate x="0" y="0" z="0.1" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <primitiveref id="p1" />
+                
+            </children>
+            
+        </component>
+
+        <component id="t112">
+        
+            <transformation>
+
+                <translate x="0" y="0" z="-0.1" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <primitiveref id="p1" />
+                
+            </children>
+            
+        </component>
+
+        <component id="t121">
+        
+            <transformation>
+
+                <translate x="0" y="-0.25" z="0" />
+                <rotate axis="x" angle="90"/>
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <primitiveref id="p1" />
+                
+            </children>
+            
+        </component>
+
+
+        <component id="t122">
+        
+            <transformation>
+
+                <translate x="0" y="0.25" z="0" />
+                <rotate axis="x" angle="90"/>
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <primitiveref id="p1" />
+                
+            </children>
+            
+        </component>
+
+        <component id="t131">
+        
+            <transformation>
+
+                <translate x="0.5" y="0" z="0" />
+                <rotate axis="y" angle="-90"/>
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <primitiveref id="p1" />
+                
+            </children>
+            
+        </component>
+
+        <component id="t132">
+        
+            <transformation>
+
+                <translate x="-0.5" y="0" z="0" />
+                <rotate axis="y" angle="-90"/>
+
+            </transformation>
+
+            <materials>
+
+                <material id="inherit" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <primitiveref id="p1" />
+                
+            </children>
+            
+        </component>
+
+
+    </components>
+
+</dsx>

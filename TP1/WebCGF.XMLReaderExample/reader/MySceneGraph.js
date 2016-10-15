@@ -178,7 +178,7 @@ MySceneGraph.prototype.parseViews = function(rootElement) {
 		id = perspective_elems.id;
 		near = this.reader.getFloat(perspective_elems, 'near');
 		far = this.reader.getFloat(perspective_elems, 'far');
-		angle = this.reader.getFloat(perspective_elems,'angle');
+		angle = Math.PI * this.reader.getFloat(perspective_elems,'angle') / 180;
 
 		/* Making sure that there are no to prespectives with the same id */
 		for(var j = 0; j < this.views.length; j++) {
@@ -337,7 +337,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		if( ambient_r == 'undefined' || ambient_r < 0 ||
 			ambient_g == 'undefined' || ambient_g < 0 ||
 			ambient_b == 'undefined' || ambient_b < 0 ||
-			ambient_a == 'undefined' || ambient_a < 0 ||)
+			ambient_a == 'undefined' || ambient_a < 0 )
 			return "Lights -> Omni -> Location -> Missing required information.";
 
 		if( diffuses.length > 1 )
@@ -393,7 +393,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 				target_z  == 'undefined'|| target_x < 0 )
 				return "Lights -> Spot -> Location -> Missing required information.";
 
-			this.scene.lights[this.nLights].setSpotCutOff( this.reader.getFloat(light, 'angle') );
+			this.scene.lights[this.nLights].setSpotCutOff( Math.PI * this.reader.getFloat(light, 'angle') / 180 );
 			this.scene.lights[this.nLights].setSpotExponent( this.reader.getFloat(light, 'exponent') );
 			this.scene.lights[this.nLights].setSpotDirection( target_x - location_x, target_y - location_y, target_z - location_z );
 		}
@@ -578,8 +578,7 @@ MySceneGraph.prototype.parseTransformations = function(rootElement) {
 			
 			if( transformation == 'rotate' ) {
 				var axis, angle;
-				angle = this.reader.getFloat(transform_elems.children[k], 'angle');
-				angle = (angle*Math.PI)/180;
+				angle = Math.PI * this.reader.getFloat(transform_elems.children[k], 'angle') / 180;
 				axis = this.reader.getString(transform_elems.children[k], 'axis');
 				this.transformations[this.transformations.length - 1].addTransform(transformation, [axis, angle]);
 			}
@@ -709,7 +708,7 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 					break;
 				case 'rotate':
 					var axis, angleDec, angle;
-					angle = this.reader.getFloat(transform_elems, 'angle');
+					angle = Math.PI * this.reader.getFloat(transform_elems, 'angle') / 180;
 					axis = this.reader.getString(transform_elems, 'axis');
 					this.transformation[i].setRotate(axis, angle);
 					break;

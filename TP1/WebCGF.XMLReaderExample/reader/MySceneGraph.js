@@ -694,8 +694,9 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 					this.transformation[i].setTranslate(x,y,z);
 					break;
 				case 'rotate':
-					var axis, angleDec, angle;
+					var axis, angle;
 					angle = this.reader.getFloat(transform_elems, 'angle');
+					angle = (angle * Math.PI)/180;
 					axis = this.reader.getString(transform_elems, 'axis');
 					this.transformation[i].setRotate(axis, angle);
 					break;
@@ -724,10 +725,29 @@ MySceneGraph.prototype.readComponentMaterials = function (compElement, node) {
 	
 	this.materials = [nnodes];
 
-	for(var i = 0; i < nnodes; i++) {
+	if(nnodes > 1){	
+		for(var i = 0; i < nnodes; i++) {
+			
+		var material_elems = material[0].children[i];
 
+		if (material_elems == null)
+			return "Materials -> Material error";
+
+		var id = material_elems.attributes.getNamedItem('id').value;
+		
+		if(id != 'inherit')
+			node.addMaterial(id); //Material 0 é o material default
+		
+		}
+	}
+	else {
+		var material_elems = materials[0].children[0];
+		var id = material_elems.attributes.getNamedItem('id').value;
+		if(id != 'inherit')
+			node.addMaterial(id);
 		
 	}
+	
 };
 
 MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
@@ -737,6 +757,10 @@ MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
 		return "Component -> Texture error";
 	
 	var id = texture[0].attributes.getNamedItem('id').value;
+	
+	/*if(id == 'inherit') //herda do pai
+	else if (id == 'none') //remove textura do pai
+	else //nova textura*/
 };
 
 MySceneGraph.prototype.readComponentChildren = function (compElement, node) {

@@ -49,6 +49,7 @@ MyInterface.prototype.processKeyUp = function(event) {
 	switch (code)
 	{
 		case (77): 		// M key
+			this.scene.changeMaterial();
 			break;
 		case (86): 		// V key
 			this.scene.changeView();

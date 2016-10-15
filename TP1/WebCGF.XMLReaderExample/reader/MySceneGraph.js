@@ -312,6 +312,9 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		var diffuses = light.getElementsByTagName('diffuse');
 		var speculars = light.getElementsByTagName('specular');
 
+		if( locations.length < 1 || ambients.length < 1 || diffuses.length < 1 || speculars < 1 )
+			return "Lights -> Missing required information.";
+
 		if( locations.length > 1 )
 			console.warn("Lights -> Omni -> Only 1 location is needed.");
 
@@ -331,7 +334,10 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		var ambient_b = this.reader.getFloat(ambients[0], 'b');
 		var ambient_a = this.reader.getFloat(ambients[0], 'a');
 
-		if( ambient_r == 'undefined' || ambient_g == 'undefined' || ambient_b == 'undefined' || ambient_a == 'undefined' )
+		if( ambient_r == 'undefined' || ambient_r < 0 ||
+			ambient_g == 'undefined' || ambient_g < 0 ||
+			ambient_b == 'undefined' || ambient_b < 0 ||
+			ambient_a == 'undefined' || ambient_a < 0 ||)
 			return "Lights -> Omni -> Location -> Missing required information.";
 
 		if( diffuses.length > 1 )
@@ -342,7 +348,10 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		var diffuse_b = this.reader.getFloat(diffuses[0], 'b');
 		var diffuse_a = this.reader.getFloat(diffuses[0], 'a');
 
-		if( diffuse_r == 'undefined' || diffuse_g == 'undefined' || diffuse_b == 'undefined' || diffuse_a == 'undefined' )
+		if( diffuse_r == 'undefined' || diffuse_r < 0 ||
+			diffuse_g == 'undefined' || diffuse_g < 0 ||
+			diffuse_b == 'undefined' || diffuse_b < 0 ||
+			diffuse_a == 'undefined' || diffuse_a < 0 )
 			return "Lights -> Omni -> Location -> Missing required information.";
 
 		if( speculars.length > 1 )
@@ -353,7 +362,10 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		var specular_b = this.reader.getFloat(speculars[0], 'b');
 		var specular_a = this.reader.getFloat(speculars[0], 'a');
 
-		if( specular_r == 'undefined' || specular_g == 'undefined' || specular_b == 'undefined' || specular_a == 'undefined' )
+		if( specular_r == 'undefined' || specular_r < 0 ||
+			specular_g == 'undefined' || specular_b < 0 ||
+			specular_b == 'undefined' || specular_g < 0 ||
+			specular_a == 'undefined' || specular_a < 0 )
 			return "Lights -> Omni -> Location -> Missing required information.";
 
 		this.scene.lights[this.nLights].setPosition(location_x, location_y, location_z, location_w);
@@ -366,7 +378,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		if( type == 'spot' ) {
 			var targets = light.getElementsByTagName('target');
 
-			if( targets.length < 1 || locations.length < 1 || ambients.length < 1 || diffuses.length < 1 || speculars < 1 )
+			if( targets.length < 1 )
 				return "Lights -> Spot -> Missing required information.";
 
 			if( targets.length > 1 )
@@ -376,7 +388,9 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 			var target_y = this.reader.getFloat(targets[0], 'y');
 			var target_z = this.reader.getFloat(targets[0], 'z');
 
-			if( target_x == 'undefined' || target_y == 'undefined' || target_z  == 'undefined' )
+			if( target_x == 'undefined' || target_x < 0 || 
+				target_y == 'undefined' || target_x < 0 || 
+				target_z  == 'undefined'|| target_x < 0 )
 				return "Lights -> Spot -> Location -> Missing required information.";
 
 			this.scene.lights[this.nLights].setSpotCutOff( this.reader.getFloat(light, 'angle') );

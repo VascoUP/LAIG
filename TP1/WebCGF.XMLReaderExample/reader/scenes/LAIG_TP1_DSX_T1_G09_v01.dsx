@@ -194,6 +194,13 @@
             <children>
 
                 <componentref id="t1" />
+                <componentref id="b1" />
+                <componentref id="p1" />
+                <componentref id="n1" />
+                <componentref id="pe1" />
+                <componentref id="c1" />
+                <componentref id="ch1" />
+                <componentref id="ar1" />
                 
             </children>
             
@@ -718,7 +725,7 @@
         </component>
 
         <!-- Right foot -->
-        <component id="p12">
+        <component id="pe12">
         
             <transformation>
 
@@ -743,7 +750,7 @@
         </component>
 
         <!-- Head -->
-        <component id="p12">
+        <component id="c1">
         
             <transformation>
 
@@ -769,7 +776,7 @@
         </component>
 
         <!-- Hoop -->
-        <component id="p12">
+        <component id="ar1">
         
             <transformation>
 

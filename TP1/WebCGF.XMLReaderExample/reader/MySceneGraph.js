@@ -738,28 +738,18 @@ MySceneGraph.prototype.readComponentMaterials = function (compElement, node) {
 	
 	this.materials = [nnodes];
 
-	if(nnodes > 1){	
-		for(var i = 0; i < nnodes; i++) {
+	for(var i = 0; i < nnodes; i++) {
 			
-		var material_elems = material[0].children[i];
+		var material_elems = materials[0].children[i];
 
 		if (material_elems == null)
 			return "Materials -> Material error";
 
 		var id = material_elems.attributes.getNamedItem('id').value;
 		
-		if(id != 'inherit')
-			node.addMaterial(id); //Material 0 é o material default
-		
-		}
+		node.addMaterial(id);
 	}
-	else {
-		var material_elems = materials[0].children[0];
-		var id = material_elems.attributes.getNamedItem('id').value;
-		if(id != 'inherit')
-			node.addMaterial(id);
-		
-	}
+	
 	
 };
 
@@ -770,6 +760,8 @@ MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
 		return "Component -> Texture error";
 	
 	var id = texture[0].attributes.getNamedItem('id').value;
+	
+	node.setTexture(id);
 };
 
 MySceneGraph.prototype.readComponentChildren = function (compElement, node) {

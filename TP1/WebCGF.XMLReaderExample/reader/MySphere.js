@@ -137,8 +137,6 @@
 		}
 	}
 
-	console.debug(this.normals);
-
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();
  };

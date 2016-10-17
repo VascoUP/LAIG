@@ -1,7 +1,5 @@
 <dsx>
-    <scene root="c1" axis_length="2" />
-    
-    
+
     <views default="p1" >
 
         <perspective id="p1" near="0.4" far="500" angle="10">
@@ -26,60 +24,9 @@
         </perspective>
 
     </views>
-    
 
-    <illumination doublesided="0" local="1" >
-    
-        <ambient r="0.1" g="0.1" b="0.1" a="255" />
-        <background r="0.2" g="0.2" b="0.8" a="1.0" />
-        <ambient r="0.05" g="0.05" b="0.05" a="1.0" />
-        
-    </illumination>
-    
-    
-    <lights>
-
-        <omni id="l1" enabled="1" >
-
-            <location x="-5" y="-5" z="-5" w="1" />
-            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-            <specular r="0.4" g="0.3" b="0.5" a="1.0" />
-
-        </omni>
-
-        <omni id="l3" enabled="1" >
-
-            <location x="2" y="2" z="2" w="1" />
-            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
-            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
-            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
-
-        </omni>
-        
-        <spot id="l2" enabled="1" angle="1.47" exponent="10">
-
-            <target x="0" y="0" z="0" />
-            <location x="-2" y="2" z="2" w="1" />
-            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
-            <diffuse r="0.7" g="0.4" b="0.2" a="1.0" />
-            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
-
-        </spot>
-    </lights>
-    
-    
-    <textures>
-
-        <texture id="t1" file="resources/WoodTexture.jpg" length_s="1" length_t="1" />
-        <texture id="g1" file="resources/FoliageTexture.jpg" length_s="1" length_t="1" />
-        <texture id="t2" file="resources/RockTexture.jpg" length_s="1" length_t="1" />
-        
-    </textures>
-
-    
     <materials>
-    
+
         <material id="m1" >
 
             <emission r="10" g="10" b="10" a="255" />
@@ -89,7 +36,7 @@
             <shininess value="10" />
 
         </material>
-            
+
         <material id="m2" >
 
             <emission r="10" g="10" b="10" a="255" />
@@ -122,20 +69,53 @@
 
     </materials>
     
+    <illumination doublesided="0" local="1" >
     
-    <transformations>
-    
-        <transformation id="t1">
-
-           <translate x="5" y="1" z="0" />
-           <rotate axis="x" angle="3.14" />
-           <scale x="2" y="2" z="2" />
-
-        </transformation>
+        <ambient r="0.1" g="0.1" b="0.1" a="255" />
+        <background r="0.2" g="0.2" b="0.8" a="1.0" />
+        <ambient r="0.05" g="0.05" b="0.05" a="1.0" />
         
-    </transformations>
-    
-    
+    </illumination>
+
+    <lights>
+
+        <omni id="l1" enabled="1" >
+
+            <location x="-5" y="-5" z="-5" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="0.4" g="0.3" b="0.5" a="1.0" />
+
+        </omni>
+
+        <omni id="l3" enabled="1" >
+
+            <location x="2" y="2" z="2" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+
+        </omni>
+        
+        <spot id="l2" enabled="1" angle="1.47" exponent="10">
+
+            <target x="0" y="0" z="0" />
+            <location x="-2" y="2" z="2" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="0.7" g="0.4" b="0.2" a="1.0" />
+            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+
+        </spot>
+    </lights>
+
+    <textures>
+
+        <texture id="t1" file="resources/WoodTexture.jpg" length_s="1" length_t="1" />
+        <texture id="g1" file="resources/FoliageTexture.jpg" length_s="1" length_t="1" />
+        <texture id="t2" file="resources/RockTexture.jpg" length_s="1" length_t="1" />
+        
+    </textures>
+
     <primitives>
     
         <primitive id="p1">
@@ -149,11 +129,21 @@
             <sphere radius="1" slices="20" stacks="20" />
             
         </primitive>
+ 
+    </primitives> 
 
+    <transformations>
+    
+        <transformation id="t1">
+
+           <translate x="5" y="1" z="0" />
+           <rotate axis="x" angle="3.14" />
+           <scale x="2" y="2" z="2" />
+
+        </transformation>
         
-    </primitives>
-    
-    
+    </transformations>
+
     <components>
         
         <component id="c1">
@@ -179,7 +169,10 @@
             </children>
             
         </component>
-        
+
     </components>
 
+
+    <scene root="c1" axis_length="2" />
+ 
 </dsx>

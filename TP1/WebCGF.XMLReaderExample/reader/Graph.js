@@ -1,13 +1,8 @@
-function Graph (sceneGraph, idHead) {
+function Graph (sceneGraph) {
 	this.sceneGraph = sceneGraph;
-	this.idHead = idHead;
+	this.idHead = 0;
 	this.nodes = [];
 }
-
-Graph.prototype.addHead = function( node ) {
-	this.head = node;
-	this.addNode(node);
-};
 
 Graph.prototype.addNode = function( node ) {
 	this.nodes.push(node);

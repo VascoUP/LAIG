@@ -16,7 +16,7 @@ Graph.prototype.addNode = function( node ) {
 Graph.prototype.connectedGraph = function( ) {
 	for( var i = 0; i < this.nodes.length; i++ ) {
 		if( this.idHead == this.nodes[i] ) {
-			if( this.connectedGraph( this.nodes[i] ) == -1 )
+			if( this.connectedGraph( this.nodes[i], this.nodes[i].texture ) == -1 )
 				return -1;
 			break;
 		}
@@ -32,7 +32,7 @@ Graph.prototype.connectedGraph = function( ) {
 	return 0;
 }
 
-Graph.prototype.connectedGraph = function( node ) {
+Graph.prototype.connectedGraph = function( node, texture ) {
 	for( var i = 0; i < this.node.idChildren.length; i++ ) {
 		var j;
 		for( j = 0; j < this.nodes.length; j++ )
@@ -45,11 +45,32 @@ Graph.prototype.connectedGraph = function( node ) {
 		}
 		
 		this.nodes[j].visited = true;
-		if( this.connectedGraph(n) == -1 )
+		if( this.connectedGraph( n, node.texture ) == -1 )
 			return -1;
 	}
 
+	for( var i = 0; i < this.node.primitives.length; i++ ) 
+		this.node.primitives[i].display();
+
 	return 0;
+}
+
+Graph.prototype.applyTransformation = function( node ) {
+	var arr = node.transformation.transforms;
+
+	for( var i = 0; i < arr.length; i++ ) {
+		switch(arr[i]) {
+			case 'rotate':
+			this.sceneGraph.scene.rotate( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2] );
+			break;
+			case 'scale':
+			this.sceneGraph.scene.scale( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2], arr[i].matrix[3] );
+			break;
+			case 'translate':
+			this.sceneGraph.scene.translate( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2], arr[i].matrix[3] );
+			break;
+		}
+	}
 }
 
 Graph.prototype.drawScene = function( ) {
@@ -63,6 +84,16 @@ Graph.prototype.drawScene = function( ) {
 
 Graph.prototype.drawScene = function( node ) {
 	this.sceneGraph.scene.pushMatrix();
+
+	/* 
+		Find the material id in the materials array 
+	*/
+	for( var i = 0; i < this.sceneGraph.materials.length; i++ ) {
+		if( this.sceneGraph.materials[i].id == node.materials[node.currMaterialIndex] )
+			this.sceneGraph.materials[i].material.apply();
+	}
+
+	this.applyTransformation(node);
 
 	for( var i = 0; i < this.node.idChildren.length; i++ ) {
 		var n;
@@ -86,7 +117,9 @@ function Node (id) {
 	this.idCildren = [];
 	this.primitives = [];
 	this.materials = [];
+	this.texture;
 
+	this.currMaterialIndex = 0;
 	this.visited = false;
 }
 
@@ -94,12 +127,12 @@ Node.prototype.setTransformation = function( transformation ) {
 	this.transformation = transformation;
 }
 
-Node.prototype.setTexture = function( texture ) {
-	this.texture = texture;
+Node.prototype.setTexture = function( textureId ) {
+	this.texture = textureId;
 }
 
-Node.prototype.addMaterial = function( material ) {
-	this.materials.push(material);
+Node.prototype.addMaterial = function( materialId ) {
+	this.materials.push( materialId );
 }
 
 
@@ -108,5 +141,5 @@ Node.prototype.addChildren = function( id ) {
 }
 
 Node.prototype.addPrimitives = function( primitive ) {
-	this.primitives.push(primitive);
+	this.primitives.push( primitive );
 }

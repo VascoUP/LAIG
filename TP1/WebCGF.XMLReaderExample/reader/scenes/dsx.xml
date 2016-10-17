@@ -194,10 +194,13 @@
             <children>
 
                 <componentref id="t1" />
-                <componentref id="b1" />
-                <componentref id="p1" />
+                <componentref id="b11" />
+                <componentref id="b12" />
+                <componentref id="p11" />
+                <componentref id="p12" />
                 <componentref id="n1" />
-                <componentref id="pe1" />
+                <componentref id="pe11" />
+                <componentref id="pe12" />
                 <componentref id="c1" />
                 <componentref id="ch1" />
                 <componentref id="ar1" />
@@ -465,32 +468,6 @@
             
         </component>
 
-        <!-- Arms -->
-        <component id="b1">
-        
-            <transformation>
-
-                <scale x="0.4" y="0.05" z="0.05" />
-
-            </transformation>
-
-            <materials>
-
-                <material id="inherit" />
-
-            </materials>
-
-            <texture id="inherit" />
-
-            <children>
-
-                <componentref id="b11" />
-                <componentref id="b12" />
-                
-            </children>
-            
-        </component>
-
         <!-- Left arm -->
         <component id="b11">
         
@@ -499,6 +476,7 @@
                 <translate x="1.4" y="-0.2" z="0" />
                 <rotate axis="z" angle="-30"/>
                 <translate x="-0.4" y="0" z="0" />
+                <scale x="0.4" y="0.05" z="0.05" />
 
             </transformation>
 
@@ -526,6 +504,7 @@
                 <translate x="1.4" y="0.2" z="0" />
                 <rotate axis="z" angle="30"/>
                 <translate x="-0.4" y="0" z="0" />
+                <scale x="0.4" y="0.05" z="0.05" />
 
             </transformation>
 
@@ -544,32 +523,6 @@
             </children>
             
         </component>
-        
-        <!-- Legs -->
-        <component id="p1">
-        
-            <transformation>
-
-                <scale x="0.4" y="0.1" z="0.1" />
-
-            </transformation>
-
-            <materials>
-
-                <material id="inherit" />
-
-            </materials>
-
-            <texture id="inherit" />
-
-            <children>
-
-                <componentref id="p11" />
-                <componentref id="p12" />
-                
-            </children>
-            
-        </component>
 
         <!-- Left leg -->
         <component id="p11">
@@ -577,6 +530,7 @@
             <transformation>
 
                 <translate x="0.1" y="-0.15" z="0" />
+                <scale x="0.4" y="0.1" z="0.1" />
 
             </transformation>
 
@@ -602,6 +556,7 @@
             <transformation>
 
                 <translate x="0.1" y="0.15" z="0" />
+                <scale x="0.4" y="0.1" z="0.1" />
 
             </transformation>
 
@@ -672,12 +627,13 @@
             </children>
             
         </component>
-        
-        <!-- Foot -->
-        <component id="pe1">
+
+        <!-- Left foot -->
+        <component id="pe11">
         
             <transformation>
 
+                <translate x="0.051" y="-0.15" z="0" />
                 <scale x="0.051" y="0.051" z="0.051" />
 
             </transformation>
@@ -689,32 +645,6 @@
             </materials>
 
             <texture id="t2" />
-
-            <children>
-
-                <componentref id="pe11" />
-                <componentref id="pe12" />
-                
-            </children>
-            
-        </component>
-
-        <!-- Left foot -->
-        <component id="pe11">
-        
-            <transformation>
-
-                <translate x="0.051" y="-0.15" z="0" />
-
-            </transformation>
-
-            <materials>
-
-                <material id="inherit" />
-
-            </materials>
-
-            <texture id="inherit" />
 
             <children>
 
@@ -730,16 +660,17 @@
             <transformation>
 
                 <translate x="0.051" y="0.15" z="0" />
+                <scale x="0.051" y="0.051" z="0.051" />
 
             </transformation>
 
             <materials>
 
-                <material id="inherit" />
+                <material id="t1" />
 
             </materials>
 
-            <texture id="inherit" />
+            <texture id="t2" />
 
             <children>
 

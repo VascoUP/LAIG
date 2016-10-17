@@ -538,7 +538,8 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 		
 		appearance.setShininess(shininess);
 		
-		this.materials[i] = appearance;
+		var m = new MaterialInfo(id, appearance);
+		this.materials[i] = m;
 	}	
 };
 

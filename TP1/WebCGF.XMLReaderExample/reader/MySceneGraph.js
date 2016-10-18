@@ -773,47 +773,52 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 	if (transformations == null || transformations.length != 1) 
 		return "Component -> Tranformation error";
 	
-	if(nnodes != 0){ //Transformation is not empty
-		for(var i = 0; i < nnodes; i++) {
+	for(var i = 0; i < nnodes; i++) {
 
-			var transform_elems = transformations[0].children[i];
-			if (transform_elems == null)
-				return "Component -> Transformation error";
-			var id;
+		var transform_elems = transformations[0].children[i];
+		if (transform_elems == null)
+			return "Component -> Transformation error";
+		var id;
 
-			//this.transform[i] = new TransformationInfo(id);
+		//this.transform[i] = new TransformationInfo(id);
 
-			var transformation = transform_elems.tagName;
-			switch(transformation) {
-				case 'transformationref':
-					id = this.reader.getString(transform_elems, 'id');
-					break;
-				case 'translate':
-					var x, y, z;
-					x = this.reader.getFloat(transform_elems, 'x')
-					y = this.reader.getFloat(transform_elems, 'y');
-					z = this.reader.getFloat(transform_elems, 'z');
-					this.transformation[i].setTranslate(x,y,z);
-					break;
-				case 'rotate':
-					var axis, angle;
-					angle = Math.PI * this.reader.getFloat(transform_elems, 'angle') / 180;
-					axis = this.reader.getString(transform_elems, 'axis');
-					this.transformation[i].setRotate(axis, angle);
-					break;
-				case 'scale':
-					var x, y, z;
-					x = this.reader.getFloat(transform_elems, 'x');
-					y = this.reader.getFloat(transform_elems, 'y');
-					z = this.reader.getFloat(transform_elems, 'z');
-					this.transformation[i].setScale(x, y, z);
-					break;
+		var transformation = transform_elems.tagName;
+		switch(transformation) {
+			case 'transformationref':
+				id = this.reader.getString(transform_elems, 'id');
+
+				if( nnodes != 1 )
+					return "You either have transformationref OR the transformations you want that haven't been defined before."
+
+				node.setTransformationId(id);
+
+				break;
+			case 'translate':
+				var x, y, z;
+				x = this.reader.getFloat(transform_elems, 'x')
+				y = this.reader.getFloat(transform_elems, 'y');
+				z = this.reader.getFloat(transform_elems, 'z');
+				node.addTransform(transformation, [x, y, z]);
+				break;
+			case 'rotate':
+				var axis, angle;
+				angle = Math.PI * this.reader.getFloat(transform_elems, 'angle') / 180;
+				axis = this.reader.getString(transform_elems, 'axis');
+				this.transformation[i].setRotate(axis, angle);
+				node.addTransform(transformation, [angle, axis]);
+				break;
+			case 'scale':
+				var x, y, z;
+				x = this.reader.getFloat(transform_elems, 'x');
+				y = this.reader.getFloat(transform_elems, 'y');
+				z = this.reader.getFloat(transform_elems, 'z');
+				this.transformation[i].setScale(x, y, z);
+				node.addTransform(transformation, [x, y, z]);
+				break;
 		}
 			
 		if(id != null)
 			break;
-		
-		}	
 	}
 };
 

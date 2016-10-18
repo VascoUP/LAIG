@@ -118,6 +118,16 @@ function Node (id) {
 	this.visited = false;
 }
 
+Node.prototype.setTransformationId = function( transformationId ) {
+	this.transformationId = transformationId;
+}
+
+Node.prototype.addTransform = function( type, arr ) {
+	if( this.transformation == undefined ) 
+		this.transformation = new TransformationInfo();
+	this.transformation.addTransform(type, arr);
+}
+
 Node.prototype.setTransformation = function( transformation ) {
 	this.transformation = transformation;
 }

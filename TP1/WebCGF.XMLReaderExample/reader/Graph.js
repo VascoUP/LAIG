@@ -6,46 +6,47 @@ function Graph (sceneGraph) {
 
 Graph.prototype.addNode = function( node ) {
 	this.nodes.push(node);
+	node.graph = this;
 };
 
 Graph.prototype.connectedGraph = function( ) {
+	var i;
 	for( var i = 0; i < this.nodes.length; i++ ) {
-		if( this.idHead == this.nodes[i] ) {
-			if( this.connectedGraph( this.nodes[i], this.nodes[i].texture ) == -1 )
-				return -1;
+		console.debug(i + " - " + this.nodes[i].id);
+		if( this.idHead == this.nodes[i].id ) {
+			if( this.connectedGraphNode( this.nodes[i], this.nodes[i].texture ) == -1 )
+				return "Error -> Couldn't find one of the nodes/primitives";
 			break;
 		}
 	}
 
+	if( i == this.nodes.length )
+		return "Couldn't find root node to draw the scene";
+
 	for( var i = 0; i < this.nodes.length; i++ ) {
 		if( !this.nodes[i].visited ) {
-			console.error("Components error: Node " + this.nodes[i].idChildren[i] + " not found");	
-			return -1;
+			return "Error -> This graph is not connected (node = " + this.nodes[i].id + ")";
 		}
 	}
-
-	return 0;
 }
 
-Graph.prototype.connectedGraph = function( node, texture ) {
-	for( var i = 0; i < this.node.idChildren.length; i++ ) {
+Graph.prototype.connectedGraphNode = function( node, texture ) {
+	console.debug(node);
+	node.visited = true;
+	for( var i = 0; i < node.idChildren.length; i++ ) {
 		var j;
 		for( j = 0; j < this.nodes.length; j++ )
-			if( this.node.idChildren[i] == this.nodes[j].id ) 
+			if( node.idChildren[i] == this.nodes[j].id ) 
 				break;
 
-		if( j == this.nodes.length ) {
-			console.error("Components error: Node " + this.node.idChildren[i] + " not found");	
-			return -1;
-		}
-		
-		this.nodes[j].visited = true;
-		if( this.connectedGraph( n, node.texture ) == -1 )
+		if( j == this.nodes.length || this.connectedGraphNode( n, node.texture ) == -1 )
 			return -1;
 	}
 
-	for( var i = 0; i < this.node.primitives.length; i++ ) 
-		this.node.primitives[i].display();
+	for( var i = 0; i < node.idPrimitives.length; i++ ) {
+		if(this.sceneGraph.primitives[ node.idPrimitives[i] ] == undefined)
+			return -1;
+	}
 
 	return 0;
 }
@@ -54,7 +55,7 @@ Graph.prototype.applyTransformation = function( node ) {
 	var arr = node.transformation.transforms;
 
 	for( var i = 0; i < arr.length; i++ ) {
-		switch(arr[i]) {
+		switch(arr[i].type) {
 			case 'rotate':
 			this.sceneGraph.scene.rotate( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2] );
 			break;
@@ -63,54 +64,57 @@ Graph.prototype.applyTransformation = function( node ) {
 			break;
 			case 'translate':
 			this.sceneGraph.scene.translate( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2], arr[i].matrix[3] );
+			console.log("Translate");
 			break;
 		}
 	}
 }
 
 Graph.prototype.drawScene = function( ) {
-	for( var i = 0; i < this.nodes.length; i++ ) {
+	var i;
+	for( i = 0; i < this.nodes.length; i++ ) {
 		if( this.idHead == this.nodes[i].id ) {
-			this.drawScene( this.nodes[i] );
+			this.drawSceneNode( this.nodes[i] );
 			break;
 		}
 	}
 }
 
-Graph.prototype.drawScene = function( node ) {
+Graph.prototype.drawSceneNode = function( node ) {
 	this.sceneGraph.scene.pushMatrix();
 
 	/* 
 		Find the material id in the materials array 
 	*/
-	for( var i = 0; i < this.sceneGraph.materials.length; i++ ) {
+	/*for( var i = 0; i < this.sceneGraph.materials.length; i++ ) {
 		if( this.sceneGraph.materials[i].id == node.materials[node.currMaterialIndex] )
 			this.sceneGraph.materials[i].material.apply();
-	}
+	}*/
 
 	this.applyTransformation(node);
 
-	for( var i = 0; i < this.node.idChildren.length; i++ ) {
+	for( var i = 0; i < node.idChildren.length; i++ ) {
 		var n;
 		for( var j = 0; j < this.nodes.length; j++ ) {
-			if( this.node.idChildren[i] == this.nodes[j].id )
+			if( node.idChildren[i] == this.nodes[j].id )
 				n = this.nodes[j];
 		}
 
-		this.drawScene( n );
+		this.drawSceneNode( n );
 	}
 
-	for( var i = 0; i < this.node.primitives.length; i++ ) 
-		this.node.primitives[i].display();
+	for( var i = 0; i < node.idPrimitives.length; i++ ) {
+		var prim = this.sceneGraph.primitives[ node.idPrimitives[i] ];
+		prim.display();
+	}
 
 	this.sceneGraph.scene.popMatrix();
 }
 
-
 function Node (id) {
 	this.id = id;
-	this.idCildren = [];
-	this.primitives = [];
+	this.idChildren = [];
+	this.idPrimitives = [];
 	this.materials = [];
 	this.texture;
 
@@ -140,11 +144,10 @@ Node.prototype.addMaterial = function( materialId ) {
 	this.materials.push( materialId );
 }
 
-
 Node.prototype.addChildren = function( id ) {
 	this.idChildren.push( id );
 }
 
-Node.prototype.addPrimitives = function( primitive ) {
-	this.primitives.push( primitive );
+Node.prototype.addIdPrimitive = function( id ) {
+	this.idPrimitives.push(id);
 }

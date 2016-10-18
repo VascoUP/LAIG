@@ -32,6 +32,8 @@ XMLscene.prototype.init = function (application) {
     this.currentCamera = 0;
 
 	this.object = new MySphere(this, 0.5, 20, 20);
+
+	var loaded = false;
 };
 
 XMLscene.prototype.initLights = function () {
@@ -56,6 +58,7 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {
+	loaded = true;
 	//Set axis length with the correspondent values
 	this.axis = new CGFaxis(this, this.graph.axis_length);
 	this.currentCamera = this.graph.default_view;
@@ -103,13 +106,15 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk) {
 		for(var i = 0; i < this.graph.nLights; i++)
 			this.lights[i].update();
+		this.materialRed.apply();
+		this.graph.graph.drawScene();
 	};
 
-	this.materialRed.apply();
 	//this.object.display();
 
-	for( var i = 0; i < this.graph.primitives.length; i++ )
-		this.graph.primitives[i].display();
+/*	for( var i = 0; i < this.graph.primitives.length; i++ )
+		this.graph.primitives[i].display();*/
+
 
 };
 

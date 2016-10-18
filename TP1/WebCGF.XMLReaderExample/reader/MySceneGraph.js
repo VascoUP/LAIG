@@ -6,7 +6,7 @@ function MySceneGraph(filename, scene) {
 	scene.graph = this;
 
 	this.transformations = [];
-	this.primitives = [];
+	this.primitives = {};
 	this.graph = new Graph(this);
 
 	// File reading 
@@ -176,6 +176,11 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 			return "No such element - " + name;
 		}
 	}
+
+	console.debug("idHead: " + this.graph.idHead);
+	console.debug(this.graph.nodes);
+
+	return this.graph.connectedGraph();
 };
 
 /*
@@ -669,10 +674,8 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 		var id = prim_elems.attributes.getNamedItem('id').value;
 	
 		// Making sure that there are no two primitives with the same id 
-		for(var j = 0; j < this.primitives.length; j++) {
-			if(this.primitives[j].id == id)
-				return "Primitives -> Same id error";
-		}
+		if(this.primitives[id] != undefined)
+			return "There are 2 primitives with the same name";
 
 		var primitive = prim_elems.children[0].tagName;
 		
@@ -683,7 +686,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				y1 = this.reader.getFloat(prim_elems.children[0], 'y1');
 				x2 = this.reader.getFloat(prim_elems.children[0], 'x2');
 				y2 = this.reader.getFloat(prim_elems.children[0], 'y2');
-				this.primitives.push(new MyRectangle(this.scene, x1, y1, x2, y2));
+				this.primitives[id] = new MyRectangle(this.scene, x1, y1, x2, y2);
 				break;
 			case 'triangle':
 				var x1, y1, z1, x2, y2, z2, x3, y3, z3;
@@ -696,7 +699,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				x3 = this.reader.getFloat(prim_elems.children[0], 'x3');
 				y3 = this.reader.getFloat(prim_elems.children[0], 'y3');
 				z3 = this.reader.getFloat(prim_elems.children[0], 'z3');
-				this.primitives.push(new MyTriangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3));
+				this.primitives[id] = new MyTriangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3);
 				break;
 			case 'cylinder':
 				var base, top, heigth, slices, stacks;
@@ -705,14 +708,14 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				height = this.reader.getFloat(prim_elems.children[0], 'height');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
 				stacks = this.reader.getInteger(prim_elems.children[0], 'stacks');
-				this.primitives.push(new MyCylinder(this.scene, base, top, height, slices, stacks));
+				this.primitives[id] = new MyCylinder(this.scene, base, top, height, slices, stacks);
 				break;
 			case 'sphere':
 				var radius, slices, stacks;
 				radius = this.reader.getFloat(prim_elems.children[0], 'radius');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
 				stacks = this.reader.getInteger(prim_elems.children[0], 'stacks');
-				this.primitives.push(new MySphere(this.scene, radius, slices, stacks));
+				this.primitives[id] = new MySphere(this.scene, radius, slices, stacks);
 				break;
 			case 'torus':
 				var inner, outer, slices, loops;
@@ -720,7 +723,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				outer = this.reader.getFloat(prim_elems.children[0], 'outer');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
 				loops = this.reader.getInteger(prim_elems.children[0], 'loops');
-				//this.primitives.push(new MyTorus(this.scene, inner, outer, slices, loops));
+				//this.primitives[id] = new MyTorus(this.scene, inner, outer, slices, loops);
 				break;
 		}
 	}
@@ -752,6 +755,7 @@ MySceneGraph.prototype.parseComponents = function (components) {
 		var id = comp_elems.attributes.getNamedItem('id').value;
 
 		var n = new Node(id);
+		this.graph.addNode(n);
 	
 		// Making sure that there are no two components with the same id 
 		for(var j = 0; j < this.component.length; j++) {
@@ -804,7 +808,6 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 				var axis, angle;
 				angle = Math.PI * this.reader.getFloat(transform_elems, 'angle') / 180;
 				axis = this.reader.getString(transform_elems, 'axis');
-				this.transformation[i].setRotate(axis, angle);
 				node.addTransform(transformation, [angle, axis]);
 				break;
 			case 'scale':
@@ -812,7 +815,6 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 				x = this.reader.getFloat(transform_elems, 'x');
 				y = this.reader.getFloat(transform_elems, 'y');
 				z = this.reader.getFloat(transform_elems, 'z');
-				this.transformation[i].setScale(x, y, z);
 				node.addTransform(transformation, [x, y, z]);
 				break;
 		}
@@ -859,38 +861,27 @@ MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
 
 MySceneGraph.prototype.readComponentChildren = function (compElement, node) {
 	//Falta desenvolver tudo :P
-	var children = compElement.getElementsByTagName('children');
-	var nnodes = children[0].children.length;
-	if (children == null || children.length != 1 || nnodes < 1) 
+	var ch = compElement.getElementsByTagName('children');
+	if (ch == null || ch.length != 1) 
 		return "Children error";
 	
-	this.children = [nnodes];
+	var id;
+	var countComp = 0, countPrim = 0;
 
-	for(var i = 0; i < nnodes; i++) {
+	var childrenElems = ch[0].children;
+	for(var j = 0; j < childrenElems.length; j++) {
 
-		var children_elems = children[0].children[i];
-
-		if (children_elems == null)
-			return "Children error";
-
-		var idComp, idPrim;
-		var countComp = 0, countPrim = 0;
-		for(var j = 0; j < this.children.length; j++) {
-
-			var childrenTag = children_elems.tagName;
-			switch(childrenTag) {
-				case 'componentref':
-					idComp = this.reader.getString(children_elems, 'id');
-					countComp++;
-					break;
-				case 'primitiveref':
-					idPrim = this.reader.getString(children_elems, 'id');
-					countPrim++;
-					break;
-			}
+		var childrenTag = childrenElems[j].tagName;
+		switch(childrenTag) {
+			case 'componentref':
+				id = this.reader.getString(childrenElems[j], 'id');
+				countComp++;
+				break;
+			case 'primitiveref':
+				id = this.reader.getString(childrenElems[j], 'id');
+				node.addIdPrimitive(id);
+				countPrim++;
+				break;
 		}
-		
-		if(countComp == 0 || countPrim == 0)
-			return "Error -> ComponentRef or PrimitiveRef are missing";
 	}
 };

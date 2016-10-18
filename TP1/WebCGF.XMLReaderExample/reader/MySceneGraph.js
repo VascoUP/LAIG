@@ -516,7 +516,7 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 	if(material == null || nnodes < 1) 
 		return "Material error";
 	
-	this.materials = [nnodes];
+	this.materials = {};
 
 	for(var i = 0; i < nnodes; i++) {
 
@@ -528,10 +528,8 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 		var id = material_elems.attributes.getNamedItem('id').value;
 	
 		// Making sure that there are no two materials with the same id 
-		for(var j = 0; j < this.materials.length; j++) {
-			if(this.materials[j].id == id)
-				return "Materials -> Same id error";
-		}
+		if( this.materials[id] != undefined )
+			return "Materials -> Same id error";
 
 		var appearance = new CGFappearance(this.scene);
 
@@ -593,10 +591,10 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 		var shininess = this.reader.getFloat(shininessElem, 'value');
 		
 		appearance.setShininess(shininess);
-		
-		var m = new MaterialInfo(id, appearance);
-		this.materials[i] = m;
-	}	
+		this.materials[id] = appearance;
+	}
+
+	console.debug(this.materials['t1']);
 };
 
 MySceneGraph.prototype.parseTransformations = function(transformations) {
@@ -830,8 +828,6 @@ MySceneGraph.prototype.readComponentMaterials = function (compElement, node) {
 	var nnodes = materials[0].children.length;
 	if (materials == null || materials.length != 1 || nnodes < 1) 
 		return "Component -> Materials error";
-	
-	this.materials = [nnodes];
 
 	for(var i = 0; i < nnodes; i++) {
 			
@@ -842,7 +838,7 @@ MySceneGraph.prototype.readComponentMaterials = function (compElement, node) {
 
 		var id = material_elems.attributes.getNamedItem('id').value;
 		
-		node.addMaterial(id);
+		node.addIdMaterial(id);
 	}
 	
 	

@@ -106,7 +106,7 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk) {
 		for(var i = 0; i < this.graph.nLights; i++)
 			this.lights[i].update();
-		this.materialRed.apply();
+		//this.materialRed.apply();
 		this.graph.graph.drawScene();
 	};
 

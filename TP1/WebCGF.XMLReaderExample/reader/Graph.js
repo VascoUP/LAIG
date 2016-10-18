@@ -12,7 +12,6 @@ Graph.prototype.addNode = function( node ) {
 Graph.prototype.connectedGraph = function( ) {
 	var i;
 	for( var i = 0; i < this.nodes.length; i++ ) {
-		console.debug(i + " - " + this.nodes[i].id);
 		if( this.idHead == this.nodes[i].id ) {
 			if( this.connectedGraphNode( this.nodes[i], this.nodes[i].texture ) == -1 )
 				return "Error -> Couldn't find one of the nodes/primitives";
@@ -31,7 +30,6 @@ Graph.prototype.connectedGraph = function( ) {
 }
 
 Graph.prototype.connectedGraphNode = function( node, texture ) {
-	console.debug(node);
 	node.visited = true;
 	for( var i = 0; i < node.idChildren.length; i++ ) {
 		var j;
@@ -64,7 +62,6 @@ Graph.prototype.applyTransformation = function( node ) {
 			break;
 			case 'translate':
 			this.sceneGraph.scene.translate( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2], arr[i].matrix[3] );
-			console.log("Translate");
 			break;
 		}
 	}
@@ -86,10 +83,9 @@ Graph.prototype.drawSceneNode = function( node ) {
 	/* 
 		Find the material id in the materials array 
 	*/
-	/*for( var i = 0; i < this.sceneGraph.materials.length; i++ ) {
-		if( this.sceneGraph.materials[i].id == node.materials[node.currMaterialIndex] )
-			this.sceneGraph.materials[i].material.apply();
-	}*/
+	var mat = this.sceneGraph.materials[ node.idMaterials[node.currMaterialIndex] ];
+	if( mat != 'inherit' )
+		mat.apply();
 
 	this.applyTransformation(node);
 
@@ -115,7 +111,7 @@ function Node (id) {
 	this.id = id;
 	this.idChildren = [];
 	this.idPrimitives = [];
-	this.materials = [];
+	this.idMaterials = [];
 	this.texture;
 
 	this.currMaterialIndex = 0;
@@ -140,8 +136,8 @@ Node.prototype.setTexture = function( textureId ) {
 	this.texture = textureId;
 }
 
-Node.prototype.addMaterial = function( materialId ) {
-	this.materials.push( materialId );
+Node.prototype.addIdMaterial = function( id ) {
+	this.idMaterials.push( id );
 }
 
 Node.prototype.addChildren = function( id ) {

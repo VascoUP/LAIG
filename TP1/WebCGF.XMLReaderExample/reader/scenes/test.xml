@@ -29,41 +29,41 @@
 
         <material id="m1" >
 
-            <emission r="10" g="10" b="10" a="255" />
-            <ambient r="150" g="150" b="150" a="255" />
-            <diffuse r="150" g="150" b="150" a="255" />
-            <specular r="10" g="10" b="10" a="255" />
-            <shininess value="10" />
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.18" g="0.13" b="0.05" a="1" />
+            <diffuse r="0.89" g="0.55" b="0.09" a="1" />
+            <specular r="0.18" g="0.13" b="0.05" a="1" />
+            <shininess value="1" />
 
         </material>
 
         <material id="m2" >
 
-            <emission r="10" g="10" b="10" a="255" />
-            <ambient r="150" g="150" b="150" a="255" />
-            <diffuse r="150" g="150" b="150" a="255" />
-            <specular r="10" g="10" b="10" a="255" />
-            <shininess value="10" />
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.18" g="0.13" b="0.05" a="1" />
+            <diffuse r="0.89" g="0.55" b="0.09" a="1" />
+            <specular r="0.18" g="0.13" b="0.05" a="1" />
+            <shininess value="1" />
 
         </material>
 
         <material id="t1" >
 
-            <emission r="10" g="10" b="10" a="255" />
-            <ambient r="150" g="150" b="150" a="255" />
-            <diffuse r="150" g="150" b="150" a="255" />
-            <specular r="10" g="10" b="10" a="255" />
-            <shininess value="10" />
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.18" g="0.13" b="0.05" a="1" />
+            <diffuse r="0.89" g="0.55" b="0.09" a="1" />
+            <specular r="0.18" g="0.13" b="0.05" a="1" />
+            <shininess value="1" />
 
         </material>
 
         <material id="e1" >
 
-            <emission r="10" g="200" b="10" a="255" />
-            <ambient r="10" g="200" b="10" a="255" />
-            <diffuse r="10" g="100" b="10" a="255" />
-            <specular r="10" g="100" b="10" a="255" />
-            <shininess value="20" />
+            <emission r="0.2" g="0" b="0" a="1" />
+            <ambient r="1" g="0" b="0" a="1" />
+            <diffuse r="1" g="0" b="0" a="1" />
+            <specular r="1" g="0" b="0" a="1" />
+            <shininess value="3" />
 
         </material>
 
@@ -156,7 +156,7 @@
 
             <materials>
 
-                <material id="m1" />
+                <material id="e1" />
 
             </materials>
 

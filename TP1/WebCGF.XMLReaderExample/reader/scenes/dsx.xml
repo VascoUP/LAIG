@@ -83,40 +83,40 @@
         <!-- Brown diffuse (wood) -->
         <material id="m1" >
 
-            <emission r="0" g="0" b="0" a="255" />
-            <ambient r="23" g="15" b="5" a="255" />
-            <diffuse r="139" g="69" b="10" a="255" />
-            <specular r="23" g="15" b="5" a="255" />
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.18" g="0.13" b="0.05" a="1" />
+            <diffuse r="0.89" g="0.55" b="0.09" a="1" />
+            <specular r="0.18" g="0.13" b="0.05" a="1" />
             <shininess value="1" />
 
         </material>
         <!-- Green diffuse/specular (fooliage) -->
         <material id="m2" >
 
-            <emission r="0" g="0" b="0" a="255" />
-            <ambient r="5" g="20" b="5" a="255" />
-            <diffuse r="0" g="160" b="0" a="255" />
-            <specular r="0" g="160" b="0" a="255" />
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.18" g="0.13" b="0.05" a="1" />
+            <diffuse r="0.89" g="0.55" b="0.09" a="1" />
+            <specular r="0.18" g="0.13" b="0.05" a="1" />
             <shininess value="3" />
 
         </material>
         <!-- Grey diffuse (rock) -->
         <material id="t1" >
 
-            <emission r="0" g="0" b="0" a="255" />
-            <ambient r="10" g="10" b="10" a="255" />
-            <diffuse r="64" g="64" b="64" a="255" />
-            <specular r="10" g="10" b="10" a="255" />
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.18" g="0.13" b="0.05" a="1" />
+            <diffuse r="0.89" g="0.55" b="0.09" a="1" />
+            <specular r="0.18" g="0.13" b="0.05" a="1" />
             <shininess value="5" />
 
         </material>
         <!-- Fluorescent red -->
         <material id="e1" >
 
-            <emission r="50" g="0" b="0" a="255" />
-            <ambient r="20" g="0" b="0" a="255" />
-            <diffuse r="200" g="0" b="0" a="255" />
-            <specular r="200" g="0" b="0" a="255" />
+            <emission r="0.2" g="0" b="0" a="1" />
+            <ambient r="1" g="0" b="0" a="1" />
+            <diffuse r="1" g="0" b="0" a="1" />
+            <specular r="1" g="0" b="0" a="1" />
             <shininess value="3" />
 
         </material>

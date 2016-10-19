@@ -62,23 +62,7 @@ Graph.prototype.applyTransformation = function( node ) {
 		matrix = this.sceneGraph.transformations[ node.transformation.transformationId ];
 	else
 		matrix = node.transformation;
-	console.debug(matrix);
 	this.sceneGraph.scene.multMatrix( matrix );
-/*
-	for( var i = 0; i < arr.length; i++ ) {
-		switch(arr[i].type) {
-			case 'rotate':
-			this.sceneGraph.scene.rotate( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2] );
-			break;
-			case 'scale':
-			this.sceneGraph.scene.scale( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2], arr[i].matrix[3] );
-			break;
-			case 'translate':
-			this.sceneGraph.scene.translate( arr[i].matrix[0], arr[i].matrix[1], arr[i].matrix[2], arr[i].matrix[3] );
-			break;
-		}
-	}
-*/
 }
 
 Graph.prototype.drawScene = function( ) {
@@ -141,10 +125,6 @@ Node.prototype.addTransform = function( type, arr ) {
 		mat4.translate( this.transformation, this.transformation, arr );
 		break;
 	}
-
-	console.debug(this.transformation);
-
-	//this.transformation.addTransform(type, arr);
 }
 
 Node.prototype.setTransformation = function( transformation ) {

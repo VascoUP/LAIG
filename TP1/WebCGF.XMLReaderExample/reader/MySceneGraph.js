@@ -177,9 +177,6 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 		}
 	}
 
-	console.debug("idHead: " + this.graph.idHead);
-	console.debug(this.graph.nodes);
-
 	return this.graph.connectedGraph();
 };
 
@@ -593,8 +590,6 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 		appearance.setShininess(shininess);
 		this.materials[id] = appearance;
 	}
-
-	console.debug(this.materials['t1']);
 };
 
 MySceneGraph.prototype.parseTransformations = function(transformations) {
@@ -752,8 +747,8 @@ MySceneGraph.prototype.parseComponents = function (components) {
 
 		var id = comp_elems.attributes.getNamedItem('id').value;
 
-		var n = new Node(id);
-		this.graph.addNode(n);
+		var n = new Node();
+		this.graph.addNode(id, n);
 	
 		// Making sure that there are no two components with the same id 
 		for(var j = 0; j < this.component.length; j++) {
@@ -871,6 +866,7 @@ MySceneGraph.prototype.readComponentChildren = function (compElement, node) {
 		switch(childrenTag) {
 			case 'componentref':
 				id = this.reader.getString(childrenElems[j], 'id');
+				node.addIdChildren(id);
 				countComp++;
 				break;
 			case 'primitiveref':

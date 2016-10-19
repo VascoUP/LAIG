@@ -1,52 +1,45 @@
 function Graph (sceneGraph) {
 	this.sceneGraph = sceneGraph;
 	this.idHead = 0;
-	this.nodes = [];
+	this.nodes = {};
 }
 
-Graph.prototype.addNode = function( node ) {
-	this.nodes.push(node);
+Graph.prototype.addNode = function( id, node ) {
+	this.nodes[id] = node;
 	node.graph = this;
 };
 
 Graph.prototype.connectedGraph = function( ) {
-	var i;
-	for( var i = 0; i < this.nodes.length; i++ ) {
-		if( this.idHead == this.nodes[i].id ) {
-			if( this.connectedGraphNode( this.nodes[i], this.nodes[i].texture ) == -1 )
-				return "Error -> Couldn't find one of the nodes/primitives";
-			break;
-		}
-	}
 
-	if( i == this.nodes.length )
-		return "Couldn't find root node to draw the scene";
+	var head = this.nodes[this.idHead];
+	if( head == undefined )
+		return "Couldn't find root node";
 
-	for( var i = 0; i < this.nodes.length; i++ ) {
-		if( !this.nodes[i].visited ) {
-			return "Error -> This graph is not connected (node = " + this.nodes[i].id + ")";
-		}
+	if( this.connectedGraphNode( head ) )
+		return "Error -> Couldn't find one of the nodes/primitives";
+
+	for( var id in this.nodes ) {
+		if( !this.nodes[id].visited )
+			return "Error -> This graph is not connected (node = " + id + ")";
 	}
 }
 
 Graph.prototype.connectedGraphNode = function( node, texture ) {
 	node.visited = true;
-	for( var i = 0; i < node.idChildren.length; i++ ) {
-		var j;
-		for( j = 0; j < this.nodes.length; j++ )
-			if( node.idChildren[i] == this.nodes[j].id ) 
-				break;
 
-		if( j == this.nodes.length || this.connectedGraphNode( n, node.texture ) == -1 )
-			return -1;
+	for( var i = 0; i < node.idChildren.length; i++ ) {
+		var n = this.nodes[node.idChildren[i]];
+		if( n == undefined || this.connectedGraphNode( n, node.texture ) )
+			return true;
 	}
 
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {
 		if(this.sceneGraph.primitives[ node.idPrimitives[i] ] == undefined)
-			return -1;
+			return true;
 	}
 
-	return 0;
+	// On success returns false
+	return false;
 }
 
 Graph.prototype.applyTransformation = function( node ) {
@@ -68,13 +61,10 @@ Graph.prototype.applyTransformation = function( node ) {
 }
 
 Graph.prototype.drawScene = function( ) {
-	var i;
-	for( i = 0; i < this.nodes.length; i++ ) {
-		if( this.idHead == this.nodes[i].id ) {
-			this.drawSceneNode( this.nodes[i] );
-			break;
-		}
-	}
+	var head = this.nodes[this.idHead];
+	if( head == undefined )
+		return ;
+	this.drawSceneNode( head );
 }
 
 Graph.prototype.drawSceneNode = function( node ) {
@@ -84,20 +74,14 @@ Graph.prototype.drawSceneNode = function( node ) {
 		Find the material id in the materials array 
 	*/
 	var mat = this.sceneGraph.materials[ node.idMaterials[node.currMaterialIndex] ];
-	if( mat != 'inherit' )
-		mat.apply();
 
 	this.applyTransformation(node);
 
-	for( var i = 0; i < node.idChildren.length; i++ ) {
-		var n;
-		for( var j = 0; j < this.nodes.length; j++ ) {
-			if( node.idChildren[i] == this.nodes[j].id )
-				n = this.nodes[j];
-		}
+	for( var i = 0; i < node.idChildren.length; i++ )
+		this.drawSceneNode( this.nodes[node.idChildren[i]] );
 
-		this.drawSceneNode( n );
-	}
+	if( mat != 'inherit' )
+		mat.apply();
 
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {
 		var prim = this.sceneGraph.primitives[ node.idPrimitives[i] ];
@@ -108,7 +92,6 @@ Graph.prototype.drawSceneNode = function( node ) {
 }
 
 function Node (id) {
-	this.id = id;
 	this.idChildren = [];
 	this.idPrimitives = [];
 	this.idMaterials = [];
@@ -140,7 +123,7 @@ Node.prototype.addIdMaterial = function( id ) {
 	this.idMaterials.push( id );
 }
 
-Node.prototype.addChildren = function( id ) {
+Node.prototype.addIdChildren = function( id ) {
 	this.idChildren.push( id );
 }
 

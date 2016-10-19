@@ -16,7 +16,7 @@ Graph.prototype.connectedGraph = function( ) {
 		return "Couldn't find root node";
 
 	if( this.connectedGraphNode( head ) )
-		return "Error -> Couldn't find one of the nodes/primitives";
+		return "Error -> Couldn't find at least one component element";
 
 	for( var id in this.nodes ) {
 		if( !this.nodes[id].visited )
@@ -29,13 +29,26 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 
 	for( var i = 0; i < node.idChildren.length; i++ ) {
 		var n = this.nodes[node.idChildren[i]];
-		if( n == undefined || this.connectedGraphNode( n, node.texture ) )
+		if( n == undefined ) {
+			console.error("Node " + node.idChildren[i] + " not found.");
+			return true;
+		}
+
+		if( this.connectedGraphNode( n, node.texture ) )
 			return true;
 	}
 
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {
-		if(this.sceneGraph.primitives[ node.idPrimitives[i] ] == undefined)
+		if(this.sceneGraph.primitives[ node.idPrimitives[i] ] == undefined) {
+			console.error("Primitive " + node.idPrimitives[i] + " not found.");
 			return true;
+		}
+	}
+
+	var mat = this.sceneGraph.materials[ node.idMaterials[node.currMaterialIndex] ];
+	if( node.idMaterials[node.currMaterialIndex] != 'inherit' && mat == undefined ) {
+		console.error("Material " + node.idMaterials[node.currMaterialIndex] + " not found.");
+		return true;
 	}
 
 	// On success returns false
@@ -80,7 +93,7 @@ Graph.prototype.drawSceneNode = function( node ) {
 	for( var i = 0; i < node.idChildren.length; i++ )
 		this.drawSceneNode( this.nodes[node.idChildren[i]] );
 
-	if( mat != 'inherit' )
+	if( node.idMaterials[node.currMaterialIndex] != 'inherit' )
 		mat.apply();
 
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {
@@ -95,7 +108,7 @@ function Node (id) {
 	this.idChildren = [];
 	this.idPrimitives = [];
 	this.idMaterials = [];
-	this.texture;
+	this.idTexture;
 
 	this.currMaterialIndex = 0;
 	this.visited = false;
@@ -115,8 +128,8 @@ Node.prototype.setTransformation = function( transformation ) {
 	this.transformation = transformation;
 }
 
-Node.prototype.setTexture = function( textureId ) {
-	this.texture = textureId;
+Node.prototype.setIdTexture = function( idTexture ) {
+	this.idTexture = idTexture;
 }
 
 Node.prototype.addIdMaterial = function( id ) {

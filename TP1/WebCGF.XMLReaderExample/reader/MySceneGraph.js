@@ -847,7 +847,7 @@ MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
 	
 	var id = texture[0].attributes.getNamedItem('id').value;
 	
-	node.setTexture(id);
+	node.setIdTexture(id);
 };
 
 MySceneGraph.prototype.readComponentChildren = function (compElement, node) {

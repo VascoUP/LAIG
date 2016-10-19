@@ -32,7 +32,8 @@ MyTriangle.prototype.initBuffers = function (x1, y1, z1, x2, y2, z2, x3, y3, z3)
 	];
 
 	this.indices = [
-        2, 1, 0
+        2, 1, 0,
+        0, 1, 2
     ];
 
     var uX = x2 - x1;

@@ -266,6 +266,7 @@
             <materials>
 
                 <material id="inherit" />
+				<material id="e1"/>
 
             </materials>
 

@@ -142,5 +142,5 @@ XMLscene.prototype.changeView = function() {
 };
 
 XMLscene.prototype.changeMaterial = function() {
-	
+	this.graph.changeMaterials();
 }

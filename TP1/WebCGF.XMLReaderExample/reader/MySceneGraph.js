@@ -859,3 +859,7 @@ MySceneGraph.prototype.readComponentChildren = function (compElement, node) {
 		}
 	}
 };
+
+MySceneGraph.prototype.changeMaterials = function() {
+	this.graph.changeMaterials();
+}

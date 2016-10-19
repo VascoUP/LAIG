@@ -96,6 +96,11 @@ Graph.prototype.drawSceneNode = function( node ) {
 	this.sceneGraph.scene.popMatrix();
 }
 
+Graph.prototype.changeMaterials = function() {
+	for(var key in this.nodes)
+		this.nodes[key].changeMaterial();
+}
+
 function Node (id) {
 	this.idChildren = [];
 	this.idPrimitives = [];
@@ -145,4 +150,13 @@ Node.prototype.addIdChildren = function( id ) {
 
 Node.prototype.addIdPrimitive = function( id ) {
 	this.idPrimitives.push(id);
+}
+
+Node.prototype.changeMaterial = function() {
+	for(var i = 0; i < this.idMaterials.length; i++){
+		if(i == (this.idMaterials.length - 1))
+			this.currMaterialIndex = 0;
+		else
+			this.currMaterialIndex++;
+	}
 }

@@ -5,7 +5,7 @@ function MySceneGraph(filename, scene) {
 	this.scene = scene;
 	scene.graph = this;
 
-	this.transformations = [];
+	this.transformations = {};
 	this.primitives = {};
 	this.graph = new Graph(this);
 
@@ -614,12 +614,12 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 		var id = transform_elems.attributes.getNamedItem('id').value;
 	
 		// Making sure that there are no two transformations with the same id
-		for(var j = 0; j < this.transformations.length; j++) {
-			if(this.transformations[j].id == id)
-				return "Transformations -> Same id error";
-		}
+		if( this.transformations[id] != undefined )
+			return "Transformations -> Same id error";
 
-		this.transformations.push(new TransformationInfo(id));
+		var matrix = mat4.create();
+		this.transformations[id] = matrix;
+		//this.transformations[id] = new TransformationInfo(id);
 
 		for(var k = 0; k < transform_elems.children.length; k++){
 			var transformation = transform_elems.children[k].tagName;
@@ -628,14 +628,19 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 				var axis, angle;
 				angle = Math.PI * this.reader.getFloat(transform_elems.children[k], 'angle') / 180;
 				axis = this.reader.getString(transform_elems.children[k], 'axis');
-				this.transformations[this.transformations.length - 1].addTransform(transformation, [axis, angle]);
+				mat4.rotate(matrix, matrix, angle, axis == 'x' ? [1, 0, 0] : axis == 'y' ? [0, 1, 0] : [0, 0, 1]);
+				//this.transformations[id].addTransform(transformation, [axis, angle]);
 			}
 			else {
 				var x, y, z;
 				x = this.reader.getFloat(transform_elems.children[k], 'x');
 				y = this.reader.getFloat(transform_elems.children[k], 'y');
 				z = this.reader.getFloat(transform_elems.children[k], 'z');
-				this.transformations[this.transformations.length - 1].addTransform(transformation, [x, y, z]);
+				if( transformation == 'scale' )
+					mat4.scale(matrix, matrix, [x, y, z]);
+				else
+					mat4.translate(matrix, matrix, [x, y, z]);
+				//this.transformations[id].addTransform(transformation, [x, y, z]);
 			}
 		}
 	}

@@ -132,7 +132,7 @@
 
         <primitive id="p3">
 
-            <torus inner="0.5" outer="2" slices="20" loops="10" />
+            <torus inner="0.5" outer="2" slices="50" loops="50" />
             
         </primitive>
  

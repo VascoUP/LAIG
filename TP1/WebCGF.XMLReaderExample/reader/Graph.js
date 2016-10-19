@@ -56,8 +56,15 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 }
 
 Graph.prototype.applyTransformation = function( node ) {
-	var arr = node.transformation.transforms;
 
+	var matrix;
+	if( node.transformation == undefined )
+		matrix = this.sceneGraph.transformations[ node.transformation.transformationId ];
+	else
+		matrix = node.transformation;
+	console.debug(matrix);
+	this.sceneGraph.scene.multMatrix( matrix );
+/*
 	for( var i = 0; i < arr.length; i++ ) {
 		switch(arr[i].type) {
 			case 'rotate':
@@ -71,6 +78,7 @@ Graph.prototype.applyTransformation = function( node ) {
 			break;
 		}
 	}
+*/
 }
 
 Graph.prototype.drawScene = function( ) {
@@ -120,8 +128,23 @@ Node.prototype.setTransformationId = function( transformationId ) {
 
 Node.prototype.addTransform = function( type, arr ) {
 	if( this.transformation == undefined ) 
-		this.transformation = new TransformationInfo();
-	this.transformation.addTransform(type, arr);
+		this.transformation = mat4.create();
+
+	switch(type) {
+		case 'rotate':
+		mat4.rotate( this.transformation, this.transformation, arr[0], arr[1] == 'x' ? [1, 0, 0] : arr[1] == 'y' ? [0, 1, 0] : [0, 0, 1] );
+		break;
+		case 'scale':
+		mat4.scale( this.transformation, this.transformation, arr );
+		break;
+		case 'translate':
+		mat4.translate( this.transformation, this.transformation, arr );
+		break;
+	}
+
+	console.debug(this.transformation);
+
+	//this.transformation.addTransform(type, arr);
 }
 
 Node.prototype.setTransformation = function( transformation ) {

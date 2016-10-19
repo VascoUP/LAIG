@@ -129,6 +129,10 @@
             <sphere radius="1" slices="20" stacks="20" />
             
         </primitive>
+		
+		<primitive id="p3">
+			<torus inner="0.2" outer="2" slices="50" loops="10" />
+		</primitive>
  
     </primitives> 
 
@@ -166,6 +170,7 @@
 
                 <primitiveref id="p2" />
                 <primitiveref id="p1" />
+				<primitiveref id="p3" />
                 
             </children>
             

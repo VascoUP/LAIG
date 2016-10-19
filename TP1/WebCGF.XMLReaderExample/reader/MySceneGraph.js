@@ -43,29 +43,6 @@ MySceneGraph.prototype.onXMLReady=function()
 	this.scene.onGraphLoaded();
 };
 
-MySceneGraph.prototype.parseElement = function(rootElement) {
-	var tag = rootElement.tagName;
-	switch(tag) {
-		case 'scene':
-			break;
-		case 'views':
-			break;
-		case 'illumination':
-			break;
-		case 'lights':
-			break;
-		case 'textures':
-			break;
-		case 'materials':
-			break;
-		case 'Transformations':
-			break;
-		case 'primitives':
-			break;
-		case 'components':
-			break;
-	}
-}
 /*
  * Example of method that parses elements of one block and stores information in a specific data structure
  */
@@ -790,14 +767,14 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 				id = this.reader.getString(transform_elems, 'id');
 
 				if( nnodes != 1 )
-					return "You either have transformationref OR the transformations you want that haven't been defined before."
+					return "You either have transformationref OR the transformations you want that haven't been defined before.";
 
 				node.setTransformationId(id);
 
 				break;
 			case 'translate':
 				var x, y, z;
-				x = this.reader.getFloat(transform_elems, 'x')
+				x = this.reader.getFloat(transform_elems, 'x');
 				y = this.reader.getFloat(transform_elems, 'y');
 				z = this.reader.getFloat(transform_elems, 'z');
 				node.addTransform(transformation, [x, y, z]);

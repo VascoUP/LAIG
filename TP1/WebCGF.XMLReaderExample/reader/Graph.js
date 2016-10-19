@@ -153,10 +153,8 @@ Node.prototype.addIdPrimitive = function( id ) {
 }
 
 Node.prototype.changeMaterial = function() {
-	for(var i = 0; i < this.idMaterials.length; i++){
-		if(i == (this.idMaterials.length - 1))
-			this.currMaterialIndex = 0;
-		else
-			this.currMaterialIndex++;
-	}
+	if( this.currMaterialIndex == this.idMaterials.length - 1 )
+		this.currMaterialIndex = 0;
+	else 
+		this.currMaterialIndex++;
 }

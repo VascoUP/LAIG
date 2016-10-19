@@ -721,7 +721,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				outer = this.reader.getFloat(prim_elems.children[0], 'outer');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
 				loops = this.reader.getInteger(prim_elems.children[0], 'loops');
-				this.primitives[id] = new MyTorus(this.scene, inner, outer, slices, loops);
+				//this.primitives[id] = new MyTorus(this.scene, inner, outer, slices, loops);
 				break;
 		}
 	}

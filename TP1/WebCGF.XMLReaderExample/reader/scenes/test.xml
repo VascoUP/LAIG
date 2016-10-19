@@ -132,7 +132,7 @@
 
         <primitive id="p3">
 
-            <torus inner="1" outer="2" slices="10" loops="10" />
+            <torus inner="0.5" outer="2" slices="20" loops="10" />
             
         </primitive>
  
@@ -173,6 +173,7 @@
                 <componentref id="c2" />
                 <primitiveref id="p2" />
                 <primitiveref id="p1" />
+				<primitiveref id="p3" />
 
             </children>
             

@@ -129,6 +129,12 @@
             <sphere radius="1" slices="20" stacks="20" />
             
         </primitive>
+
+        <primitive id="p3">
+
+            <torus inner="1" outer="2" slices="10" loops="10" />
+            
+        </primitive>
  
     </primitives> 
 
@@ -164,9 +170,35 @@
 
             <children>
 
+                <componentref id="c2" />
                 <primitiveref id="p2" />
                 <primitiveref id="p1" />
-                
+
+            </children>
+            
+        </component>
+
+        <component id="c2">
+        
+            <transformation>
+
+                <translate x="3" y="0" z="-1" />
+                <scale x="1" y="2" z="1" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="m2" />
+
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+
+                <primitiveref id="p1" />
+
             </children>
             
         </component>

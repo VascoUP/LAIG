@@ -79,7 +79,7 @@
 
     <lights>
 
-        <omni id="l1" enabled="1" >
+        <omni id="l1" enabled="0" >
 
             <location x="-5" y="-5" z="-5" w="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />

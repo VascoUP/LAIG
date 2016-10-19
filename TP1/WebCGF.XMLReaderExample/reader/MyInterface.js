@@ -22,16 +22,16 @@ MyInterface.prototype.init = function(application) {
 	
 	this.gui = new dat.GUI();	
 
-	//ver erro!!!
-	/*for(var i = 0; i < this.scene.graph.nLights; i++) {
-		var groupLights = this.gui.addFolder ( 'Light '+ (i+1) );
-		groupLights.add(this.scene, 'enabled');
-		groupLights.add(this.scene, 'disabled');
-	}*/
-	
 	return true;
 };
 
+MyInterface.prototype.updateLights = function(nLights, lights) {
+	
+	for(var i = 0; i < nLights; i++) {
+		var groupLights = this.gui.addFolder ( 'Light '+ (i+1) );
+		groupLights.add(lights[i], 'enabled');
+	}
+}
 
 
 /**
@@ -57,26 +57,3 @@ MyInterface.prototype.processKeyUp = function(event) {
 		
 	};	
 };
-
-/**
- * processKeyboard
- * @param event {Event}
- */
-/*MyInterface.prototype.processKeyDown = function(event) {
-
-	CGFinterface.prototype.processKeyDown.call(this, event);
-	
-	//If lower case letter than calculate its upper case equal
-	var code = (event.keyCode >= 97 && event.keyCode <= 122)? event.keyCode - 32 : event.keyCode;
-	code = (code >= 97 && code <= 122) ? code - 32 : code;
-
-	switch (code)
-	{
-		case (77): 		// M key
-			break;
-		case (86): 		// V key
-			this.scene.changeView();
-			break;
-	};	
-};*/
-

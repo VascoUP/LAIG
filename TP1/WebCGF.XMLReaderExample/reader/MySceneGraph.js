@@ -356,7 +356,10 @@ MySceneGraph.prototype.parseLights = function(lights) {
 		var location_z = this.reader.getFloat(locations[0], 'z');
 		var location_w = this.reader.getFloat(locations[0], 'w');
 
-		if( location_x == 'undefined' || location_y == 'undefined' || location_z == 'undefined' || location_w == 'undefined' )
+		if( location_x == 'undefined' || 
+			location_y == 'undefined' || 
+			location_z == 'undefined' || 
+			location_w == 'undefined' )
 			return "Lights -> Omni -> Location -> Missing required information.";
 
 		if( ambients.length > 1 )
@@ -421,10 +424,10 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			var target_y = this.reader.getFloat(targets[0], 'y');
 			var target_z = this.reader.getFloat(targets[0], 'z');
 
-			if( target_x == 'undefined' || target_x < 0 || 
-				target_y == 'undefined' || target_x < 0 || 
-				target_z  == 'undefined'|| target_x < 0 )
-				return "Lights -> Spot -> Location -> Missing required information.";
+			if( target_x == 'undefined' || 
+				target_y == 'undefined' ||  
+				target_z  == 'undefined' )
+				return "Lights -> Spot -> Target -> Missing required information.";
 
 			this.scene.lights[this.nLights].setSpotCutOff( Math.PI * this.reader.getFloat(light, 'angle') / 180 );
 			this.scene.lights[this.nLights].setSpotExponent( this.reader.getFloat(light, 'exponent') );

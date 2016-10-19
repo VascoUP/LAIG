@@ -36,11 +36,11 @@ MyTriangle.prototype.initBuffers = function (x1, y1, z1, x2, y2, z2, x3, y3, z3)
     ];
 
     var uX = x2 - x1;
-    var uX = y2 - y1;
-    var uX = z2 - z1;
+    var uY = y2 - y1;
+    var uZ = z2 - z1;
     var vX = x3 - x1;
-    var vX = y3 - y1;
-    var vX = z3 - z1;
+    var vY = y3 - y1;
+    var vZ = z3 - z1;
 
     this.normals = [
     	(uY * vZ) - (uZ * vY), (uZ * vX) - (uX * vZ), (uX * vY) - (uY * vX),

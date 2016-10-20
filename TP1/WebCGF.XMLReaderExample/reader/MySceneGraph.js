@@ -320,6 +320,9 @@ MySceneGraph.prototype.parseLights = function(lights) {
 	var lights;
 
 	this.nLights = 0;
+	this.index = 0;
+	this.name = "";
+	this.lightType = [this.name];
 
 	nnodes = lights.children.length;
 	if (lights == null || nnodes < 1) 
@@ -408,7 +411,11 @@ MySceneGraph.prototype.parseLights = function(lights) {
 		this.scene.lights[this.nLights].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
 		this.scene.lights[this.nLights].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
 		this.scene.lights[this.nLights].setSpecular(specular_r, specular_g, specular_b, specular_a);
-
+		
+		this.index = this.nLights;
+		this.name = "omni";
+		
+		this.lightType.push(this.name);
 
 		var type = lights.children[i].tagName;
 		if( type == 'spot' ) {
@@ -432,6 +439,12 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			this.scene.lights[this.nLights].setSpotCutOff( Math.PI * this.reader.getFloat(light, 'angle') / 180 );
 			this.scene.lights[this.nLights].setSpotExponent( this.reader.getFloat(light, 'exponent') );
 			this.scene.lights[this.nLights].setSpotDirection( target_x - location_x, target_y - location_y, target_z - location_z );
+		
+			this.name = "spot";
+			if(this.index == this.nLights)
+				this.lightType[this.lightType.length-1] = this.name;
+			else
+				this.lightType.push(this.name);
 		}
 
 		this.scene.lights[this.nLights].update();

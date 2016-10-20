@@ -25,11 +25,20 @@ MyInterface.prototype.init = function(application) {
 	return true;
 };
 
-MyInterface.prototype.updateLights = function(nLights, lights) {
+MyInterface.prototype.updateLights = function(nLights, lights, lightType) {
+	var omniLights = this.gui.addFolder( 'Omni Lights' );
+	var spotLights = this.gui.addFolder( 'Spot Lights' );
 	
-	for(var i = 0; i < nLights; i++) {
-		var groupLights = this.gui.addFolder ( 'Light '+ (i+1) );
-		groupLights.add(lights[i], 'enabled');
+	for(var i = 0; i < nLights; i++){
+		if(lightType[i+1] == 'omni'){
+			var omni = omniLights.addFolder( 'Omni ' + (i+1));
+			omni.add(lights[i], 'enabled');
+		}
+			
+		else{
+			var spot = spotLights.addFolder( 'Spot ' + (i+1));
+			spot.add(lights[i], 'enabled');
+		}
 	}
 }
 

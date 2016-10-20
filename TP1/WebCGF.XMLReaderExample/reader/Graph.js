@@ -56,7 +56,6 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 }
 
 Graph.prototype.applyTransformation = function( node ) {
-
 	var matrix;
 	if( node.transformation == undefined )
 		matrix = this.sceneGraph.transformations[ node.transformation.transformationId ];
@@ -69,41 +68,42 @@ Graph.prototype.drawScene = function( ) {
 	var head = this.nodes[this.idHead];
 	if( head == undefined )
 		return ;
-	this.drawSceneNode( head );
+	this.drawSceneNode( head, 
+						head.idMaterials[head.currMaterialIndex],
+						head.idTexture );
 }
 
-Graph.prototype.drawSceneNode = function( node, texture ) {
+Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 	this.sceneGraph.scene.pushMatrix();
 
 	/* 
 		Find the material id in the materials array 
 	*/
-	var mat = this.sceneGraph.materials[ node.idMaterials[node.currMaterialIndex] ];
-	/*var text = mat.texture;
-
-	console.debug(text);*/
+	var idMat = node.idMaterials[ node.currMaterialIndex ] != 'inherit' ? 
+					node.idMaterials[ node.currMaterialIndex ] : 
+					idMaterial;
+	var idTex = node.idTexture != 'inherit' ?
+						node.idTexture :
+						idTexture;
 
 	this.applyTransformation(node);
 
 	for( var i = 0; i < node.idChildren.length; i++ )
-		this.drawSceneNode( this.nodes[node.idChildren[i]], node.idTexture == 'inherit' ? texture : node.idTexture );
+		this.drawSceneNode( this.nodes[node.idChildren[i]], idMat, idTex );
 
-	if( node.idMaterials[node.currMaterialIndex] != 'inherit' )
-		mat.apply();
+	var mat = this.sceneGraph.materials[idMaterial];
+	if( idTexture != 'none' ) 
+		mat.setTexture( this.sceneGraph.textures[idTexture] );
+	mat.apply();
 
-	/*if( node.idTexture != 'inherit' && node.idTexture != 'none' ) {
-		mat.setTexture( this.sceneGraph.textures[node.idTexture] );
-	}*/
+	this.applyTexture( idMat, idTex );
 	
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {
 		var prim = this.sceneGraph.primitives[ node.idPrimitives[i] ];
 		prim.display();
 	}
 
-	/*if( node.idTexture != 'inherit' && node.idTexture != 'none' ) {
-		mat.setTexture( text );
-	}*/
-
+	mat.setTexture(null);
 	this.sceneGraph.scene.popMatrix();
 }
 

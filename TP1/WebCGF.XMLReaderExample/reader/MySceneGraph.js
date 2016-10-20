@@ -458,7 +458,7 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 	if (texture == null ) 
 		return "Texture error";
 	
-	this.texture= [];
+	this.textures = {};
 
 	var texture_elem = texture.getElementsByTagName('texture');
 	
@@ -466,17 +466,14 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 		var textureElem = texture_elem[i];
 		var id = this.reader.getString(texture_elem[i], 'id');
 
-
-		for( var j = 0; j < this.texture.length; j++)
-			/* Check whether the id of all textures is the same */
-			if( this.texture[j].id == id )
-				return "Textures-> There are 2 textures with the same id";
-
+		if( this.textures[id] != undefined)
+			return "Textures-> There are 2 textures with the same id (id="+id+")";
 
 		var file = this.reader.getString(texture_elem[i], 'file');
-		var t = new TextureInfo( id, file, this.reader.getFloat(texture_elem[i], 'length_t'), this.reader.getFloat(texture_elem[i], 'length_s'));
-
-		this.texture.push(t);
+		var t = new CGFtexture(this.scene, file /*, this.reader.getFloat(texture_elem[i], 'length_t'), 
+													this.reader.getFloat(texture_elem[i], 'length_s') */);
+		console.debug(t);
+		this.textures[id] = t;
 	}
 };
 

@@ -72,26 +72,37 @@ Graph.prototype.drawScene = function( ) {
 	this.drawSceneNode( head );
 }
 
-Graph.prototype.drawSceneNode = function( node ) {
+Graph.prototype.drawSceneNode = function( node, texture ) {
 	this.sceneGraph.scene.pushMatrix();
 
 	/* 
 		Find the material id in the materials array 
 	*/
 	var mat = this.sceneGraph.materials[ node.idMaterials[node.currMaterialIndex] ];
+	/*var text = mat.texture;
+
+	console.debug(text);*/
 
 	this.applyTransformation(node);
 
 	for( var i = 0; i < node.idChildren.length; i++ )
-		this.drawSceneNode( this.nodes[node.idChildren[i]] );
+		this.drawSceneNode( this.nodes[node.idChildren[i]], node.idTexture == 'inherit' ? texture : node.idTexture );
 
 	if( node.idMaterials[node.currMaterialIndex] != 'inherit' )
 		mat.apply();
 
+	/*if( node.idTexture != 'inherit' && node.idTexture != 'none' ) {
+		mat.setTexture( this.sceneGraph.textures[node.idTexture] );
+	}*/
+	
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {
 		var prim = this.sceneGraph.primitives[ node.idPrimitives[i] ];
 		prim.display();
 	}
+
+	/*if( node.idTexture != 'inherit' && node.idTexture != 'none' ) {
+		mat.setTexture( text );
+	}*/
 
 	this.sceneGraph.scene.popMatrix();
 }

@@ -29,14 +29,18 @@ MyInterface.prototype.updateLights = function(nLights, lights, lightType) {
 	var omniLights = this.gui.addFolder( 'Omni Lights' );
 	var spotLights = this.gui.addFolder( 'Spot Lights' );
 	
+	var countOmni = 0, countSpot = 0;
+	
 	for(var i = 0; i < nLights; i++){
 		if(lightType[i+1] == 'omni'){
-			var omni = omniLights.addFolder( 'Omni ' + (i+1));
+			countOmni++;
+			var omni = omniLights.addFolder( 'Omni ' + countOmni);
 			omni.add(lights[i], 'enabled');
 		}
 			
 		else{
-			var spot = spotLights.addFolder( 'Spot ' + (i+1));
+			countSpot++;
+			var spot = spotLights.addFolder( 'Spot ' + countSpot);
 			spot.add(lights[i], 'enabled');
 		}
 	}

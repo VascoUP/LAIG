@@ -91,12 +91,13 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 	for( var i = 0; i < node.idChildren.length; i++ )
 		this.drawSceneNode( this.nodes[node.idChildren[i]], idMat, idTex );
 
-	var mat = this.sceneGraph.materials[idMaterial];
-	if( idTexture != 'none' ) 
-		mat.setTexture( this.sceneGraph.textures[idTexture] );
+	var mat = this.sceneGraph.materials[idMat];
+	if( idTex != 'none' ) {
+		mat.setTexture( this.sceneGraph.textures[idTex] );
+	}
 	mat.apply();
 
-	this.applyTexture( idMat, idTex );
+	//this.applyTexture( idMat, idTex );
 	
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {
 		var prim = this.sceneGraph.primitives[ node.idPrimitives[i] ];

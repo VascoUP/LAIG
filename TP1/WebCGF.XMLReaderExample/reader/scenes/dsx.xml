@@ -161,6 +161,12 @@
             <cylinder base="1" top="1" height="1" slices="10" stacks="10" />
             
         </primitive>
+                
+        <primitive id="p5">
+
+            <torus inner="0.05" outer="1.2" slices="20" loops="40" />
+            
+        </primitive>
         
     </primitives>
     
@@ -196,6 +202,7 @@
                 <componentref id="pe12" />
                 <componentref id="c1" />
                 <componentref id="ch1" />
+                <componentref id="ar1" />
                 
             </children>
             
@@ -694,6 +701,31 @@
             <children>
 
                 <primitiveref id="p2" />
+                
+            </children>
+            
+        </component>
+
+        <component id="ar1">
+        
+            <transformation>
+
+                <translate x="0.7" y="0" z="0" />
+                <scale x="0.6" y="0.6" z="0.6" />
+
+            </transformation>
+
+            <materials>
+
+                <material id="e1" />
+
+            </materials>
+
+            <texture id="g2" />
+
+            <children>
+
+                <primitiveref id="p5" />
                 
             </children>
             

@@ -38,7 +38,7 @@ MyTorus.prototype.initBuffers = function () {
 			this.vertices.push(x, y, z);
 			
 			//TexCoords
-			this.texCoords.push(1 - i/this.loops, 1 - j/this.slices);
+			this.texCoords.push(1 - i/this.slices, 1 - j/this.loops);
 			
 			//Normals
 			

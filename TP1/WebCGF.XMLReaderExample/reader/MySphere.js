@@ -51,13 +51,13 @@
 	this.vertices = [];
  	this.indices = [];
 	this.normals = [];
-	this.texCoords = [];
+	//this.texCoords = [];
 
 	for(var j = 1; j < this.stacks; j++) {
 		if(j == 1) {
 			this.vertices.push(xCoord, yCoord, zCoord);
 			this.normals.push(0, 0, -1);
-			this.texCoords.push( 0.5 * dS , 0.5 * dT );
+			//this.texCoords.push( 0.5 * dS , 0.5 * dT );
 
 			zAng += dZAng;
 			zCoord = this.radius * Math.sin(zAng);
@@ -89,7 +89,7 @@
 			for (var i = 0; i < this.slices; i++) {
 				this.vertices.push(xCoord, yCoord, zCoord);
 				this.normals.push( xCoord / this.radius, yCoord / this.radius, zCoord / this.radius );
-				this.texCoords.push(((xCoord * r) / 2 + 0.5) * dS, ((yCoord * r) / 2 + 0.5) *  dT );
+				//this.texCoords.push(((xCoord * r) / 2 + 0.5) * dS, ((yCoord * r) / 2 + 0.5) *  dT );
 
 				counter++;
 
@@ -114,7 +114,7 @@
 
 			this.vertices.push( 0, 0, this.radius );
 			this.normals.push( 0, 0, 1 );
-			this.texCoords.push( 0.5 * dS , 0.5 * dT );
+			//this.texCoords.push( 0.5 * dS , 0.5 * dT );
 
 			counter++;
 

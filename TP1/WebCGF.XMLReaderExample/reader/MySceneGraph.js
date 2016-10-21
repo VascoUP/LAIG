@@ -261,8 +261,6 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 };
 
 MySceneGraph.prototype.parseIlluminations = function(illumination) {
-	
-	
 	/* 
 		Illumination
 
@@ -305,9 +303,7 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	g = this.reader.getFloat(background_elem, 'g');
 	b = this.reader.getFloat(background_elem, 'b');
 	a = this.reader.getFloat(background_elem, 'a');
-	this.background = [r, g, b, a];
-	
-	
+	this.background = [r, g, b, a];	
 };
 
 MySceneGraph.prototype.parseLights = function(lights) {
@@ -839,9 +835,12 @@ MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
 	var texture = compElement.getElementsByTagName('texture');
 	if(texture == null)
 		return "Component -> Texture error";
-	
+
 	var id = texture[0].attributes.getNamedItem('id').value;
 	
+	console.debug(node);
+	console.debug(id);
+
 	node.setIdTexture(id);
 };
 

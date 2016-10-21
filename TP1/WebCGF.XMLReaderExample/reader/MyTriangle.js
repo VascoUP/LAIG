@@ -3,14 +3,13 @@
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
-function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3/*minS, maxS, minT, maxT*/) {
+function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
     CGFobject.call(this,scene);
-/*
-    this.minS = minS || 0.0;
-    this.maxS = maxS || 1.0;
-    this.minT = minT || 0.0;
-    this.maxT = maxT || 1.0;
-*/
+
+    this.minS = 0.0;
+    this.maxS = 1.0;
+    this.minT = 0.0;
+    this.maxT = 1.0;
 
     this.minS = 0.0;
     this.maxS = 1.0;
@@ -19,7 +18,6 @@ function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3/*minS, maxS, minT,
 
     this.initBuffers(x1, y1, z1, x2, y2, z2, x3, y3, z3);
 };
-
 
 MyTriangle.prototype = Object.create(CGFobject.prototype);
 MyTriangle.prototype.constructor=MyTriangle;
@@ -58,3 +56,34 @@ MyTriangle.prototype.initBuffers = function (x1, y1, z1, x2, y2, z2, x3, y3, z3)
 	this.primitiveType=this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };
+
+MyTriangle.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
+    this.minS = minS;
+    this.maxS = maxS;
+    this.minT = minT;
+    this.maxT = maxT;
+
+    var a = Math.sqrt( Math.pow(this.vertices[0] - this.vertices[6], 2) +
+                            Math.pow(this.vertices[1] - this.vertices[7], 2) +
+                            Math.pow(this.vertices[2] - this.vertices[8], 2) );
+
+    var b = Math.sqrt( Math.pow(this.vertices[3] - this.vertices[0], 2) +
+                            Math.pow(this.vertices[4] - this.vertices[1], 2) +
+                            Math.pow(this.vertices[5] - this.vertices[2], 2) );
+
+    var c = Math.sqrt( Math.pow(this.vertices[6] - this.vertices[3], 2) +
+                            Math.pow(this.vertices[7] - this.vertices[4], 2) +
+                            Math.pow(this.vertices[8] - this.vertices[5], 2) );
+
+    var cosB = ( Math.pow( a, 2 ) - Math.pow( b, 2 ) + Math.pow( c, 2 ) ) / ( 2 * a * c );
+
+    var sinB = Math.sqrt( 1 - Math.pow( cosB, 2 ) ); 
+
+    this.texCoords = [
+        c - a * cosB, a * sinB,
+        0, 0,
+        c, 0
+    ];
+
+    this.updateTexCoordsGLBuffers();
+}

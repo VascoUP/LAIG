@@ -21,6 +21,8 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+	this.enableTextures(true);
+
 	this.axis=new CGFaxis(this);
 
 	this.materialRed = new CGFappearance(this);

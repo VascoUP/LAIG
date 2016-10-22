@@ -71,7 +71,7 @@
     
     <textures>
 
-        <texture id="t1" file="resources/WoodTexture.jpg" length_s="1" length_t="1" />
+        <texture id="t1" file="resources/WoodTexture.png" length_s="1" length_t="1" />
         <texture id="g1" file="resources/FoliageTexture.jpg" length_s="1" length_t="1" />
         <texture id="t2" file="resources/RockTexture.jpg" length_s="1" length_t="1" />
         <texture id="g2" file="resources/FluorescentRedTexture.jpg" length_s="1" length_t="1" />

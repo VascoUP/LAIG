@@ -189,7 +189,7 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 				make sure every element exists
 	*/
 	var nnodes = views_elems.children.length;
-	if (views_elems == null || nnodes < 1) 
+	if (views_elems == null || nnodes < 1) parseComponent
 		return "Views error";
 
 	this.default_view = this.reader.getString(views_elems, 'default');
@@ -210,7 +210,7 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 
 		var id, near, far, angle;
 		id = perspective_elems.id;
-		near = this.reader.getFloat(perspective_elems, 'near');
+		near = this.reader.getFloat(perspective_elems, 'near');parseComponent
 		far = this.reader.getFloat(perspective_elems, 'far');
 		angle = Math.PI * this.reader.getFloat(perspective_elems,'angle') / 180;
 

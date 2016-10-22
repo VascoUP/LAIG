@@ -58,7 +58,7 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 Graph.prototype.applyTransformation = function( node ) {
 	var matrix;
 	if( node.transformation == undefined )
-		matrix = this.sceneGraph.transformations[ node.transformation.transformationId ];
+		matrix = this.sceneGraph.transformations[ node.transformationId ];
 	else
 		matrix = node.transformation;
 	this.sceneGraph.scene.multMatrix( matrix );

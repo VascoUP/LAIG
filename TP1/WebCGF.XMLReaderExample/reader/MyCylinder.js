@@ -98,7 +98,7 @@
 
 	this.vertices.push(0, 0, 0);
 	this.normals.push(0, 0, -1);
-	this.texCoords.push(s, this.minT);
+	this.texCoords.push(s, this.maxT);
 
 	var nIndices = this.vertices.length / 3;
 
@@ -142,7 +142,7 @@
 		
 			this.vertices.push(xCoord, yCoord, this.height);
 			this.normals.push(0, 0, 1);
-			this.texCoords.push(s, this.maxT + dT);
+			this.texCoords.push(s, this.maxT - dT);
 
 			if(i > 0) 
 				this.indices.push( nIndices - 1, nIndices + i - 1, nIndices + i);

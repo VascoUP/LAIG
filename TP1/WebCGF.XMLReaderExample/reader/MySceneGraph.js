@@ -331,15 +331,16 @@ MySceneGraph.prototype.parseLights = function(lights) {
 	if( nOmni < 1 )
 		return "You need at least one omni light";
 
+	var lightsId = [];
+
 	for( var i = 0; i < lights.children.length; i++ ) {
 
 		var light = lights.children[i];
 		var id = this.reader.getString(light, 'id');
 
-
-		for( var j = 0; j < this.scene.lights.length; j++)
+		for( var j = 0; j < lightsId.length; j++)
 			/* Check whether the id of all lights is the same */
-			if( this.scene.lights[j].id == id )
+			if( lightsId[j] == id )
 				return "Lights -> There are 2 lights with the same id";
 
 		var locations = light.getElementsByTagName('location');
@@ -452,6 +453,8 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			this.scene.lights[this.nLights].enable();
 		else
 			this.scene.lights[this.nLights].disable();
+
+		lightsId.push(id);
 
 		this.nLights++;
 	}

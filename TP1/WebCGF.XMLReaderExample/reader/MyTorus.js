@@ -9,6 +9,11 @@ function MyTorus(scene, inner, outer, slices, loops) {
 	this.slices = slices;
 	this.loops = loops;
 
+    this.minS = 0.0;
+    this.maxS = 1.0;
+    this.minT = 0.0;
+    this.maxT = 1.0;
+
 	this.initBuffers();
 };
 
@@ -22,6 +27,9 @@ MyTorus.prototype.initBuffers = function () {
 	this.texCoords = [];
 
 	var pi2 = 2 * Math.PI;
+
+	var diffS = this.maxS - this.minS;
+	var diffT = this.maxT - this.minT;
 	
 	//vertexes, normals and texCoords
 	for (j = 0; j <= this.loops; j++) {
@@ -38,7 +46,7 @@ MyTorus.prototype.initBuffers = function () {
 			this.vertices.push(x, y, z);
 			
 			//TexCoords
-			this.texCoords.push(1 - j/this.loops, 1 - i/this.slices);
+			this.texCoords.push(this.maxS - (diffS * j/this.loops), this.maxT - (diffT * i/this.slices));
 			
 			//Normals
 			
@@ -77,3 +85,18 @@ MyTorus.prototype.initBuffers = function () {
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };
+
+ MyTorus.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
+    this.minS = minS;
+    this.maxS = maxS;
+    this.minT = minT;
+    this.maxT = maxT;
+
+	var diffS = this.maxS - this.minS;
+	var diffT = this.maxT - this.minT;
+	
+	for (j = 0; j <= this.loops; j++) 
+		for (i = 0; i <= this.slices; i++) 
+			this.texCoords.push(this.maxS - (diffS * j/this.loops), this.maxT - (diffT * i/this.slices));
+    this.updateTexCoordsGLBuffers();
+ }

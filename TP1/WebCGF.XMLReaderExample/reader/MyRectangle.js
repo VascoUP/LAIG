@@ -1,9 +1,4 @@
-/**
- * MyRectangle
- * @param gl {WebGLRenderingContext}
- * @constructor
- */
-function MyRectangle(scene, x1, y1, x2, y2/*minS, maxS, minT, maxT*/) {
+function MyRectangle(scene, x1, y1, x2, y2) {
     CGFobject.call(this,scene);
 
     this.minS = 0.0;
@@ -12,7 +7,7 @@ function MyRectangle(scene, x1, y1, x2, y2/*minS, maxS, minT, maxT*/) {
     this.maxT = 1.0;
 
     this.initBuffers(x1, y1, x2, y2);
-};
+}
 
 
 MyRectangle.prototype = Object.create(CGFobject.prototype);
@@ -49,4 +44,20 @@ MyRectangle.prototype.initBuffers = function (x1, y1, x2, y2) {
 		
 	this.primitiveType=this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
-};
+}
+
+MyRectangle.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
+    this.minS = minS;
+    this.maxS = maxS;
+    this.minT = minT;
+    this.maxT = maxT;
+
+    this.texCoords = [
+        this.minS, this.minT,
+        this.minS, this.maxT,
+        this.maxS, this.maxT,
+        this.maxS, this.minT
+    ];
+
+    this.updateTexCoordsGLBuffers();
+}

@@ -11,11 +11,6 @@ function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
     this.minT = 0.0;
     this.maxT = 1.0;
 
-    this.minS = 0.0;
-    this.maxS = 1.0;
-    this.minT = 0.0;
-    this.maxT = 1.0;
-
     this.initBuffers(x1, y1, z1, x2, y2, z2, x3, y3, z3);
 };
 

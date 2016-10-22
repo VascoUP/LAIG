@@ -1,8 +1,4 @@
-/**
- * MySphere
- * @constructor
- */
- function MySphere(scene, radius, slices, stacks, minS, maxS, minT, maxT) {
+function MySphere(scene, radius, slices, stacks, minS, maxS, minT, maxT) {
  	CGFobject.call(this,scene);
 	
 	if( radius > 0 )
@@ -25,7 +21,7 @@
 	this.maxT = maxT || 1.0;
 
  	this.initBuffers();
- };
+ }
 
  MySphere.prototype = Object.create(CGFobject.prototype);
  MySphere.prototype.constructor = MySphere;
@@ -45,19 +41,22 @@
 
 	var counter = 0;
 
-	var dS = this.maxS - this.minS;
-	var dT = this.maxT - this.minT;
+	var dS = (this.maxS - this.minS) / this.slices;
+	var dT = (this.maxT - this.minT) / this.stacks;
+	var t = this.minT;
+	var s = this.minS;
 
 	this.vertices = [];
  	this.indices = [];
 	this.normals = [];
-	//this.texCoords = [];
+	this.texCoords = [];
 
 	for(var j = 1; j < this.stacks; j++) {
+		s = this.minS;
 		if(j == 1) {
 			this.vertices.push(xCoord, yCoord, zCoord);
 			this.normals.push(0, 0, -1);
-			//this.texCoords.push( 0.5 * dS , 0.5 * dT );
+			this.texCoords.push( this.maxS - this.minS , this.minT );
 
 			zAng += dZAng;
 			zCoord = this.radius * Math.sin(zAng);
@@ -65,42 +64,41 @@
 			xCoord = r;
 			yCoord = 0;
 
-			for(var i = 0; i < this.slices; i++) {
+			t += dT;
+
+			for(var i = 0; i <= this.slices; i++) {
 				this.vertices.push( xCoord, yCoord, zCoord );
 				this.normals.push( xCoord / this.radius, yCoord / this.radius, zCoord / this.radius );
+				this.texCoords.push( s , t );
 
 				ang += dAng;
 
 				yCoord = Math.sin(ang) * r;
 				xCoord = Math.cos(ang) * r;
 
+				s += dS;
+
+			this.texCoords.push( this.maxS - this.minS , this.minT );
 				counter++;
 
 				if( i > 0 )
 					this.indices.push( counter, counter - 1, 0 );
 
-				if( i + 1 == this.slices ) 
-					this.indices.push( 0, 1, counter );
 			}
 		}
  		else {
- 			var s = 0.0;
-
-			for (var i = 0; i < this.slices; i++) {
+			for (var i = 0; i <= this.slices; i++) {
 				this.vertices.push(xCoord, yCoord, zCoord);
 				this.normals.push( xCoord / this.radius, yCoord / this.radius, zCoord / this.radius );
-				//this.texCoords.push(((xCoord * r) / 2 + 0.5) * dS, ((yCoord * r) / 2 + 0.5) *  dT );
+				this.texCoords.push( s , t );
 
 				counter++;
 
-				if( i > 0 ) {
-					this.indices.push( counter - 1, counter - this.slices - 1, counter - this.slices );
-					this.indices.push( counter, counter - 1, counter - this.slices );
-				}
+				s+= dS;
 
-				if( i + 1 == this.slices ) {
-					this.indices.push( counter, counter - this.slices, counter - this.slices + 1 );
-					this.indices.push( counter - this.slices + 1, counter - this.slices, counter - 2 * this.slices + 1 );					
+				if( i > 0 ) {
+					this.indices.push( counter - 1, counter - this.slices - 2, counter - this.slices - 1 );
+					this.indices.push( counter, counter - 1, counter - this.slices - 1 );
 				}
 
 				ang += dAng;
@@ -114,18 +112,12 @@
 
 			this.vertices.push( 0, 0, this.radius );
 			this.normals.push( 0, 0, 1 );
-			//this.texCoords.push( 0.5 * dS , 0.5 * dT );
+			this.texCoords.push( this.maxS - this.minS , this.maxT );
 
 			counter++;
 
-			for(var i = 0; i < this.slices; i++) {
-
-				if( i == this.slices - 1)
-					this.indices.push(counter, counter - this.slices + i, counter - this.slices);
-				else
-					this.indices.push(counter, counter - this.slices + i, counter - this.slices + i + 1);
-
-			}
+			for(var i = 0; i <= this.slices; i++)
+					this.indices.push(counter, counter - this.slices + i - 1, counter - this.slices + i);
  		}
  		else {
 			ang = 0;
@@ -134,9 +126,39 @@
 			r = this.radius * Math.cos(zAng);
 			xCoord = r;
 			yCoord = 0;
+			t += dT;
 		}
 	}
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();
- };
+ }
+
+MySphere.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
+    this.minS = minS;
+    this.maxS = maxS;
+    this.minT = minT;
+    this.maxT = maxT;
+
+    this.texCoords = [ ];
+
+	var dS = (this.maxS - this.minS) / this.slices;
+	var dT = (this.maxT - this.minT) / this.stacks;
+	var t = this.minT + dT;
+	var s;
+
+	this.texCoords.push( this.maxS - this.minS , this.minT );
+
+	for(var j = 1; j < this.stacks; j++) {
+		s = this.minS;
+		for (var i = 0; i <= this.slices; i++) {
+			this.texCoords.push( s , t );
+			s+= dS;
+		}
+		t += dT;
+	}
+
+	this.texCoords.push( this.maxS - this.minS , this.maxT );
+
+    this.updateTexCoordsGLBuffers();
+}

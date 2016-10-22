@@ -484,7 +484,7 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 		var file = this.reader.getString(texture_elem[i], 'file');
 		var t = new CGFtexture(this.scene, file /*, this.reader.getFloat(texture_elem[i], 'length_t'), 
 													this.reader.getFloat(texture_elem[i], 'length_s') */);
-		console.debug(t);
+
 		this.textures[id] = t;
 	}
 };
@@ -840,9 +840,6 @@ MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
 		return "Component -> Texture error";
 
 	var id = texture[0].attributes.getNamedItem('id').value;
-	
-	console.debug(node);
-	console.debug(id);
 
 	node.setIdTexture(id);
 };

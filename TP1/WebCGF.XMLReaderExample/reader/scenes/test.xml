@@ -110,7 +110,8 @@
 
     <textures>
 
-        <texture id="t1" file="resources/WoodTexture.jpg" length_s="1" length_t="1" />
+        <texture id="t1" file="resources/WoodTexture.png" length_s="5" length_t="1" />
+        <texture id="t3" file="resources/WoodTexture2.png" length_s="1" length_t="1" />
         <texture id="g1" file="resources/FoliageTexture.jpg" length_s="1" length_t="1" />
         <texture id="t2" file="resources/RockTexture.jpg" length_s="1" length_t="1" />
         
@@ -133,6 +134,12 @@
         <primitive id="p3">
 
             <torus inner="0.5" outer="2" slices="50" loops="50" />
+            
+        </primitive>
+
+        <primitive id="p4">
+
+            <cylinder base="1" top="1" height="1" slices="10" stacks="10" />
             
         </primitive>
  
@@ -166,11 +173,11 @@
 
             </materials>
 
-            <texture id="t1" />
+            <texture id="t3" />
 
             <children>
             
-                <primitiveref id="p2" />
+                <primitiveref id="p1" />
 
             </children>
             

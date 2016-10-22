@@ -51,6 +51,12 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 		return true;
 	}
 
+	var tex = this.sceneGraph.textures[ node.idTexture ];
+	if( node.idTexture != 'inherit' && node.idTexture != 'none' && tex == undefined ) {
+		console.error("Texture " + node.idTexture + " not found.");
+		return true;
+	}
+
 	// On success returns false
 	return false;
 }
@@ -94,15 +100,18 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 		this.drawSceneNode( this.nodes[node.idChildren[i]], idMat, idTex );
 
 	var mat = this.sceneGraph.materials[idMat];
-	if( idTex != 'none' ) {
-		mat.setTexture( this.sceneGraph.textures[idTex] );
-	}
-	mat.apply();
+	if( idTex != 'none' ) 
+		mat.setTexture( this.sceneGraph.textures[idTex].texture );
 
-	//this.applyTexture( idMat, idTex );
+	mat.apply();
 	
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {
 		var prim = this.sceneGraph.primitives[ node.idPrimitives[i] ];
+			
+		if( idTex != 'none' ) 
+			prim.setTexCoords( 0, 0, this.sceneGraph.textures[idTex].length_s, 
+									this.sceneGraph.textures[idTex].length_t )
+
 		prim.display();
 	}
 

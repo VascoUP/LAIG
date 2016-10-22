@@ -92,6 +92,8 @@ MyTorus.prototype.initBuffers = function () {
     this.minT = minT;
     this.maxT = maxT;
 
+	this.texCoords = [];
+
 	var diffS = this.maxS - this.minS;
 	var diffT = this.maxT - this.minT;
 	

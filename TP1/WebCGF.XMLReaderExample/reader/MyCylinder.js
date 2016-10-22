@@ -86,6 +86,9 @@
 	/**
 	 * Draw the base 
 	*/
+	dS = this.maxS - this.minS;
+	dT = this.maxT - this.minT;
+
 	r = this.base;
 
 	xCoord = r;
@@ -98,7 +101,7 @@
 
 	this.vertices.push(0, 0, 0);
 	this.normals.push(0, 0, -1);
-	this.texCoords.push(s, this.maxT);
+	this.texCoords.push(dS / 2 + this.minS, dT / 2 + this.minT);
 
 	var nIndices = this.vertices.length / 3;
 
@@ -106,7 +109,9 @@
 		
 			this.vertices.push(xCoord, yCoord, zCoord);
 			this.normals.push(0, 0, -1);
-			this.texCoords.push(s, this.minT + dT);
+			this.texCoords.push((xCoord / r + 1) / 2 * dS, (yCoord / r + 1) / 2 * dT);
+			/*this.texCoords.push(xCoord * dS / r + ( this.maxS + this.minS ) / 2, 
+								yCoord * dT / r + ( this.maxT + this.minT ) / 2);*/
 
 			if(i > 0) 
 				this.indices.push(nIndices + i, nIndices + i - 1, nIndices - 1);
@@ -134,7 +139,7 @@
 
 	this.vertices.push(0, 0, this.height);
 	this.normals.push(0, 0, 1);
-	this.texCoords.push(s, this.minT);
+	this.texCoords.push(dS / 2 + this.minS, dT / 2 + this.minT);
 
 	nIndices = this.vertices.length / 3;
 
@@ -142,7 +147,9 @@
 		
 			this.vertices.push(xCoord, yCoord, this.height);
 			this.normals.push(0, 0, 1);
-			this.texCoords.push(s, this.maxT - dT);
+			this.texCoords.push((xCoord / r + 1) / 2 * dS, (yCoord / r + 1) / 2 * dT);
+			/*this.texCoords.push(Math.sin(ang) * dS + ( this.maxS + this.minS ) / 2, 
+								Math.cos(ang) * dT + ( this.maxT + this.minT ) / 2);*/
 
 			if(i > 0) 
 				this.indices.push( nIndices - 1, nIndices + i - 1, nIndices + i);
@@ -156,10 +163,90 @@
 	}
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
- 	this.initGLBuffers();
- };
+	this.initGLBuffers();
+};
 
- MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
+MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
+	this.minS = minS;
+	this.maxS = maxS;
+	this.minT = minT;
+	this.maxT = maxT;
 
-    this.updateTexCoordsGLBuffers();
- }
+	this.texCoords = [];
+
+	var dS = ( this.maxS - this.minS ) / this.slices;
+	var dT = ( this.maxT - this.minT ) / (this.stacks + 2);
+	var t = this.minT + dT;
+	var s;
+
+	/**
+	 * Draw the body 
+	 */
+ 	for(var j = -1; j < this.stacks; j++) {
+		s = this.minS;
+		for (var i = 0; i <= this.slices; i++) {
+			this.texCoords.push(s, t);
+			s += dS;
+		}
+		t += dT;
+	}
+
+
+	/**
+	 * Draw the base 
+	*/
+	dS = this.maxS - this.minS;
+	dT = this.maxT - this.minT;
+
+	xCoord = 1;
+	yCoord = 0;
+	zCoord = 0;
+	
+	var ang = 0;
+	var dAng = 2 * Math.PI / this.slices;
+
+	s = this.minS;
+
+	this.vertices.push(0, 0, 0);
+	this.normals.push(0, 0, -1);
+	this.texCoords.push(dS / 2 + this.minS, dT / 2 + this.minT);
+
+	for (var i = 0; i <= this.slices; i++) {
+			this.texCoords.push((xCoord + 1) / 2 * dS, (yCoord + 1) / 2 * dT);
+			/*this.texCoords.push(xCoord * dS / r + ( this.maxS + this.minS ) / 2, 
+								yCoord * dT / r + ( this.maxT + this.minT ) / 2);*/
+
+			ang += dAng;
+			yCoord = Math.sin(ang);
+			xCoord = Math.cos(ang);
+			s += dS;
+	}
+	
+
+	/**
+	 * Draw the top 
+	*/
+	xCoord = 1;
+	yCoord = 0;
+	
+	ang = 0;
+
+	s = this.minS;
+
+	this.vertices.push(0, 0, this.height);
+	this.normals.push(0, 0, 1);
+	this.texCoords.push(dS / 2 + this.minS, dT / 2 + this.minT);
+
+	for (var i = 0; i <= this.slices; i++) {
+			this.texCoords.push((xCoord + 1) / 2 * dS, (yCoord + 1) / 2 * dT);
+			/*this.texCoords.push(Math.sin(ang) * dS + ( this.maxS + this.minS ) / 2, 
+								Math.cos(ang) * dT + ( this.maxT + this.minT ) / 2);*/
+
+			ang += dAng;
+			yCoord = Math.sin(ang);
+			xCoord = Math.cos(ang);
+			s += dS;
+	}
+	
+	this.updateTexCoordsGLBuffers();
+}

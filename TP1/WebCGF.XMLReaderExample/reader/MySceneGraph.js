@@ -222,14 +222,17 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 				return "Views -> Prespectives -> Same id error";
 		}
 
-
+		this.views[i] = new ViewInfo(id, near, far, angle);
+		
+		if(this.views[0].id != this.default_view)
+			return "Views -> First view defined is not equal to default view";
+		
 		/* 
 			From (Prespectives)
 
 			TO DO:
 					make sure every element exists
 		*/
-		this.views[i] = new ViewInfo(id, near, far, angle);
 
 		var from_elems = perspective_elems.getElementsByTagName('from');
 

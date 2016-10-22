@@ -271,6 +271,9 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 		return "Illumination error";
 
 	var illumination_elem = illumination;
+	
+	var doublesided = this.reader.getBoolean(illumination_elem, 'doublesided');
+	var local = this.reader.getBoolean(illumination_elem, 'local');
 
 	var ambient = illumination_elem.getElementsByTagName('ambient');
 

@@ -25,12 +25,16 @@
  MyCylinder.prototype.initBuffers = function() {
 	var r = this.base;
 	var dR = ( this.top - this.base ) / this.stacks;
+
 	var xCoord = r;
 	var yCoord = 0;
+
 	var zCoord = 0;
 	var dZ = this.height / this.stacks;
+
 	var ang = 0;
 	var dAng = 2 * Math.PI / this.slices;
+
 	var counter = 0;
 
 	var dS = ( this.maxS - this.minS ) / this.slices;
@@ -83,18 +87,20 @@
 	 * Draw the base 
 	*/
 	r = this.base;
+
 	xCoord = r;
 	yCoord = 0;
 	zCoord = 0;
 	
 	ang = 0;
+
 	var s = this.minS;
+
 	this.vertices.push(0, 0, 0);
 	this.normals.push(0, 0, -1);
 	this.texCoords.push(s, this.minT);
 
 	var nIndices = this.vertices.length / 3;
-	s = this.minS;
 
 	for (var i = 0; i <= this.slices; i++) {
 		
@@ -118,17 +124,19 @@
 	 * Draw the top 
 	*/
 	r = this.top;
+
 	xCoord = r;
 	yCoord = 0;
 	
 	ang = 0;
 
+	s = this.minS;
+
 	this.vertices.push(0, 0, this.height);
 	this.normals.push(0, 0, 1);
 	this.texCoords.push(s, this.minT);
 
-	var nIndices = this.vertices.length / 3;
-	s = this.minS;
+	nIndices = this.vertices.length / 3;
 
 	for (var i = 0; i <= this.slices; i++) {
 		

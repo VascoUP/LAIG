@@ -126,19 +126,13 @@
 
         <primitive id="p2">
 
-            <sphere radius="1" slices="50" stacks="50" />
+            <sphere radius="1" slices="20" stacks="20" />
             
         </primitive>
 
         <primitive id="p3">
 
             <torus inner="0.5" outer="2" slices="50" loops="50" />
-            
-        </primitive>        
-        
-        <primitive id="p4">
-
-            <cylinder base="1" top="2" height="5" slices="5" stacks="5" />
             
         </primitive>
  
@@ -148,7 +142,9 @@
     
         <transformation id="t1">
 
-           <translate x="0" y="0" z="0" />
+           <translate x="5" y="1" z="0" />
+           <rotate axis="x" angle="3.14" />
+           <scale x="2" y="2" z="2" />
 
         </transformation>
         
@@ -160,7 +156,7 @@
         
             <transformation>
 
-                <transformationref id="t1" />
+                <translate x="1" y="1" z="1" />
 
             </transformation>
 
@@ -173,8 +169,8 @@
             <texture id="t1" />
 
             <children>
-
-				<primitiveref id="p4" />
+            
+                <primitiveref id="p2" />
 
             </children>
             

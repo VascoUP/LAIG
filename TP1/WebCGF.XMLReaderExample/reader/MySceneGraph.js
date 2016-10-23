@@ -162,43 +162,34 @@ MySceneGraph.prototype.onXMLError=function (message) {
 
 //Parses the scene's elements
 MySceneGraph.prototype.parseScenes = function(scene_elems) {
-	/* 
-		Scenes 
-
-		TO DO:
-				make sure every element exists
-	*/
+	
 	if (scene_elems == null)
 		return "Scene error";
 
 	this.graph.idHead = this.reader.getString(scene_elems, 'root');
 	this.axis_length = this.reader.getFloat(scene_elems, 'axis_length');
 	
+	if(this.graph.idHead == 'undefined' || this.axis_length == 'undefined')
+		return "Scene -> Missing required information.";
+	
 };
 
 //Parses the the different views' elements
 MySceneGraph.prototype.parseViews = function(views_elems) {
-/* 
-		Views 
 
-		TO DO:
-				make sure every element exists
-	*/
 	var nnodes = views_elems.children.length;
 	if (views_elems == null || nnodes < 1) 
 		return "Views error";
 
 	this.default_view = this.reader.getString(views_elems, 'default');
+	
+	if(this.default_view == 'undefined')
+		return "View -> Default View -> Missing required information.";
+	
 	this.views=[nnodes];
 
 	for(var i = 0; i < nnodes; i++) {
 
-		/* 
-			Prespectives 
-
-			TO DO:
-					make sure every item exists
-		*/
 		var perspective_elems = views_elems.children[i];
 
 		if (perspective_elems == null)
@@ -209,50 +200,54 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 		near = this.reader.getFloat(perspective_elems, 'near');
 		far = this.reader.getFloat(perspective_elems, 'far');
 		angle = Math.PI * this.reader.getFloat(perspective_elems,'angle') / 180;
+		
+		if(id == 'undefined' || near == 'undefined' || far == 'undefined' || angle == 'undefined')
+			return ("Views -> Prespective " + id + " -> Missing required information.");
+		
+		if(angle < 0 || angle > 2*Math.PI)
+			return "Views -> Prespective " + id + " -> Angle with wrong values.";
 
 		//Making sure that there are no to prespectives with the same id
 		for(var j = 0; j < this.views.length; j++) {
 			if(this.views[j] == null)
 				break;
 			if(this.views[j].id == id)
-				return "Views -> Prespectives -> Same id error";
+				return "Views -> Prespective " + id + " -> Same id error";
 		}
 
 		this.views[i] = new ViewInfo(id, near, far, angle);
 		
 		if(this.views[0].id != this.default_view)
 			return "Views -> First view defined is not equal to default view";
-		
-		/* 
-			From (Prespectives)
-
-			TO DO:
-					make sure every element exists
-		*/
 
 		var from_elems = perspective_elems.getElementsByTagName('from');
 
 		if(from_elems == null || from_elems.length != 1)
-			return "Views -> Prespectives -> From error";
+			return "Views -> Prespective " + id + " -> From error";
 
 		var fromE = from_elems[0];
+		
+		if(	this.reader.getFloat(fromE, 'x') == 'undefined' ||
+			this.reader.getFloat(fromE, 'y') == 'undefined' ||
+			this.reader.getFloat(fromE, 'z') == 'undefined'	)
+				return "Views -> Prespective "+ id + " -> 'From' elements missing.";
+			
 		this.views[i].setFrom(this.reader.getFloat(fromE, 'x'),
 								this.reader.getFloat(fromE, 'y'),
 								this.reader.getFloat(fromE, 'z'));
 
-
-		/* 
-			To (Prespectives) 
-
-			TO DO:
-					make sure every element exists
-		*/
 		var to_elems = perspective_elems.getElementsByTagName('to');
 
 		if(to_elems == null || to_elems.length != 1)
-			return "Views -> Prespectives -> To error";
+			return "Views -> Prespective " + id + " -> To error";
 
 		var toE = to_elems[0];
+		
+		if(	this.reader.getFloat(toE, 'x') == 'undefined' ||
+			this.reader.getFloat(toE, 'y') == 'undefined' ||
+			this.reader.getFloat(toE, 'z') == 'undefined'	)
+				return "Views -> Prespective "+ id + " -> 'To' elements missing.";
+			
 		this.views[i].setTo(this.reader.getFloat(toE, 'x'),
 								this.reader.getFloat(toE, 'y'),
 								this.reader.getFloat(toE, 'z'));
@@ -261,12 +256,7 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 
 //Parses the illumnitations' elements
 MySceneGraph.prototype.parseIlluminations = function(illumination) {
-	/* 
-		Illumination
-
-		TO DO:
-			make sure every element exists
-	*/
+	
 	if (illumination == null) 
 		return "Illumination error";
 
@@ -274,10 +264,14 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	
 	var doublesided = this.reader.getBoolean(illumination_elem, 'doublesided');
 	var local = this.reader.getBoolean(illumination_elem, 'local');
+	
+	if(	(doublesided == 'undefined' || (doublesided != 0 && doublesided != 1 ))||
+		(local == 'undefined' || (local != 0 && local != 1)))
+			return "Illumination -> Doublesided or local variables missing or with wrong values.";
 
 	var ambient = illumination_elem.getElementsByTagName('ambient');
 
-	if( ambient == null || ambient.length < 1)
+	if( ambient == null || ambient.length != 1)
 		return "Illumination -> Ambient error";
 	else if( ambient.length > 1 ) 
 		//It should stop reading the dsx file because of this
@@ -290,11 +284,18 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	g = this.reader.getFloat(ambient_elem, 'g');
 	b = this.reader.getFloat(ambient_elem, 'b');
 	a = this.reader.getFloat(ambient_elem, 'a');
+	
+	if(	(r == 'undefined' || r < 0 || r > 1) ||
+		(g == 'undefined' || g < 0 || g > 1) ||
+		(b == 'undefined' || b < 0 || b > 1) ||
+		(a == 'undefined' || a < 0 || a > 1) )
+			return "Illumination -> Ambient -> Missing required information or variables with wrong values";
+			
 	this.ambient = [r, g, b, a];
 
 	var background = illumination_elem.getElementsByTagName('background');
 
-	if( background == null || background.length < 1)
+	if( background == null || background.length != 1)
 		return "Illumination -> Background error";
 	else if( background.length > 1 ) 
 		//It should stop reading the dsx file because of this
@@ -306,31 +307,29 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	g = this.reader.getFloat(background_elem, 'g');
 	b = this.reader.getFloat(background_elem, 'b');
 	a = this.reader.getFloat(background_elem, 'a');
+	
+	if(	(r == 'undefined' || r < 0 || r > 1) ||
+		(g == 'undefined' || g < 0 || g > 1) ||
+		(b == 'undefined' || b < 0 || b > 1) ||
+		(a == 'undefined' || a < 0 || a > 1) )
+			return "Illumination -> Background -> Missing required information or variables with wrong values";
+			
 	this.background = [r, g, b, a];	
 };
 
 //Parses the lights' elements
 MySceneGraph.prototype.parseLights = function(lights) {
 
-	/*
-		Lights
-
-		TO DO: ????
-	*/
 	var lights;
 
 	this.nLights = 0;
 	this.index = 0;
-	this.name = "";
-	this.lightType = [this.name];
+	this.name = ""; //Lights name (omni or spot)
+	this.lightType = [this.name]; //To save the type of lights
 
 	nnodes = lights.children.length;
 	if (lights == null || nnodes < 1) 
-		return "Illumination error";
-
-	var nOmni = lights.getElementsByTagName('omni').length;
-	if( nOmni < 1 )
-		return "You need at least one omni light";
+		return "Lights error -> You need at least one omni ou spot lights";
 
 	var lightsId = [];
 
@@ -338,6 +337,9 @@ MySceneGraph.prototype.parseLights = function(lights) {
 
 		var light = lights.children[i];
 		var id = this.reader.getString(light, 'id');
+		
+		if(id == 'undefined')
+			return "Lights -> Missing the light's id";
 
 		for( var j = 0; j < lightsId.length; j++)
 			//Check whether the id of all lights is the same
@@ -353,7 +355,7 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			return "Lights -> Missing required information.";
 
 		if( locations.length > 1 )
-			console.warn("Lights -> Omni -> Only 1 location is needed.");
+			console.warn("Lights -> Only 1 location is needed.");
 
 		var location_x = this.reader.getFloat(locations[0], 'x');
 		var location_y = this.reader.getFloat(locations[0], 'y');
@@ -365,55 +367,54 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			location_w = this.reader.getFloat(locations[0], 'w');
 		else
 			location_w = 1; //To ensure that we set the light position with the variable w
-		
+	
 		if( location_x == 'undefined' || 
 			location_y == 'undefined' ||
 			location_z == 'undefined' ||
-			location_w == 'undefined' || 
-			location_w != 1				)
+			location_w == 'undefined' )
 				return "Lights -> Location -> Missing required information.";
 		
 		if( ambients.length > 1 )
-			console.warn("Lights -> Omni -> Only 1 location is needed.");
+			console.warn("Lights -> Only 1 ambient is needed.");
 
 		var ambient_r = this.reader.getFloat(ambients[0], 'r');
 		var ambient_g = this.reader.getFloat(ambients[0], 'g');
 		var ambient_b = this.reader.getFloat(ambients[0], 'b');
 		var ambient_a = this.reader.getFloat(ambients[0], 'a');
 
-		if( ambient_r == 'undefined' || ambient_r < 0 ||
-			ambient_g == 'undefined' || ambient_g < 0 ||
-			ambient_b == 'undefined' || ambient_b < 0 ||
-			ambient_a == 'undefined' || ambient_a < 0 )
-			return "Lights -> Omni -> Location -> Missing required information.";
+		if( (ambient_r == 'undefined' || ambient_r < 0 || ambient_r > 1) ||
+			(ambient_g == 'undefined' || ambient_g < 0 || ambient_g > 1) ||
+			(ambient_b == 'undefined' || ambient_b < 0 || ambient_b > 1) ||
+			(ambient_a == 'undefined' || ambient_a < 0 || ambient_a > 1))
+				return "Lights -> Ambient -> Missing required information or variables with wrong values.";
 
 		if( diffuses.length > 1 )
-			console.warn("Lights -> Omni -> Only 1 location is needed.");
+			console.warn("Lights -> Only 1 diffuse is needed.");
 
 		var diffuse_r = this.reader.getFloat(diffuses[0], 'r');
 		var diffuse_g = this.reader.getFloat(diffuses[0], 'g');
 		var diffuse_b = this.reader.getFloat(diffuses[0], 'b');
 		var diffuse_a = this.reader.getFloat(diffuses[0], 'a');
 
-		if( diffuse_r == 'undefined' || diffuse_r < 0 ||
-			diffuse_g == 'undefined' || diffuse_g < 0 ||
-			diffuse_b == 'undefined' || diffuse_b < 0 ||
-			diffuse_a == 'undefined' || diffuse_a < 0 )
-			return "Lights -> Omni -> Location -> Missing required information.";
+		if( (diffuse_r == 'undefined' || diffuse_r < 0 || diffuse_r > 1) ||
+			(diffuse_g == 'undefined' || diffuse_g < 0 || diffuse_g > 1) ||
+			(diffuse_b == 'undefined' || diffuse_b < 0 || diffuse_b > 1) ||
+			(diffuse_a == 'undefined' || diffuse_a < 0 || diffuse_a > 1))
+				return "Lights -> Diffuse -> Missing required information or variables with wrong values.";
 
 		if( speculars.length > 1 )
-			console.warn("Lights -> Omni -> Only 1 location is needed.");
+			console.warn("Lights -> Only 1 specular is needed.");
 
 		var specular_r = this.reader.getFloat(speculars[0], 'r');
 		var specular_g = this.reader.getFloat(speculars[0], 'g');
 		var specular_b = this.reader.getFloat(speculars[0], 'b');
 		var specular_a = this.reader.getFloat(speculars[0], 'a');
 
-		if( specular_r == 'undefined' || specular_r < 0 ||
-			specular_g == 'undefined' || specular_b < 0 ||
-			specular_b == 'undefined' || specular_g < 0 ||
-			specular_a == 'undefined' || specular_a < 0 )
-			return "Lights -> Omni -> Location -> Missing required information.";
+		if( (specular_r == 'undefined' || specular_r < 0 || specular_r > 1) ||
+			(specular_g == 'undefined' || specular_b < 0 || specular_b > 1) ||
+			(specular_b == 'undefined' || specular_g < 0 || specular_g > 1) ||
+			(specular_a == 'undefined' || specular_a < 0 || specular_a > 1))
+				return "Lights -> Diffuse -> Missing required information or variables with wrong values.";
 
 		this.scene.lights[this.nLights].setPosition(location_x, location_y, location_z, location_w);
 		this.scene.lights[this.nLights].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
@@ -443,20 +444,32 @@ MySceneGraph.prototype.parseLights = function(lights) {
 				target_z  == 'undefined' )
 				return "Lights -> Spot -> Target -> Missing required information.";
 
-			this.scene.lights[this.nLights].setSpotCutOff( Math.PI * this.reader.getFloat(light, 'angle') / 180 );
-			this.scene.lights[this.nLights].setSpotExponent( this.reader.getFloat(light, 'exponent') );
+			var angle = Math.PI * this.reader.getFloat(light, 'angle') / 180 ;
+			var exponent = this.reader.getFloat(light, 'exponent') ;
+			
+			if(( 0 > angle || angle > 2 * Math.PI || angle == 'undefined') || exponent == 'undefined')
+				return "Lights -> Spot -> Missing required information or variables with wrong values.";
+			
+			this.scene.lights[this.nLights].setSpotCutOff( angle );
+			this.scene.lights[this.nLights].setSpotExponent( exponent );
 			this.scene.lights[this.nLights].setSpotDirection( target_x - location_x, target_y - location_y, target_z - location_z );
 		
 			this.name = "spot";
+			/* 	Because we first read information that is equal to omni and spot lights, so we save one more omni 
+				light and after we replaced it by the respective spot light */
 			if(this.index == this.nLights)
-				this.lightType[this.lightType.length-1] = this.name;
+				this.lightType[this.lightType.length-1] = this.name; 
 			else
 				this.lightType.push(this.name);
 		}
 
 		this.scene.lights[this.nLights].update();
 
-		if( this.reader.getBoolean(light,  'enabled') )
+		var enabled = this.reader.getBoolean(light,  'enabled');
+		if(  enabled == 'undefined' || (enabled != 0 && enabled != 1) )
+			return "Lights -> Property enabled with wrong values or missing information.";
+		
+		if( enabled )
 			this.scene.lights[this.nLights].enable();
 		else
 			this.scene.lights[this.nLights].disable();
@@ -470,12 +483,6 @@ MySceneGraph.prototype.parseLights = function(lights) {
 //Parses the different textures
 MySceneGraph.prototype.parseTextures = function(texture) {
 	
-	/*
-		Textures
-
-		TO DO:
-			?
-	*/	
 	var texture;
 	
 	if (texture == null ) 

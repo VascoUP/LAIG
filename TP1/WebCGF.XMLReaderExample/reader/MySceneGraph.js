@@ -502,16 +502,12 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			diffuse_b < 0 || diffuse_b > 1 || diffuse_a < 0 || diffuse_a > 1 )
 				console.warn("Lights -> Diffuse -> RGBA values must be between 0 and 1");
 
-<<<<<<< HEAD
 		if( speculars.length > 1 )
 			console.warn("Light " + id + " -> Only 1 speculars is needed.");
 		
 		if(speculars[0].attributes.length != 4)
 			return "Lights -> Specular -> Wrong number of attributes.";
 		
-=======
-
->>>>>>> origin/master
 		var specular_r = this.reader.getFloat(speculars[0], 'r');
 		var specular_g = this.reader.getFloat(speculars[0], 'g');
 		var specular_b = this.reader.getFloat(speculars[0], 'b');
@@ -802,6 +798,9 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 		if (transform_elems == null)
 			return "Transformation error";
 
+		if(transform_elems.attributes.length != 1)
+			return "Transformation -> Wrong number of attributes.";
+		
 		var id = transform_elems.attributes.getNamedItem('id').value;
 		
 		if( id == undefined )
@@ -821,6 +820,9 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 			var transformation = transform_elems.children[k].tagName;
 			
 			if( transformation == 'rotate' ) {
+				if(transform_elems.children[k].attributes.length != 2)
+					return "Transformation -> Rotate -> Wrong number of attributes";
+				
 				var axis, angle;
 				angle = Math.PI * this.reader.getFloat(transform_elems.children[k], 'angle') / 180;
 				axis = this.reader.getString(transform_elems.children[k], 'axis');
@@ -833,6 +835,9 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 				mat4.rotate(matrix, matrix, angle, axis == 'x' ? [1, 0, 0] : axis == 'y' ? [0, 1, 0] : [0, 0, 1]);
 			}
 			else {
+				if(transform_elems.children[k].attributes.length != 3)
+					return "Transformation -> Wrong number of attributes";
+				
 				var x, y, z;
 				x = this.reader.getFloat(transform_elems.children[k], 'x');
 				y = this.reader.getFloat(transform_elems.children[k], 'y');
@@ -862,8 +867,11 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 
 		var prim_elems = primitives.children[i];
 
-		if (prim_elems == null)
+		if(prim_elems == null)
 			return "Primitives -> Primitive error";
+		
+		if(prim_elems.attributes.length != 1)
+			return "Primitive -> Wrong number of attributes";
 
 		var id = prim_elems.attributes.getNamedItem('id').value;
 		
@@ -881,6 +889,10 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 		
 		switch(primitive) {
 			case 'rectangle':
+			
+				if(prim_elems.children[0].attributes.length != 4)
+					return "Primitives -> Rectangle -> Wrong number of attributes.";
+				
 				var x1, y1, x2, y2;
 				x1 = this.reader.getFloat(prim_elems.children[0], 'x1');
 				y1 = this.reader.getFloat(prim_elems.children[0], 'y1');
@@ -893,6 +905,10 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				this.primitives[id] = new MyRectangle(this.scene, x1, y1, x2, y2);
 				break;
 			case 'triangle':
+				
+				if(prim_elems.children[0].attributes.length != 9)
+					return "Primitives -> Triangle -> Wrong number of attributes.";
+				
 				var x1, y1, z1, x2, y2, z2, x3, y3, z3;
 				x1 = this.reader.getFloat(prim_elems.children[0], 'x1');
 				y1 = this.reader.getFloat(prim_elems.children[0], 'y1');
@@ -912,6 +928,10 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				this.primitives[id] = new MyTriangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3);
 				break;
 			case 'cylinder':
+
+				if(prim_elems.children[0].attributes.length != 5)
+					return "Primitives -> Cylinder -> Wrong number of attributes.";
+				
 				var base, top, heigth, slices, stacks;
 				base = this.reader.getFloat(prim_elems.children[0], 'base');
 				top = this.reader.getFloat(prim_elems.children[0], 'top');
@@ -929,6 +949,10 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				this.primitives[id] = new MyCylinder(this.scene, base, top, height, slices, stacks);
 				break;
 			case 'sphere':
+			
+				if(prim_elems.children[0].attributes.length != 3)
+					return "Primitives -> Sphere -> Wrong number of attributes.";
+				
 				var radius, slices, stacks;
 				radius = this.reader.getFloat(prim_elems.children[0], 'radius');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
@@ -943,6 +967,10 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				this.primitives[id] = new MySphere(this.scene, radius, slices, stacks);
 				break;
 			case 'torus':
+				
+				if(prim_elems.children[0].attributes.length != 4)
+					return "Primitives -> Torus -> Wrong number of attributes.";
+				
 				var inner, outer, slices, loops;
 				inner = this.reader.getFloat(prim_elems.children[0], 'inner');
 				outer = this.reader.getFloat(prim_elems.children[0], 'outer');

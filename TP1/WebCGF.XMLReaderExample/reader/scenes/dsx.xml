@@ -60,6 +60,21 @@
             <specular r="0.1" g="0.1" b="0.1" a="1.0" />
         </spot>
 
+        <spot id="4" enabled="1" angle="1.47" exponent="10">
+            <target x="0" y="0" z="0" />
+            <location x="30" y="-30" z="30" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="0.7" g="0.4" b="0.2" a="1.0" />
+            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+        </spot>
+
+        <omni id="l5" enabled="1" >
+            <location x="-30" y="-30" z="-30" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+        </omni>
+
     </lights>
         
     <textures>
@@ -68,15 +83,14 @@
         <texture id="g1" file="resources/FoliageTexture.jpg" length_s="2" length_t="2" />
         <texture id="ground" file="resources/FoliageTexture.jpg" length_s="15" length_t="15" />
         <texture id="t2" file="resources/RockTexture.jpg" length_s="3" length_t="3" />
-        <texture id="mountain" file="resources/RockTexture.jpg" length_s="0.50" length_t="0.50" />
-        <texture id="g2" file="resources/FluorescentRedTexture.jpg" length_s="1" length_t="1" />
-        
+        <texture id="mountain" file="resources/RockTexture.jpg" length_s="15" length_t="5" />
+
     </textures>
 
     
     <materials>
 
-        <!-- Brown diffuse (wood) -->
+        <!-- Brown diffuse -->
         <material id="w1" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.18" g="0.13" b="0.05" a="1" />
@@ -85,7 +99,7 @@
             <shininess value="1" />
         </material>
 
-        <!-- Green diffuse/specular (fooliage) -->
+        <!-- Green diffuse/specular -->
         <material id="f1" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.18" g="0.13" b="0.05" a="1" />
@@ -94,7 +108,7 @@
             <shininess value="3" />
         </material>
 
-        <!-- Grey diffuse (rock) -->
+        <!-- Grey diffuse -->
         <material id="r1" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.18" g="0.18" b="0.18" a="1" />
@@ -103,7 +117,7 @@
             <shininess value="20" />
         </material>
 
-        <!-- Brown diffuse (rock) -->
+        <!-- Brown2 diffuse -->
         <material id="r2" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.10" g="0.10" b="0.10" a="1" />
@@ -112,7 +126,7 @@
             <shininess value="20" />
         </material>
 
-        <!-- Red diffuse (rock) -->
+        <!-- Red diffuse -->
         <material id="r3" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.20" g="0.01" b="0.01" a="1" />
@@ -183,7 +197,7 @@
         </primitive>
 
         <primitive id="tor">
-            <torus inner="0.05" outer="1.2" slices="20" loops="40" />         
+            <torus inner="0.05" outer="1" slices="100" loops="100" />         
         </primitive>
         
     </primitives>
@@ -203,6 +217,7 @@
                 <componentref id="sky" />
                 <componentref id="ground" />
                 <componentref id="mountains" />
+                <componentref id="tor" />
             </children>       
         </component>
 
@@ -544,6 +559,8 @@
             </transformation>
             <materials>
                 <material id="f1" />
+                <material id="w1" />
+                <material id="r1" />
             </materials>
             <texture id="ground" />
             <children>
@@ -558,7 +575,7 @@
             <materials>
                 <material id="r1" />
             </materials>
-            <texture id="t2" />
+            <texture id="mountain" />
             <children>
                 <componentref id="mountain1" />
                 <componentref id="mountain2" />
@@ -572,9 +589,9 @@
                 <rotate axis="y" angle="-45" />
             </transformation>
             <materials>
-                <material id="r1" />
+                <material id="inherit" />
             </materials>
-            <texture id="t2" />
+            <texture id="inherit" />
             <children>
                 <componentref id="mountain" />
             </children>            
@@ -586,9 +603,11 @@
                 <rotate axis="y" angle="-90" />
             </transformation>
             <materials>
-                <material id="r1" />
+                <material id="inherit" />
+                <material id="r2" />
+                <material id="r3" />
             </materials>
-            <texture id="t2" />
+            <texture id="inherit" />
             <children>
                 <componentref id="mountain" />
             </children>            
@@ -600,9 +619,11 @@
                 <rotate axis="y" angle="-60" />
             </transformation>
             <materials>
-                <material id="r1" />
+                <material id="inherit" />
+                <material id="r3" />
+                <material id="w1" />
             </materials>
-            <texture id="t2" />
+            <texture id="inherit" />
             <children>
                 <componentref id="mountain" />
             </children>            
@@ -620,6 +641,21 @@
             <texture id="inherit" />
             <children>
                 <primitiveref id="cyl3" />
+            </children>            
+        </component>
+
+        <component id="tor">   
+            <transformation>
+                <rotate axis="x" angle="-45" />
+                <scale x="20" y="20" z="1" />
+            </transformation>
+            <materials>
+                <material id="e1" />
+                <material id="r2" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="tor" />
             </children>            
         </component>
 

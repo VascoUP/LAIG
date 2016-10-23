@@ -503,7 +503,7 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 		var file = this.reader.getString(texture_elem[i], 'file');
 		var t = new CGFtexture(this.scene, file);
 		var texInfo = new TextureInfo( t, this.reader.getFloat(texture_elem[i], 'length_t'), 
-											this.reader.getFloat(texture_elem[i], 'length_s'))
+											this.reader.getFloat(texture_elem[i], 'length_s'));
 
 		this.textures[id] = texInfo;
 	}

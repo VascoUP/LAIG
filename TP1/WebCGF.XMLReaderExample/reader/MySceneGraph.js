@@ -358,14 +358,21 @@ MySceneGraph.prototype.parseLights = function(lights) {
 		var location_x = this.reader.getFloat(locations[0], 'x');
 		var location_y = this.reader.getFloat(locations[0], 'y');
 		var location_z = this.reader.getFloat(locations[0], 'z');
-		var location_w = this.reader.getFloat(locations[0], 'w');
-
+		
+		var type = lights.children[i].tagName;
+		var location_w;
+		if(type == 'omni')
+			location_w = this.reader.getFloat(locations[0], 'w');
+		else
+			location_w = 1; //To ensure that we set the light position with the variable w
+		
 		if( location_x == 'undefined' || 
-			location_y == 'undefined' || 
-			location_z == 'undefined' || 
-			location_w == 'undefined' )
-			return "Lights -> Omni -> Location -> Missing required information.";
-
+			location_y == 'undefined' ||
+			location_z == 'undefined' ||
+			location_w == 'undefined' || 
+			location_w != 1				)
+				return "Lights -> Location -> Missing required information.";
+		
 		if( ambients.length > 1 )
 			console.warn("Lights -> Omni -> Only 1 location is needed.");
 
@@ -418,7 +425,6 @@ MySceneGraph.prototype.parseLights = function(lights) {
 		
 		this.lightType.push(this.name);
 
-		var type = lights.children[i].tagName;
 		if( type == 'spot' ) {
 			var targets = light.getElementsByTagName('target');
 

@@ -152,7 +152,6 @@
 
 			s += dS;
 	}
-MyRectangle.prototype.initBuffers = fu
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();

@@ -208,32 +208,33 @@ MySceneGraph.prototype.onXMLError=function (message) {
 
 //Parses the scene's elements
 MySceneGraph.prototype.parseScenes = function(scene_elems) {
-	
-	if (scene_elems == null)
-		return "Scene error";
+	if (scene_elems == null || scene_elems.attributes.length < 2)
+		return "Scene -> Missing required information";
+	else if(scene_elems.attributes.length > 2)
+		console.warn("Scene -> More attributes than required");
 
 	this.graph.idHead = this.reader.getString(scene_elems, 'root');
 	this.axis_length = this.reader.getFloat(scene_elems, 'axis_length');
 	
 	if(this.graph.idHead == undefined || this.axis_length == undefined)
-		return "Scene -> Missing required information.";
-	
-	if(this.axis_length < 0)
-		console.warn("Axis length must be positive");
-	
+		return "Scene -> Wrong name for one of the attributes (root / axis_length).";
+	else if(this.axis_length < 0)
+		console.warn("Axis length can't be negative");
 };
 
 //Parses the the different views' elements
 MySceneGraph.prototype.parseViews = function(views_elems) {
 
 	var nnodes = views_elems.children.length;
-	if (views_elems == null || nnodes < 1) 
-		return "Views error";
+	if (views_elems == null || nnodes < 1 || views_elems.attributes.length < 1) 
+		return "Views -> Missing required information";
+	else if( views_elems.attributes.length > 1 )
+		console.warn("Views -> More attributes than required");
 
 	this.default_view = this.reader.getString(views_elems, 'default');
 	
 	if(this.default_view == undefined)
-		return "View -> Default View -> Missing required information.";
+		return "View -> Missing attribute default";
 	
 	this.views=[nnodes];
 
@@ -241,8 +242,10 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 
 		var perspective_elems = views_elems.children[i];
 
-		if (perspective_elems == null)
-			return "Views -> Prespectives error";
+		if (perspective_elems == null || perspective_elems.attributes.length < 4)
+			return "Views -> Prespectives -> Missing required information.";
+		else if( perspective_elems.attributes.length > 4 )
+			console.warn("Views -> Prespective -> More attributes than required");
 
 		var id, near, far, angle;
 		id = perspective_elems.id;
@@ -250,8 +253,10 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 		far = this.reader.getFloat(perspective_elems, 'far');
 		angle = Math.PI * this.reader.getFloat(perspective_elems,'angle') / 180;
 		
-		if(id == undefined || near == undefined || far == undefined || angle == undefined)
-			return ("Views -> Prespective -> Missing required information.");
+		if(id == undefined)
+			return ("Views -> Prespective " + id + " ->  Wrong name for one of the attributes (near / far / angle).");
+		else if(near == undefined || far == undefined || angle == undefined)
+			return ("Views -> Prespective ->  Wrong name for attribute id");
 
 		//Making sure that there are no to prespectives with the same id
 		for(var j = 0; j < this.views.length; j++) {
@@ -263,20 +268,22 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 
 		this.views[i] = new ViewInfo(id, near, far, angle);
 		
-		if(this.views[0].id != this.default_view)
-			return "Views -> First view defined is not equal to default view";
+		if( i == 0 && id != this.default_view)
+			console.warn("Views -> First view defined is not equal to default view");
 
 		var from_elems = perspective_elems.getElementsByTagName('from');
 
-		if(from_elems == null || from_elems.length != 1)
-			return "Views -> Prespective " + id + " -> From error";
+		if(from_elems == null || from_elems.length != 1 || from_elems[0].attributes.length < 3)
+			return "Views -> Prespective " + id + " -> From -> Missing required information.";
+		else if( from_elems[0].attributes.length > 3 )
+			console.warn("Views -> Prespective -> From -> More attributes than required");
 
 		var fromE = from_elems[0];
 		
 		if(	this.reader.getFloat(fromE, 'x') == undefined ||
 			this.reader.getFloat(fromE, 'y') == undefined ||
 			this.reader.getFloat(fromE, 'z') == undefined	)
-				return "Views -> Prespective "+ id + " -> 'From' elements missing.";
+				return "Views -> Prespective "+ id + " -> From -> At least one attribute name is wrong (x / y / z).";
 			
 		this.views[i].setFrom(this.reader.getFloat(fromE, 'x'),
 								this.reader.getFloat(fromE, 'y'),
@@ -284,46 +291,60 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 
 		var to_elems = perspective_elems.getElementsByTagName('to');
 
-		if(to_elems == null || to_elems.length != 1)
-			return "Views -> Prespective " + id + " -> To error";
+		if(to_elems == null || to_elems.length != 1 || to_elems[0].attributes.length < 3)
+			return "Views -> Prespective " + id + " -> To -> Missing required information.";
+		else if( to_elems[0].attributes.length > 3 )
+			console.warn("Views -> Prespective -> To -> More attributes than required");
 
 		var toE = to_elems[0];
 		
 		if(	this.reader.getFloat(toE, 'x') == undefined ||
 			this.reader.getFloat(toE, 'y') == undefined ||
 			this.reader.getFloat(toE, 'z') == undefined	)
-				return "Views -> Prespective "+ id + " -> 'To' elements missing.";
+				return "Views -> Prespective "+ id + " -> To -> At least one attribute name is wrong (x / y / z).";
 			
 		this.views[i].setTo(this.reader.getFloat(toE, 'x'),
 								this.reader.getFloat(toE, 'y'),
 								this.reader.getFloat(toE, 'z'));
 	}
+
+	//Making sure that the view with the id equal to the default_view is defined
+	var j;
+	for(j = 0; j < this.views.length; j++) {
+		if(this.views[j].id == this.default_view)
+			break;
+	}
+	if( j == this.views.length) {
+		console.warn("Views -> Couldn't find view with the same id as default_view");
+		this.default_view = this.views[0].id; //We know that it has to exist at least one view to get here
+	}
 };
 
 //Parses the illumnitations' elements
-MySceneGraph.prototype.parseIlluminations = function(illumination) {
+MySceneGraph.prototype.parseIlluminations = function(illumination_elem) {
 	
-	if (illumination == null) 
-		return "Illumination error";
-
-	var illumination_elem = illumination;
+	if (illumination_elem == null || illumination_elem.attributes.length < 2) 
+		return "Illumination attribute error";
+	else if(illumination_elem.attributes.length > 2)
+		console.warn("Illumination -> More attributes than required");
 	
 	var doublesided = this.reader.getBoolean(illumination_elem, 'doublesided');
 	var local = this.reader.getBoolean(illumination_elem, 'local');
-	
+
 	if(	doublesided == undefined || local == undefined )
-			return "Illumination -> Doublesided or local variables missing";
+		return "Illumination -> Doublesided or local variables missing";
 			
 	if( (doublesided != 0 && doublesided != 1 ) || (local != 0 && local != 1) )
 		console.warn("Doublesided and local must be 0 or 1");
 
 	var ambient = illumination_elem.getElementsByTagName('ambient');
 
-	if( ambient == null || ambient.length != 1)
-		return "Illumination -> Ambient error";
-	
+	if( ambient == null || ambient.length < 1 || ambient[0].attributes.length < 4)
+		return "Illumination -> Ambient  attributes error";
+	else if(ambient[0].attributes.length > 4)
+		console.warn("Illumination -> Ambient -> More attributes than required");
 	else if( ambient.length > 1 ) 
-		//It should stop reading the dsx file because of this
+		//It shouldn't stop reading the dsx file because of this
 		console.warn("There are more than 1 ambient elements in illumination, only the first will be considered");
 
 	var ambient_elem = ambient[0];
@@ -344,10 +365,12 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 
 	var background = illumination_elem.getElementsByTagName('background');
 
-	if( background == null || background.length != 1)
-		return "Illumination -> Background error";
-	else if( background.length > 1 ) 
-		//It should stop reading the dsx file because of this
+	if( background == null || background.length < 1 || background[0].attributes.length < 4)
+		return "Illumination -> Background attribute error";
+	else if( background[0].attributes.length > 4 )
+		console.warn("Illumination -> Background -> More attributes than required");
+	else if( background.length > 1 )
+		//It shouldn't' stop reading the dsx file because of this
 		console.warn("There are more than 1 ambient elements in illumination, only the first will be considered");
 
 	var background_elem = background[0];
@@ -356,7 +379,7 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	g = this.reader.getFloat(background_elem, 'g');
 	b = this.reader.getFloat(background_elem, 'b');
 	a = this.reader.getFloat(background_elem, 'a');
-	
+
 	if(	r == undefined || g == undefined || b == undefined || a == undefined )
 		return "Illumination -> Background -> Missing required information.";
 			
@@ -479,12 +502,16 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			diffuse_b < 0 || diffuse_b > 1 || diffuse_a < 0 || diffuse_a > 1 )
 				console.warn("Lights -> Diffuse -> RGBA values must be between 0 and 1");
 
+<<<<<<< HEAD
 		if( speculars.length > 1 )
 			console.warn("Light " + id + " -> Only 1 speculars is needed.");
 		
 		if(speculars[0].attributes.length != 4)
 			return "Lights -> Specular -> Wrong number of attributes.";
 		
+=======
+
+>>>>>>> origin/master
 		var specular_r = this.reader.getFloat(speculars[0], 'r');
 		var specular_g = this.reader.getFloat(speculars[0], 'g');
 		var specular_b = this.reader.getFloat(speculars[0], 'b');
@@ -496,7 +523,7 @@ MySceneGraph.prototype.parseLights = function(lights) {
 		if( specular_r < 0 || specular_r > 1 || specular_g < 0 || specular_g > 1 || 
 			specular_b < 0 || specular_b > 1 || specular_a < 0 || specular_a > 1 )
 				console.warn("Lights -> Specular -> RGBA values must be between 0 and 1");
-				
+
 		this.scene.lights[this.nLights].setPosition(location_x, location_y, location_z, location_w);
 		this.scene.lights[this.nLights].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
 		this.scene.lights[this.nLights].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
@@ -569,18 +596,26 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 	
 	var texture;
 	
-	if (texture == null ) 
+	if (texture == null) 
 		return "Texture error";
+	else if(texture.attributes.length != 0)
+		console.warn("Textures -> More attributes than required");
 	
 	this.textures = {};
 
 	var texture_elem = texture.getElementsByTagName('texture');
 	
-	if(texture_elem.length < 1)
+	if(texture_elem == undefined || texture_elem.length < 1)
 		return "Texture -> You need at least one texture.";
 	
 	for( var i = 0; i < texture_elem.length; i++ ) {
 		var textureElem = texture_elem[i];
+
+		if(textureElem.attributes.length < 4)
+			return "Textures -> Texture -> Missing required information";
+		else if(textureElem.attributes.length > 4)
+			console.warn("Textures -> Texture -> More attributes than required");
+
 		var id = this.reader.getString(texture_elem[i], 'id');
 		
 		if( id == undefined )
@@ -616,6 +651,8 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 	
 	if(material == null || nnodes < 1) 
 		return "Material error";
+	else if( material.attributes.length != 0 )
+		console.warn("Materials -> More attribute than required");
 	
 	this.materials = {};
 
@@ -623,8 +660,10 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 
 		var material_elems = material.children[i];
 
-		if (material_elems == null)
+		if (material_elems == null || material_elems.attributes.length < 1)
 			return "Materials -> Material error";
+		else if( material_elems.attributes.length > 1 )
+			console.warn("Materials -> Materials -> More attribute than required");
 
 		var id = material_elems.attributes.getNamedItem('id').value;
 		
@@ -633,93 +672,114 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 	
 		// Making sure that there are no two materials with the same id 
 		if( this.materials[id] != undefined )
-			return "Materials -> " + this.materials[id] + " -> Same id error";
+			return "Materials -> Material " + id + " -> Same id error";
 
 		var appearance = new CGFappearance(this.scene);
-
 		var emission = material_elems.getElementsByTagName('emission');
 
 		if(emission == null || emission.length < 1)
-			return "Materials -> Emission-> Variable error";
+			return "Materials -> Material " + id + " -> Emission-> Variable error";
 
 		var r, g, b, a;
 		var emissionElem = emission[0];
+		if( emissionElem.attributes.length < 4 )
+			return "Materials -> Material " + id + " -> -> Emission -> Missing required information";
+		else if ( emissionElem.attributes.length > 4 )
+			console.warn("Materials -> Material " + id + " -> -> Emission -> More attributes than required");
 		r = this.reader.getFloat(emissionElem, 'r');
 		g = this.reader.getFloat(emissionElem, 'g');
 		b = this.reader.getFloat(emissionElem, 'b');
 		a = this.reader.getFloat(emissionElem, 'a');
 		
 		if(	r == undefined || g == undefined || b == undefined || a == undefined )
-			return "Material -> Emission -> Missing required information.";
+			return "Materials -> Material " + id + " -> Emission -> Missing required information.";
 			
 		if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1)
-			console.warn("Material -> Emission -> RGBA values must be between 0 and 1");
+			console.warn("MaterialS -> Material " + id + " -> Emission -> RGBA values must be between 0 and 1");
 		
 		appearance.setEmission(r, g, b, a);
 		
 		var ambient = material_elems.getElementsByTagName('ambient');
 		if(ambient == null || ambient.length < 1)
-			return "Materials -> Ambient-> Variable error";
+			return "Materials -> Material " + id + " -> Ambient-> Variable error";
 
 		var ambientElem = ambient[0];
+		if( ambientElem.attributes.length < 4 )
+			return "Materials -> Material " + id + " -> -> Ambient -> Missing required information";
+		else if ( ambientElem.attributes.length > 4 )
+			console.warn("Materials -> Material " + id + " -> -> Ambient -> More attributes than required");
 		r = this.reader.getFloat(ambientElem, 'r');
 		g = this.reader.getFloat(ambientElem, 'g');
 		b = this.reader.getFloat(ambientElem, 'b');
 		a = this.reader.getFloat(ambientElem, 'a');
-		
+
 		if(	r == undefined || g == undefined || b == undefined || a == undefined )
-			return "Material -> Ambient -> Missing required information.";
+			return "Materials -> Material " + id + " -> Ambient -> Missing required information.";
 			
 		if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1)
-			console.warn("Material -> Ambient -> RGBA values must be between 0 and 1");
+			console.warn("Materials -> Material " + id + " -> Ambient -> RGBA values must be between 0 and 1");
 		
 		appearance.setAmbient(r, g, b, a);
 
 		var diffuse = material_elems.getElementsByTagName('diffuse');
 		if(diffuse == null || diffuse.length < 1)
-			return "Materials -> Diffuse-> Variable error";
+			return "Materials -> Material " + id + " -> Diffuse-> Variable error";
 
 		var diffuseElem = diffuse[0];
+		if( diffuseElem.attributes.length < 4 )
+			return "Materials -> Material " + id + " -> -> Diffuse -> Missing required information";
+		else if ( diffuseElem.attributes.length > 4 )
+			console.warn("Materials -> Material " + id + " -> -> Diffuse -> More attributes than required");
 		r = this.reader.getFloat(diffuseElem, 'r');
 		g = this.reader.getFloat(diffuseElem, 'g');
 		b = this.reader.getFloat(diffuseElem, 'b');
 		a = this.reader.getFloat(diffuseElem, 'a');
-		
+
 		if(	r == undefined || g == undefined || b == undefined || a == undefined )
-			return "Material -> Diffuse -> Missing required information.";
+			return "Materials -> Material " + id + " -> Diffuse -> Missing required information.";
 			
 		if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1)
-			console.warn("Material -> Diffuse -> RGBA values must be between 0 and 1");
+			console.warn("Materials -> Material " + id + " -> Diffuse -> RGBA values must be between 0 and 1");
 		
 		appearance.setDiffuse(r, g, b, a);
 								
 		var specular = material_elems.getElementsByTagName('specular');
 		if(specular == null || specular.length < 1)
-			return "Materials -> Specular-> Variable error";
+			return "Materials -> Material " + id + " -> Specular-> Variable error";
 
 		var specularElem = specular[0];
+		if( specularElem.attributes.length < 4 )
+			return "Materials -> Material " + id + " -> Specular -> Missing required information";
+		else if ( specularElem.attributes.length > 4 )
+			console.warn("Materials -> Material " + id + " -> Specular -> More attributes than required");
 		r = this.reader.getFloat(specularElem, 'r');
 		g = this.reader.getFloat(specularElem, 'g');
 		b = this.reader.getFloat(specularElem, 'b');
 		a = this.reader.getFloat(specularElem, 'a');
-		
+
 		if(	r == undefined || g == undefined || b == undefined || a == undefined )
-			return "Material -> Specular -> Missing required information.";
+			return "Materials -> Material " + id + " -> Specular -> Missing required information.";
 			
 		if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1)
-			console.warn("Material -> Specular -> RGBA values must be between 0 and 1");
+			console.warn("Materials -> Material " + id + " -> Specular -> RGBA values must be between 0 and 1");
 		
 		appearance.setSpecular(r, g, b, a);
 								
 		var shininess = material_elems.getElementsByTagName('shininess');
 		if(shininess == null || shininess.length < 1)
-			return "Materials -> Shininess-> Variable error";
+			return "Materials -> Material " + id + " -> Shininess-> Variable error";
 
 		var shininessElem = shininess[0];
+		if( shininessElem.attributes.length < 1 )
+			return "Materials -> Material " + id + " -> Material -> Shininess -> Missing required information";
+		else if ( shininessElem.attributes.length > 1 )
+			console.warn("Materials -> Material " + id + " -> Material -> Shininess -> More attributes than required");
 		var shininess = this.reader.getFloat(shininessElem, 'value');
 		
-		if ( shininess == undefined || shininess < 0)
-			return "Materials -> Shininess-> Missing required information or variable with wrong value (shininess must be a positive value)";
+		if ( shininess == undefined )
+			return "Materials -> Material " + id + " -> Shininess-> Missing required information or variable with wrong value (shininess must be a positive value)";
+		else if ( shininess < 0 )
+			console.warn("Materials -> Material " + id + " -> Shininess value is negative");
 		
 		appearance.setShininess(shininess);
 		appearance.setTextureWrap('REPEAT', 'REPEAT');
@@ -764,7 +824,7 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 				var axis, angle;
 				angle = Math.PI * this.reader.getFloat(transform_elems.children[k], 'angle') / 180;
 				axis = this.reader.getString(transform_elems.children[k], 'axis');
-				
+
 				if( angle == undefined || axis == undefined)
 					return "Transformation -> Rotate -> Missing required information.";
 				else if(this.axis_length < 0)

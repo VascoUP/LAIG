@@ -402,7 +402,7 @@ MySceneGraph.prototype.parseLights = function(lights) {
 	nnodes = lights.children.length;
 	if (lights == null || nnodes < 1) 
 		return "Lights error -> You need at least one omni ou spot lights";
-	else if( lights.attributes.length != 1 )
+	else if( lights.attributes.length != 0 )
 		console.warn("Lights -> More attributes the required");
 
 	var lightsId = [];

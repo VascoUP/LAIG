@@ -99,7 +99,7 @@
         <spot id="l2" enabled="1" angle="1.47" exponent="10">
 
             <target x="0" y="0" z="0" />
-            <location x="-2" y="2" z="2" w="1" />
+            <location x="-2" y="2" z="2" />
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
             <diffuse r="0.7" g="0.4" b="0.2" a="1.0" />
             <specular r="0.1" g="0.1" b="0.1" a="1.0" />

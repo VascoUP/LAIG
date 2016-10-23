@@ -1,3 +1,4 @@
+//Sphere's constructor
 function MySphere(scene, radius, slices, stacks, minS, maxS, minT, maxT) {
  	CGFobject.call(this,scene);
 	

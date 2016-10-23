@@ -1,3 +1,4 @@
+//SceneGraph's constructor
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 	
@@ -21,9 +22,7 @@ function MySceneGraph(filename, scene) {
 	this.reader.open('scenes/'+filename, this);  
 }
 
-/*
- * Callback to be executed after successful reading
- */
+//Callback to be executed after successful reading
 MySceneGraph.prototype.onXMLReady=function() 
 {
 	console.log("XML Loading finished.");
@@ -43,9 +42,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	this.scene.onGraphLoaded();
 };
 
-/*
- * Example of method that parses elements of one block and stores information in a specific data structure
- */
+//Verifies if each element is in the right place
 MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 	var ch = rootElement.children;
@@ -157,15 +154,13 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 	return this.graph.connectedGraph();
 };
 
-/*
- * Callback to be executed on any read error
- */
+//Callback to be executed on any read error
 MySceneGraph.prototype.onXMLError=function (message) {
 	console.error("XML Loading Error: "+message);	
 	this.loadedOk=false;
 };
 
-
+//Parses the scene's elements
 MySceneGraph.prototype.parseScenes = function(scene_elems) {
 	/* 
 		Scenes 
@@ -181,6 +176,7 @@ MySceneGraph.prototype.parseScenes = function(scene_elems) {
 	
 };
 
+//Parses the the different views' elements
 MySceneGraph.prototype.parseViews = function(views_elems) {
 /* 
 		Views 
@@ -214,7 +210,7 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 		far = this.reader.getFloat(perspective_elems, 'far');
 		angle = Math.PI * this.reader.getFloat(perspective_elems,'angle') / 180;
 
-		/* Making sure that there are no to prespectives with the same id */
+		//Making sure that there are no to prespectives with the same id
 		for(var j = 0; j < this.views.length; j++) {
 			if(this.views[j] == null)
 				break;
@@ -263,6 +259,7 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 	}
 };
 
+//Parses the illumnitations' elements
 MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	/* 
 		Illumination
@@ -283,7 +280,7 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	if( ambient == null || ambient.length < 1)
 		return "Illumination -> Ambient error";
 	else if( ambient.length > 1 ) 
-		/* It should stop reading the dsx file because of this */
+		//It should stop reading the dsx file because of this
 		console.warn("There are more than 1 ambient elements in illumination, only the first will be considered");
 
 	var ambient_elem = ambient[0];
@@ -300,7 +297,7 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	if( background == null || background.length < 1)
 		return "Illumination -> Background error";
 	else if( background.length > 1 ) 
-		/* It should stop reading the dsx file because of this */
+		//It should stop reading the dsx file because of this
 		console.warn("There are more than 1 ambient elements in illumination, only the first will be considered");
 
 	var background_elem = background[0];
@@ -312,6 +309,7 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 	this.background = [r, g, b, a];	
 };
 
+//Parses the lights' elements
 MySceneGraph.prototype.parseLights = function(lights) {
 
 	/*
@@ -342,7 +340,7 @@ MySceneGraph.prototype.parseLights = function(lights) {
 		var id = this.reader.getString(light, 'id');
 
 		for( var j = 0; j < lightsId.length; j++)
-			/* Check whether the id of all lights is the same */
+			//Check whether the id of all lights is the same
 			if( lightsId[j] == id )
 				return "Lights -> There are 2 lights with the same id";
 
@@ -463,6 +461,7 @@ MySceneGraph.prototype.parseLights = function(lights) {
 	}
 };
 
+//Parses the different textures
 MySceneGraph.prototype.parseTextures = function(texture) {
 	
 	/*
@@ -484,6 +483,7 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 		var textureElem = texture_elem[i];
 		var id = this.reader.getString(texture_elem[i], 'id');
 
+		// Making sure that there are no two textures with the same id 
 		if( this.textures[id] != undefined)
 			return "Textures-> There are 2 textures with the same id (id="+id+")";
 
@@ -496,6 +496,7 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 	}
 };
 
+//Parses the materials
 MySceneGraph.prototype.parseMaterials = function(material) {
 	
 	/*
@@ -590,6 +591,7 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 	}
 };
 
+//Parses the transformations
 MySceneGraph.prototype.parseTransformations = function(transformations) {
 		
 	/*
@@ -644,7 +646,7 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 	}
 };
 
-
+//Parses the different primitives
 MySceneGraph.prototype.parsePrimitives = function(primitives) {
 	
 	/*
@@ -725,6 +727,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 	}
 };
 
+//Parses the componenets
 MySceneGraph.prototype.parseComponents = function (components) {
 	
 	/*
@@ -766,6 +769,7 @@ MySceneGraph.prototype.parseComponents = function (components) {
 	}
 };
 
+//Reads the transformations of each component
 MySceneGraph.prototype.readComponentTransformation = function (compElement, node) {
 
 	var transformations = compElement.getElementsByTagName('transformation');
@@ -820,8 +824,8 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 	}
 };
 
+//Reads the materials of each component
 MySceneGraph.prototype.readComponentMaterials = function (compElement, node) {
-	//Falta ver se o id é inherit e assim
 	var materials = compElement.getElementsByTagName('materials');
 	var nnodes = materials[0].children.length;
 	if (materials == null || materials.length != 1 || nnodes < 1) 
@@ -842,8 +846,8 @@ MySceneGraph.prototype.readComponentMaterials = function (compElement, node) {
 	
 };
 
+//Reads the texture of each component
 MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
-	//Falta ver inherit e essas cenas
 	var texture = compElement.getElementsByTagName('texture');
 	if(texture == null)
 		return "Component -> Texture error";
@@ -853,6 +857,7 @@ MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
 	node.setIdTexture(id);
 };
 
+//Reads the children of each component
 MySceneGraph.prototype.readComponentChildren = function (compElement, node) {
 	//Falta desenvolver tudo :P
 	var ch = compElement.getElementsByTagName('children');

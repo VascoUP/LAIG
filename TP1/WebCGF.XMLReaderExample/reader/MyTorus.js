@@ -1,7 +1,4 @@
-/**
- * MyTorus
- * @constructor
- */
+//Torus' constructor
 function MyTorus(scene, inner, outer, slices, loops) {
 	CGFobject.call(this, scene);
 	this.outer = outer;

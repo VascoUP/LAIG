@@ -1,4 +1,4 @@
-
+//Scene's constructor
 function XMLscene(myInterface) {
     CGFscene.call(this);
     this.myInterface = myInterface;
@@ -122,6 +122,7 @@ XMLscene.prototype.display = function () {
 
 };
 
+//Changes the cameras
 XMLscene.prototype.changeView = function() {
 	for(var i = 0; i < this.graph.views.length; i++) {
 		if( this.graph.views[i].id == this.currentCamera ) {
@@ -143,6 +144,7 @@ XMLscene.prototype.changeView = function() {
 	}
 };
 
+//Changes the materials
 XMLscene.prototype.changeMaterial = function() {
 	this.graph.graph.changeMaterials();
 }

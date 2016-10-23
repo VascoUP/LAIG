@@ -1,9 +1,4 @@
-/**
- * MyInterface
- * @constructor
- */
- 
- 
+//Interface's constructor
 function MyInterface() {
 	//call CGFinterface constructor 
 	CGFinterface.call(this);
@@ -12,10 +7,6 @@ function MyInterface() {
 MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
 
-/**
- * init
- * @param {CGFapplication} application
- */
 MyInterface.prototype.init = function(application) {
 	// call CGFinterface init
 	CGFinterface.prototype.init.call(this, application);
@@ -25,6 +16,7 @@ MyInterface.prototype.init = function(application) {
 	return true;
 };
 
+//Updates and creates the lights' interface
 MyInterface.prototype.updateLights = function(nLights, lights, lightType) {
 	var omniLights = this.gui.addFolder( 'Omni Lights' );
 	var spotLights = this.gui.addFolder( 'Spot Lights' );
@@ -32,12 +24,14 @@ MyInterface.prototype.updateLights = function(nLights, lights, lightType) {
 	var countOmni = 0, countSpot = 0;
 	
 	for(var i = 0; i < nLights; i++){
+		//Creates the "omni" lights
 		if(lightType[i+1] == 'omni'){
 			countOmni++;
 			var omni = omniLights.addFolder( 'Omni ' + countOmni);
 			omni.add(lights[i], 'enabled');
 		}
-			
+		
+		//Creates the "spot" lights
 		else{
 			countSpot++;
 			var spot = spotLights.addFolder( 'Spot ' + countSpot);
@@ -46,12 +40,7 @@ MyInterface.prototype.updateLights = function(nLights, lights, lightType) {
 	}
 }
 
-
-/**
- * processKeyboard
- * @param event {Event}
- */
-MyInterface.prototype.processKeyUp = function(event) {
+MyInterface.prototype.processKeyboard = function(event) {
 	
 	CGFinterface.prototype.processKeyUp.call(this, event);
 

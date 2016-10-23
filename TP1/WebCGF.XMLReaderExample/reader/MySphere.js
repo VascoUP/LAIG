@@ -1,4 +1,4 @@
-function MySphere(scene, radius, slices, stacks, minS, maxS, minT, maxT) {
+function MySphere(scene, radius, slices, stacks) {
  	CGFobject.call(this,scene);
 	
 	if( radius > 0 )
@@ -15,10 +15,10 @@ function MySphere(scene, radius, slices, stacks, minS, maxS, minT, maxT) {
 	else
 		this.stacks = 2;
 
-	this.minS = minS || 0.0;
-	this.maxS = maxS || 1.0;
-	this.minT = minT || 0.0;
-	this.maxT = maxT || 1.0;
+	this.minS = 0.0;
+	this.maxS = 1.0;
+	this.minT = 0.0;
+	this.maxT = 1.0;
 
  	this.initBuffers();
  }

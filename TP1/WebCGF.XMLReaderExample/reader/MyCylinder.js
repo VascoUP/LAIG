@@ -2,7 +2,7 @@
  * MyCylinder
  * @constructor
  */
- function MyCylinder(scene, base, top, height, slices, stacks, minS, maxS, minT, maxT) {
+ function MyCylinder(scene, base, top, height, slices, stacks) {
  	CGFobject.call(this,scene);
 	
 	this.base = base;
@@ -11,10 +11,10 @@
 	this.slices = slices;
 	this.stacks = stacks;
 
-	this.minS = minS || 0.0;
-	this.maxS = maxS || 1.0;
-	this.minT = minT || 0.0;
-	this.maxT = maxT || 1.0;
+	this.minS = 0.0;
+	this.maxS = 1.0;
+	this.minT = 0.0;
+	this.maxT = 1.0;
 
  	this.initBuffers();
  };
@@ -161,6 +161,7 @@
 
 			s += dS;
 	}
+MyRectangle.prototype.initBuffers = fu
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();

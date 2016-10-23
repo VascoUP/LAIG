@@ -373,6 +373,9 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			location_z == 'undefined' ||
 			location_w == 'undefined' )
 				return "Lights -> Location -> Missing required information.";
+				
+		if(location_w != 0 && location_w != 1)
+			console.warn("Location_w must be 0 or 1");
 		
 		if( ambients.length > 1 )
 			console.warn("Lights -> Only 1 ambient is needed.");
@@ -721,13 +724,18 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 		if (prim_elems == null)
 			return "Primitives -> Primitive error";
 
-
 		var id = prim_elems.attributes.getNamedItem('id').value;
+		
+		if(id == 'undefined')
+			return "Primitive -> ID -> Missing required information";
 	
 		// Making sure that there are no two primitives with the same id 
 		if(this.primitives[id] != undefined)
 			return "There are 2 primitives with the same name";
 
+		if(prim_elems.children.length > 1)
+			console.warn("You must have only one tag");
+		
 		var primitive = prim_elems.children[0].tagName;
 		
 		switch(primitive) {
@@ -737,6 +745,10 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				y1 = this.reader.getFloat(prim_elems.children[0], 'y1');
 				x2 = this.reader.getFloat(prim_elems.children[0], 'x2');
 				y2 = this.reader.getFloat(prim_elems.children[0], 'y2');
+				
+				if(x1 == 'undefined' || y1 == 'undefined' || x2 == 'undefined' || y2 == 'undefined')
+					return "Primitives -> Rectangle -> Missing required information.";
+				
 				this.primitives[id] = new MyRectangle(this.scene, x1, y1, x2, y2);
 				break;
 			case 'triangle':

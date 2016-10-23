@@ -46,6 +46,7 @@ MySceneGraph.prototype.onXMLReady=function()
 MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 	var ch = rootElement.children;
+	var elems = [ false, false, false, false, false, false, false, false, false ];
 	var err;
 
 	if( ch == null || ch.length != 9 )
@@ -60,6 +61,11 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 			if( i != 0 )
 				console.warn("<scene> element is out of place");
 
+			if( elems[0] )
+				return "Found 2 <scene> elements";
+			else
+				elems[0] = true;
+
 			if( (err = this.parseScenes(ch[i])) != null )
 				return err;
 			pScene = true;
@@ -71,6 +77,11 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 			if( i != 1 )
 				console.warn("<views> element is out of place");
 
+			if( elems[1] )
+				return "Found 2 <views> elements";
+			else
+				elems[1] = true;
+
 			if( (err = this.parseViews(ch[i])) != null )
 				return err;
 
@@ -80,7 +91,12 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 			if( i != 2 )
 				console.warn("<illumination> element is out of place");
-			
+
+			if( elems[2] )
+				return "Found 2 <illumination> elements";
+			else
+				elems[2] = true;
+
 			if( (err = this.parseIlluminations(ch[i])) != null )
 				return err;
 
@@ -91,6 +107,11 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 			if( i != 3 )
 				console.warn("<lights> element is out of place");
 			
+			if( elems[3] )
+				return "Found 2 <lights> elements";
+			else
+				elems[3] = true;
+
 			if( (err = this.parseLights(ch[i])) != null )
 				return err;
 
@@ -100,6 +121,11 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 			if( i != 4 )
 				console.warn("<textures> element is out of place");
+
+			if( elems[4] )
+				return "Found 2 <textures> elements";
+			else
+				elems[4] = true;
 			
 			if( (err = this.parseTextures(ch[i])) != null )
 				return err;
@@ -110,7 +136,12 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 			if( i != 5 )
 				console.warn("<materials> element is out of place");
-			
+
+			if( elems[5] )
+				return "Found 2 <materials> elements";
+			else
+				elems[5] = true;
+
 			if( (err = this.parseMaterials(ch[i])) != null )
 				return err;
 
@@ -120,7 +151,12 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 			if( i != 6 )
 				console.warn("<transformations> element is out of place");
-			
+
+			if( elems[6] )
+				return "Found 2 <transformations> elements";
+			else
+				elems[6] = true;
+
 			if( (err = this.parseTransformations(ch[i])) != null )
 			return err;
 
@@ -130,6 +166,11 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 			if( i != 7 )
 				console.warn("<primitives> element is out of place");
+
+			if( elems[7] )
+				return "Found 2 <transformations> elements";
+			else
+				elems[7] = true;
 			
 			if( (err = this.parsePrimitives(ch[i])) != null )
 				return err;
@@ -140,6 +181,11 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 			if( i != 8 )
 				console.warn("<components> element is out of place");
+
+			if( elems[8] )
+				return "Found 2 <transformations> elements";
+			else
+				elems[8] = true;
 			
 			if( (err = this.parseComponents(ch[i])) != null )
 				return err;

@@ -208,8 +208,10 @@ MySceneGraph.prototype.onXMLError=function (message) {
 
 //Parses the scene's elements
 MySceneGraph.prototype.parseScenes = function(scene_elems) {
-	if (scene_elems == null || scene_elems.attributes.length != 2)
-		return "Scene -> Missing required information.";
+	if (scene_elems == null || scene_elems.attributes.length < 2)
+		return "Scene -> Missing required information";
+	else if(scene_elems.attributes.length > 2)
+		console.warn("Scene -> More attributes than required");
 
 	this.graph.idHead = this.reader.getString(scene_elems, 'root');
 	this.axis_length = this.reader.getFloat(scene_elems, 'axis_length');
@@ -224,8 +226,10 @@ MySceneGraph.prototype.parseScenes = function(scene_elems) {
 MySceneGraph.prototype.parseViews = function(views_elems) {
 
 	var nnodes = views_elems.children.length;
-	if (views_elems == null || nnodes < 1 || views_elems.attributes.length != 1) 
-		return "Views -> Missing required information.";
+	if (views_elems == null || nnodes < 1 || views_elems.attributes.length < 1) 
+		return "Views -> Missing required information";
+	else if( views_elems.attributes.length > 1 )
+		console.warn("Views -> More attributes than required");
 
 	this.default_view = this.reader.getString(views_elems, 'default');
 	
@@ -238,8 +242,10 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 
 		var perspective_elems = views_elems.children[i];
 
-		if (perspective_elems == null || perspective_elems.attributes.length != 4)
+		if (perspective_elems == null || perspective_elems.attributes.length < 4)
 			return "Views -> Prespectives -> Missing required information.";
+		else if( perspective_elems.attributes.length > 4 )
+			console.warn("Views -> Prespective -> More attributes than required");
 
 		var id, near, far, angle;
 		id = perspective_elems.id;
@@ -267,8 +273,10 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 
 		var from_elems = perspective_elems.getElementsByTagName('from');
 
-		if(from_elems == null || from_elems.length != 1 || from_elems[0].attributes.length != 3)
+		if(from_elems == null || from_elems.length != 1 || from_elems[0].attributes.length < 3)
 			return "Views -> Prespective " + id + " -> From -> Missing required information.";
+		else if( from_elems[0].attributes.length > 3 )
+			console.warn("Views -> Prespective -> From -> More attributes than required");
 
 		var fromE = from_elems[0];
 		
@@ -283,8 +291,10 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 
 		var to_elems = perspective_elems.getElementsByTagName('to');
 
-		if(to_elems == null || to_elems.length != 1 || to_elems[0].attributes.length != 3)
+		if(to_elems == null || to_elems.length != 1 || to_elems[0].attributes.length < 3)
 			return "Views -> Prespective " + id + " -> To -> Missing required information.";
+		else if( to_elems[0].attributes.length > 3 )
+			console.warn("Views -> Prespective -> To -> More attributes than required");
 
 		var toE = to_elems[0];
 		
@@ -311,29 +321,31 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 };
 
 //Parses the illumnitations' elements
-MySceneGraph.prototype.parseIlluminations = function(illumination) {
+MySceneGraph.prototype.parseIlluminations = function(illumination_elem) {
 	
-	if (illumination == null) 
-		return "Illumination error";
-
-	var illumination_elem = illumination;
+	if (illumination_elem == null || illumination_elem.attributes.length < 2) 
+		return "Illumination attribute error";
+	else if(illumination_elem.attributes.length > 2)
+		console.warn("Illumination -> More attributes than required");
 	
 	var doublesided = this.reader.getBoolean(illumination_elem, 'doublesided');
 	var local = this.reader.getBoolean(illumination_elem, 'local');
 
 	if(	doublesided == undefined || local == undefined )
-			return "Illumination -> Doublesided or local variables missing";
+		return "Illumination -> Doublesided or local variables missing";
 			
 	if( (doublesided != 0 && doublesided != 1 ) || (local != 0 && local != 1) )
 		console.warn("Doublesided and local must be 0 or 1");
 
 	var ambient = illumination_elem.getElementsByTagName('ambient');
 
-	if( ambient == null || ambient.length != 1)
-		return "Illumination -> Ambient error";
+	if( ambient == null || ambient.length != 1 || ambient.attributes.length < 4)
+		return "Illumination -> Ambient  attributes error";
+	else if(ambient.attributes.length > 4)
+		console.warn("Illumination -> Ambient -> More attributes than required");
 	
 	else if( ambient.length > 1 ) 
-		//It should stop reading the dsx file because of this
+		//It shouldn't stop reading the dsx file because of this
 		console.warn("There are more than 1 ambient elements in illumination, only the first will be considered");
 
 	var ambient_elem = ambient[0];
@@ -354,10 +366,10 @@ MySceneGraph.prototype.parseIlluminations = function(illumination) {
 
 	var background = illumination_elem.getElementsByTagName('background');
 
-	if( background == null || background.length != 1)
-		return "Illumination -> Background error";
+	if( background == null || background.length != 1 || background.attributes.length != 4)
+		return "Illumination -> Background attribute error";
 	else if( background.length > 1 ) 
-		//It should stop reading the dsx file because of this
+		//It shouldn't' stop reading the dsx file because of this
 		console.warn("There are more than 1 ambient elements in illumination, only the first will be considered");
 
 	var background_elem = background[0];

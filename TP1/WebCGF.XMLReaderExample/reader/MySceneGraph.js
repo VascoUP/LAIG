@@ -385,6 +385,17 @@ MySceneGraph.prototype.parseLights = function(lights) {
 	for( var i = 0; i < lights.children.length; i++ ) {
 
 		var light = lights.children[i];
+		
+		var type = light.tagName;
+	
+		if(type == 'omni')
+			if(light.attributes.length != 2)
+				return "Omni Light -> Wrong number of attributes.";
+			
+		if(type == 'spot')
+			if(light.attributes.length != 4)
+				return "Spot Light -> Wrong number of attributes.";
+		
 		var id = this.reader.getString(light, 'id');
 		
 		if(id == undefined)
@@ -405,17 +416,23 @@ MySceneGraph.prototype.parseLights = function(lights) {
 
 		if( locations.length > 1 )
 			console.warn("Lights -> Only 1 location is needed.");
-
+		
+		var location_w;
+		if(type == 'omni'){
+			if(locations[0].attributes.length != 4)
+				return "Omni Light " + id + " -> Location -> Wrong number of attributes.";
+			location_w = this.reader.getFloat(locations[0], 'w');
+		}
+			
+		else{
+			if(locations[0].attributes.length != 3)
+				return "Spot Light" + id + " -> Location -> Wrong number of attributes.";
+			location_w = 1; //To ensure that we set the light position with the variable w
+		}
+			
 		var location_x = this.reader.getFloat(locations[0], 'x');
 		var location_y = this.reader.getFloat(locations[0], 'y');
 		var location_z = this.reader.getFloat(locations[0], 'z');
-		
-		var type = lights.children[i].tagName;
-		var location_w;
-		if(type == 'omni')
-			location_w = this.reader.getFloat(locations[0], 'w');
-		else
-			location_w = 1; //To ensure that we set the light position with the variable w
 	
 		if( location_x == undefined || 
 			location_y == undefined ||
@@ -428,6 +445,9 @@ MySceneGraph.prototype.parseLights = function(lights) {
 		
 		if( ambients.length > 1 )
 			console.warn("Lights -> Only 1 ambient is needed.");
+		
+		if(ambients[0].attributes.length != 4)
+			return "Light " + id + "-> Ambient -> Wrong number of attributes.";
 
 		var ambient_r = this.reader.getFloat(ambients[0], 'r');
 		var ambient_g = this.reader.getFloat(ambients[0], 'g');
@@ -443,6 +463,9 @@ MySceneGraph.prototype.parseLights = function(lights) {
 
 		if( diffuses.length > 1 )
 			console.warn("Lights -> Only 1 diffuse is needed.");
+		
+		if(diffuses[0].attributes.length != 4)
+			return "Light " + id + " -> Diffuse -> Wrong number of attributes.";
 
 		var diffuse_r = this.reader.getFloat(diffuses[0], 'r');
 		var diffuse_g = this.reader.getFloat(diffuses[0], 'g');
@@ -456,6 +479,12 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			diffuse_b < 0 || diffuse_b > 1 || diffuse_a < 0 || diffuse_a > 1 )
 				console.warn("Lights -> Diffuse -> RGBA values must be between 0 and 1");
 
+		if( speculars.length > 1 )
+			console.warn("Light " + id + " -> Only 1 speculars is needed.");
+		
+		if(speculars[0].attributes.length != 4)
+			return "Lights -> Specular -> Wrong number of attributes.";
+		
 		var specular_r = this.reader.getFloat(speculars[0], 'r');
 		var specular_g = this.reader.getFloat(speculars[0], 'g');
 		var specular_b = this.reader.getFloat(speculars[0], 'b');
@@ -486,6 +515,9 @@ MySceneGraph.prototype.parseLights = function(lights) {
 
 			if( targets.length > 1 )
 				console.warn("Lights -> Spot -> Only 1 location is needed.");
+			
+			if( targets[0].attributes.length != 3)
+				return "Spot Light " + id + " -> Target -> Wrong number of attributes.";
 
 			var target_x = this.reader.getFloat(targets[0], 'x');
 			var target_y = this.reader.getFloat(targets[0], 'y');

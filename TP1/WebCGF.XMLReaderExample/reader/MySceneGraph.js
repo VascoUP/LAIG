@@ -1044,6 +1044,11 @@ MySceneGraph.prototype.parseComponents = function (components) {
 
 		if (comp_elems == null)
 			return "Components -> Component error";
+		
+		if(comp_elems.attributes.length < 1)
+			return "Components -> Component -> Wrong number of attributes";
+		if(comp_elems.attributes.length > 1)
+			console.warn("Components -> Component -> More attributes than required");
 
 		var id = comp_elems.attributes.getNamedItem('id').value;
 		
@@ -1085,6 +1090,12 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 		var transformation = transform_elems.tagName;
 		switch(transformation) {
 			case 'transformationref':
+			
+				if(transform_elems.attributes.length < 1)
+					return "Component -> Transformation -> TransformationRef -> Wrong number of attributes";
+				if(transform_elems.attributes.length > 1)
+					console.warn("Component -> Transformation -> TransformationRef -> More attributes than required");
+				
 				id = this.reader.getString(transform_elems, 'id');
 				
 				if(id == undefined)
@@ -1097,6 +1108,13 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 
 				break;
 			case 'translate':
+			
+				if(transform_elems.attributes.length < 3)
+					return "Component -> Transformation -> Translate -> Wrong number of attributes";
+					
+				if(transform_elems.attributes.length > 3)
+					console.warn("Component -> Transformation -> Translate -> More attributes than required");
+				
 				var x, y, z;
 				x = this.reader.getFloat(transform_elems, 'x');
 				y = this.reader.getFloat(transform_elems, 'y');
@@ -1107,6 +1125,12 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 				node.addTransform(transformation, [x, y, z]);
 				break;
 			case 'rotate':
+				
+				if(transform_elems.attributes.length < 2)
+					return "Component -> Transformation -> Rotate -> Wrong number of attributes";
+				if(transform_elems.attributes.length > 2)
+					console.warn("Component -> Transformation -> Rotate -> More attributes than required");
+				
 				var axis, angle;
 				angle = Math.PI * this.reader.getFloat(transform_elems, 'angle') / 180;
 				axis = this.reader.getString(transform_elems, 'axis');
@@ -1120,6 +1144,12 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 				node.addTransform(transformation, [angle, axis]);
 				break;
 			case 'scale':
+			
+				if(transform_elems.attributes.length < 3)
+					return "Component -> Transformation -> Scale -> Wrong number of attributes";
+				if(transform_elems.attributes.length > 3)
+					console.warn("Component -> Transformation -> Scale -> More attributes than required");
+				
 				var x, y, z;
 				x = this.reader.getFloat(transform_elems, 'x');
 				y = this.reader.getFloat(transform_elems, 'y');
@@ -1150,6 +1180,11 @@ MySceneGraph.prototype.readComponentMaterials = function (compElement, node) {
 
 		if (material_elems == null)
 			return "Materials -> Material error";
+		
+		if(material_elems.attributes.length < 1)
+			return "Component -> Material -> Wrong number of attributes";
+		if(material_elems.attributes.length > 1)
+			console.warn("Component -> Material -> More attributes than required");
 
 		var id = material_elems.attributes.getNamedItem('id').value;
 		
@@ -1166,6 +1201,11 @@ MySceneGraph.prototype.readComponentTextures = function (compElement, node) {
 	var texture = compElement.getElementsByTagName('texture');
 	if(texture == null)
 		return "Component -> Texture error";
+	
+	if(texture[0].attributes.length < 1)
+		return "Component -> Texture -> Wrong number of attributes";
+	if(texture[0].attributes.length > 1)
+		console.warn("Component -> Texture -> More attributes than required");
 
 	var id = texture[0].attributes.getNamedItem('id').value;
 	
@@ -1194,6 +1234,11 @@ MySceneGraph.prototype.readComponentChildren = function (compElement, node) {
 		var childrenTag = childrenElems[j].tagName;
 		switch(childrenTag) {
 			case 'componentref':
+				if(childrenElems[j].attributes.length < 1)
+					return "Component -> Children -> ComponentRef -> Wrong number of attributes";
+				if(childrenElems[j].attributes.length > 1)
+					console.warn("Component -> Children -> ComponentRef -> More attributes than required");
+				
 				id = this.reader.getString(childrenElems[j], 'id');
 				
 				if(id == undefined)
@@ -1203,6 +1248,11 @@ MySceneGraph.prototype.readComponentChildren = function (compElement, node) {
 				countComp++;
 				break;
 			case 'primitiveref':
+				if(childrenElems[j].attributes.length < 1)
+					return "Component -> Children -> PrimitiveRef -> Wrong number of attributes";
+				if(childrenElems[j].attributes.length > 1)
+					console.warn("Component -> Children -> PrimitiveRef -> More attributes than required");
+				
 				id = this.reader.getString(childrenElems[j], 'id');
 				
 				if(id == undefined)

@@ -111,7 +111,6 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 	var mat = this.sceneGraph.materials[idMat];
 	if( idTex != 'none' ) 
 		mat.setTexture( this.sceneGraph.textures[idTex].texture );
-
 	mat.apply();
 	
 	for( var i = 0; i < node.idPrimitives.length; i++ ) {

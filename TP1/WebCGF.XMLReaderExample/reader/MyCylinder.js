@@ -35,8 +35,8 @@
 	var counter = 0;
 
 	var dS = ( this.maxS - this.minS ) / this.slices;
-	var dT = ( this.maxT - this.minT ) / (this.stacks + 2);
-	var t = this.minT + dT;
+	var dT = ( this.maxT - this.minT ) / this.stacks;
+	var t = this.minT;
 
  	this.vertices = [];
  	this.indices = [];
@@ -103,8 +103,6 @@
 			this.vertices.push(xCoord, yCoord, zCoord);
 			this.normals.push(0, 0, -1);
 			this.texCoords.push((xCoord / r + 1) / 2 * dS, (yCoord / r + 1) / 2 * dT);
-			/*this.texCoords.push(xCoord * dS / r + ( this.maxS + this.minS ) / 2, 
-								yCoord * dT / r + ( this.maxT + this.minT ) / 2);*/
 
 			if(i > 0) 
 				this.indices.push(nIndices + i, nIndices + i - 1, nIndices - 1);
@@ -139,8 +137,6 @@
 			this.vertices.push(xCoord, yCoord, this.height);
 			this.normals.push(0, 0, 1);
 			this.texCoords.push((xCoord / r + 1) / 2 * dS, (yCoord / r + 1) / 2 * dT);
-			/*this.texCoords.push(Math.sin(ang) * dS + ( this.maxS + this.minS ) / 2, 
-								Math.cos(ang) * dT + ( this.maxT + this.minT ) / 2);*/
 
 			if(i > 0) 
 				this.indices.push( nIndices - 1, nIndices + i - 1, nIndices + i);
@@ -166,8 +162,8 @@ MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
 	this.texCoords = [];
 
 	var dS = ( this.maxS - this.minS ) / this.slices;
-	var dT = ( this.maxT - this.minT ) / (this.stacks + 2);
-	var t = this.minT + dT;
+	var dT = ( this.maxT - this.minT ) / this.stacks;
+	var t = this.minT;
 	var s;
 
 	//Draw the body 
@@ -200,8 +196,6 @@ MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
 
 	for (var i = 0; i <= this.slices; i++) {
 			this.texCoords.push((xCoord + 1) / 2 * dS, (yCoord + 1) / 2 * dT);
-			/*this.texCoords.push(xCoord * dS / r + ( this.maxS + this.minS ) / 2, 
-								yCoord * dT / r + ( this.maxT + this.minT ) / 2);*/
 
 			ang += dAng;
 			yCoord = Math.sin(ang);
@@ -224,8 +218,6 @@ MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
 
 	for (var i = 0; i <= this.slices; i++) {
 			this.texCoords.push((xCoord + 1) / 2 * dS, (yCoord + 1) / 2 * dT);
-			/*this.texCoords.push(Math.sin(ang) * dS + ( this.maxS + this.minS ) / 2, 
-								Math.cos(ang) * dT + ( this.maxT + this.minT ) / 2);*/
 
 			ang += dAng;
 			yCoord = Math.sin(ang);

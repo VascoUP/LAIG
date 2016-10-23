@@ -2,10 +2,10 @@
 function MySphere(scene, radius, slices, stacks) {
  	CGFobject.call(this,scene);
 	
-	if( radius > 0 )
+	//if( radius > 0 )
 		this.radius = radius;
-	else
-		this.radius = 1;
+	/*else
+		this.radius = 1;*/
 
 	if( slices >= 3 )
 		this.slices = slices;
@@ -51,6 +51,8 @@ function MySphere(scene, radius, slices, stacks) {
  	this.indices = [];
 	this.normals = [];
 	this.texCoords = [];
+
+	console.debug(this.radius);
 
 	for(var j = 1; j < this.stacks; j++) {
 		s = this.minS;

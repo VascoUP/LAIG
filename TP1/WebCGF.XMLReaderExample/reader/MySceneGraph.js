@@ -402,7 +402,7 @@ MySceneGraph.prototype.parseLights = function(lights) {
 	nnodes = lights.children.length;
 	if (lights == null || nnodes < 1) 
 		return "Lights error -> You need at least one omni ou spot lights";
-	else if( lights.attributes.length != 1 )
+	else if( lights.attributes.length != 0 )
 		console.warn("Lights -> More attributes the required");
 
 	var lightsId = [];
@@ -1064,10 +1064,15 @@ MySceneGraph.prototype.parseComponents = function (components) {
 				return "Components -> " + id + " -> Same id error";
 		}
 		
-		this.readComponentTransformation(comp_elems,n);
-		this.readComponentMaterials(comp_elems,n);
-		this.readComponentTextures(comp_elems,n);
-		this.readComponentChildren(comp_elems,n);
+		var err;
+		if( (err = this.readComponentTransformation(comp_elems,n)) != null )
+			return err;
+		if( (err = this.readComponentMaterials(comp_elems,n)) != null )
+			return err;
+		if( (err = this.readComponentTextures(comp_elems,n)) != null )
+			return err;
+		if( (err = this.readComponentChildren(comp_elems,n)) != null )
+			return err;
 	}
 };
 

@@ -208,15 +208,14 @@ MySceneGraph.prototype.onXMLError=function (message) {
 
 //Parses the scene's elements
 MySceneGraph.prototype.parseScenes = function(scene_elems) {
-	
-	if (scene_elems == null)
-		return "Scene error";
+	if (scene_elems == null || scene_elems.attributes.length != 2)
+		return "Scene -> Missing required information.";
 
 	this.graph.idHead = this.reader.getString(scene_elems, 'root');
 	this.axis_length = this.reader.getFloat(scene_elems, 'axis_length');
 	
 	if(this.graph.idHead == 'undefined' || this.axis_length == 'undefined')
-		return "Scene -> Missing required information.";
+		return "Scene -> Wrong name for one of the attributes (root / axis_length).";
 	
 };
 

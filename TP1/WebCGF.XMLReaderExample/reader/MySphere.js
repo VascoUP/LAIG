@@ -52,8 +52,6 @@ function MySphere(scene, radius, slices, stacks) {
 	this.normals = [];
 	this.texCoords = [];
 
-	console.debug(this.radius);
-
 	for(var j = 1; j < this.stacks; j++) {
 		s = this.minS;
 		if(j == 1) {

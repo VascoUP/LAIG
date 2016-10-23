@@ -1,7 +1,4 @@
-/**
- * MyCylinder
- * @constructor
- */
+//Cylinder's constructor
  function MyCylinder(scene, base, top, height, slices, stacks) {
  	CGFobject.call(this,scene);
 	
@@ -46,9 +43,7 @@
 	this.normals = [];
 	this.texCoords = [];
 
-	/**
-	 * Draw the body 
-	 */
+	//Draw the body 
  	for(var j = -1; j < this.stacks; j++) {
 		var s = this.minS;
 		for (var i = 0; i <= this.slices; i++) {
@@ -83,9 +78,7 @@
 	}
 
 
-	/**
-	 * Draw the base 
-	*/
+	//Draw the base 
 	dS = this.maxS - this.minS;
 	dT = this.maxT - this.minT;
 
@@ -125,9 +118,7 @@
 	}
 	
 
-	/**
-	 * Draw the top 
-	*/
+	//Draw the top 
 	r = this.top;
 
 	xCoord = r;
@@ -180,9 +171,7 @@ MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
 	var t = this.minT + dT;
 	var s;
 
-	/**
-	 * Draw the body 
-	 */
+	//Draw the body 
  	for(var j = -1; j < this.stacks; j++) {
 		s = this.minS;
 		for (var i = 0; i <= this.slices; i++) {
@@ -193,9 +182,7 @@ MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
 	}
 
 
-	/**
-	 * Draw the base 
-	*/
+	//Draw the base 
 	dS = this.maxS - this.minS;
 	dT = this.maxT - this.minT;
 
@@ -224,9 +211,7 @@ MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
 	}
 	
 
-	/**
-	 * Draw the top 
-	*/
+	//Draw the top 
 	xCoord = 1;
 	yCoord = 0;
 	

@@ -217,6 +217,9 @@ MySceneGraph.prototype.parseScenes = function(scene_elems) {
 	if(this.graph.idHead == 'undefined' || this.axis_length == 'undefined')
 		return "Scene -> Wrong name for one of the attributes (root / axis_length).";
 	
+	else if(this.axis_length < 0)
+		console.warn("Axis length can't be negative");
+	
 };
 
 //Parses the the different views' elements
@@ -248,9 +251,6 @@ MySceneGraph.prototype.parseViews = function(views_elems) {
 		
 		if(id == 'undefined' || near == 'undefined' || far == 'undefined' || angle == 'undefined')
 			return ("Views -> Prespective " + id + " -> Missing required information.");
-		
-		if(angle < 0 || angle > 2*Math.PI)
-			return "Views -> Prespective " + id + " -> Angle with wrong values.";
 
 		//Making sure that there are no to prespectives with the same id
 		for(var j = 0; j < this.views.length; j++) {
@@ -418,6 +418,9 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			location_z == 'undefined' ||
 			location_w == 'undefined' )
 				return "Lights -> Location -> Missing required information.";
+				
+		if(location_w != 0 && location_w != 1)
+			console.warn("Location_w must be 0 or 1");
 		
 		if( ambients.length > 1 )
 			console.warn("Lights -> Only 1 ambient is needed.");
@@ -492,7 +495,7 @@ MySceneGraph.prototype.parseLights = function(lights) {
 			var angle = Math.PI * this.reader.getFloat(light, 'angle') / 180 ;
 			var exponent = this.reader.getFloat(light, 'exponent') ;
 			
-			if(( 0 > angle || angle > 2 * Math.PI || angle == 'undefined') || exponent == 'undefined')
+			if(angle == 'undefined' || exponent == 'undefined')
 				return "Lights -> Spot -> Missing required information or variables with wrong values.";
 			
 			this.scene.lights[this.nLights].setSpotCutOff( angle );
@@ -537,18 +540,34 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 
 	var texture_elem = texture.getElementsByTagName('texture');
 	
+	if(texture_elem.length < 1)
+		return "Texture -> You need at least one texture.";
+	
 	for( var i = 0; i < texture_elem.length; i++ ) {
 		var textureElem = texture_elem[i];
 		var id = this.reader.getString(texture_elem[i], 'id');
+		
+		if( id == 'undefined' )
+			return "Texture -> ID -> Missing the required information."
 
 		// Making sure that there are no two textures with the same id 
 		if( this.textures[id] != undefined)
 			return "Textures-> There are 2 textures with the same id (id="+id+")";
 
 		var file = this.reader.getString(texture_elem[i], 'file');
+		
+		if( file == 'undefined' )
+			return "Texture -> Missing required information -> " + id + " -> File undefined";
+		
 		var t = new CGFtexture(this.scene, file);
-		var texInfo = new TextureInfo( t, this.reader.getFloat(texture_elem[i], 'length_t'), 
-											this.reader.getFloat(texture_elem[i], 'length_s'));
+		
+		var length_t = this.reader.getFloat(texture_elem[i], 'length_t');
+		var length_s = this.reader.getFloat(texture_elem[i], 'length_s');
+		
+		if( length_t == 'undefined' || length_s == 'undefined')
+			return "Texture -> Missing required information -> " + id + " -> length_t or length_s undefined";
+		
+		var texInfo = new TextureInfo( t, length_t, length_s);
 
 		this.textures[id] = texInfo;
 	}
@@ -557,12 +576,6 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 //Parses the materials
 MySceneGraph.prototype.parseMaterials = function(material) {
 	
-	/*
-		Materials
-
-		TO DO:
-			????????????????
-	*/
 	var nnodes = material.children.length;
 	
 	if(material == null || nnodes < 1) 
@@ -578,10 +591,13 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 			return "Materials -> Material error";
 
 		var id = material_elems.attributes.getNamedItem('id').value;
+		
+		if( id == 'undefined')
+			return "Materials -> Material -> ID -> Missing required information.";
 	
 		// Making sure that there are no two materials with the same id 
 		if( this.materials[id] != undefined )
-			return "Materials -> Same id error";
+			return "Materials -> " + this.materials[id] + " -> Same id error";
 
 		var appearance = new CGFappearance(this.scene);
 
@@ -597,6 +613,12 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 		b = this.reader.getFloat(emissionElem, 'b');
 		a = this.reader.getFloat(emissionElem, 'a');
 		
+		if(	(r == 'undefined' || r < 0 || r > 1) ||
+			(g == 'undefined' || g < 0 || g > 1) ||
+			(b == 'undefined' || b < 0 || b > 1) ||
+			(a == 'undefined' || a < 0 || a > 1) )
+				return "Material -> Emission -> Missing required information or variables with wrong values";
+		
 		appearance.setEmission(r, g, b, a);
 		
 		var ambient = material_elems.getElementsByTagName('ambient');
@@ -608,6 +630,12 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 		g = this.reader.getFloat(ambientElem, 'g');
 		b = this.reader.getFloat(ambientElem, 'b');
 		a = this.reader.getFloat(ambientElem, 'a');
+		
+		if(	(r == 'undefined' || r < 0 || r > 1) ||
+			(g == 'undefined' || g < 0 || g > 1) ||
+			(b == 'undefined' || b < 0 || b > 1) ||
+			(a == 'undefined' || a < 0 || a > 1) )
+				return "Material -> Ambient -> Missing required information or variables with wrong values";
 		
 		appearance.setAmbient(r, g, b, a);
 
@@ -621,6 +649,12 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 		b = this.reader.getFloat(diffuseElem, 'b');
 		a = this.reader.getFloat(diffuseElem, 'a');
 		
+		if(	(r == 'undefined' || r < 0 || r > 1) ||
+			(g == 'undefined' || g < 0 || g > 1) ||
+			(b == 'undefined' || b < 0 || b > 1) ||
+			(a == 'undefined' || a < 0 || a > 1) )
+				return "Material -> Diffuse -> Missing required information or variables with wrong values";
+		
 		appearance.setDiffuse(r, g, b, a);
 								
 		var specular = material_elems.getElementsByTagName('specular');
@@ -633,6 +667,12 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 		b = this.reader.getFloat(specularElem, 'b');
 		a = this.reader.getFloat(specularElem, 'a');
 		
+		if(	(r == 'undefined' || r < 0 || r > 1) ||
+			(g == 'undefined' || g < 0 || g > 1) ||
+			(b == 'undefined' || b < 0 || b > 1) ||
+			(a == 'undefined' || a < 0 || a > 1) )
+				return "Material -> Specular -> Missing required information or variables with wrong values";
+		
 		appearance.setSpecular(r, g, b, a);
 								
 		var shininess = material_elems.getElementsByTagName('shininess');
@@ -641,6 +681,9 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 
 		var shininessElem = shininess[0];
 		var shininess = this.reader.getFloat(shininessElem, 'value');
+		
+		if ( shininess == 'undefined' || shininess < 0)
+			return "Materials -> Shininess-> Missing required information or variable with wrong value";
 		
 		appearance.setShininess(shininess);
 		appearance.setTextureWrap('REPEAT', 'REPEAT');
@@ -651,13 +694,7 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 
 //Parses the transformations
 MySceneGraph.prototype.parseTransformations = function(transformations) {
-		
-	/*
-		Transformations
 
-		TO DO:
-		????????????????????????
-	*/
 	var nnodes = transformations.children.length;
 	
 	if (transformations == null || nnodes < 1) 
@@ -670,14 +707,19 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 			return "Transformation error";
 
 		var id = transform_elems.attributes.getNamedItem('id').value;
+		
+		if( id == 'undefined' )
+			return "Transformation -> ID -> Missing required information.";
 	
 		// Making sure that there are no two transformations with the same id
 		if( this.transformations[id] != undefined )
-			return "Transformations -> Same id error";
+			return "Transformations -> " + this.transformations[id] + " -> Same id error";
 
 		var matrix = mat4.create();
 		this.transformations[id] = matrix;
-		//this.transformations[id] = new TransformationInfo(id);
+		
+		if(transform_elems.children.length == 0)
+			return "Transformation -> You need at least one transformation (translate, rotate or scale)";
 
 		for(var k = 0; k < transform_elems.children.length; k++){
 			var transformation = transform_elems.children[k].tagName;
@@ -686,19 +728,27 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 				var axis, angle;
 				angle = Math.PI * this.reader.getFloat(transform_elems.children[k], 'angle') / 180;
 				axis = this.reader.getString(transform_elems.children[k], 'axis');
+				
+				if( angle == 'undefined' || axis == 'undifined')
+					return "Transformation -> Rotate -> Missing required information.";
+				else if(this.axis_length < 0)
+					console.warn("Axis length can't be negative");
+				
 				mat4.rotate(matrix, matrix, angle, axis == 'x' ? [1, 0, 0] : axis == 'y' ? [0, 1, 0] : [0, 0, 1]);
-				//this.transformations[id].addTransform(transformation, [axis, angle]);
 			}
 			else {
 				var x, y, z;
 				x = this.reader.getFloat(transform_elems.children[k], 'x');
 				y = this.reader.getFloat(transform_elems.children[k], 'y');
 				z = this.reader.getFloat(transform_elems.children[k], 'z');
+				
+				if( x == 'undefined' || y == 'undefined' || z == 'undefined')
+					return "Transformation -> " + transformation + " -> Missing required information.";
+				
 				if( transformation == 'scale' )
 					mat4.scale(matrix, matrix, [x, y, z]);
 				else
 					mat4.translate(matrix, matrix, [x, y, z]);
-				//this.transformations[id].addTransform(transformation, [x, y, z]);
 			}
 		}
 	}
@@ -706,13 +756,6 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 
 //Parses the different primitives
 MySceneGraph.prototype.parsePrimitives = function(primitives) {
-	
-	/*
-		Primitives
-
-		TO DO:
-			everything
-	*/
 	
 	var nnodes = primitives.children.length;
 	
@@ -726,13 +769,18 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 		if (prim_elems == null)
 			return "Primitives -> Primitive error";
 
-
 		var id = prim_elems.attributes.getNamedItem('id').value;
+		
+		if(id == 'undefined')
+			return "Primitive -> ID -> Missing required information";
 	
 		// Making sure that there are no two primitives with the same id 
 		if(this.primitives[id] != undefined)
 			return "There are 2 primitives with the same name";
 
+		if(prim_elems.children.length > 1)
+			console.warn("You must have only one tag");
+		
 		var primitive = prim_elems.children[0].tagName;
 		
 		switch(primitive) {
@@ -742,6 +790,10 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				y1 = this.reader.getFloat(prim_elems.children[0], 'y1');
 				x2 = this.reader.getFloat(prim_elems.children[0], 'x2');
 				y2 = this.reader.getFloat(prim_elems.children[0], 'y2');
+				
+				if(x1 == 'undefined' || y1 == 'undefined' || x2 == 'undefined' || y2 == 'undefined')
+					return "Primitives -> Rectangle -> Missing required information.";
+				
 				this.primitives[id] = new MyRectangle(this.scene, x1, y1, x2, y2);
 				break;
 			case 'triangle':

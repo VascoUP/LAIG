@@ -808,7 +808,9 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 	var nnodes = transformations.children.length;
 	
 	if (transformations == null || nnodes < 1) 
-		return "Tranformations error";
+		return "Transformations error";
+	else if( transformations.attributes.length != 0 )
+		console.warn("Transformations -> More attributes than required");
 
 	for(var i = 0; i < nnodes; i++) {
 
@@ -816,45 +818,52 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 		if (transform_elems == null)
 			return "Transformation error";
 
-		if(transform_elems.attributes.length != 1)
-			return "Transformation -> Wrong number of attributes";
+		if(transform_elems.attributes.length < 1)
+			return "Transformations -> Transformation -> Wrong number of attributes";
+		else if(transform_elems.attributes.length > 1)
+			console.warn("Transformations -> Transformation -> More attributes than required");
 		
 		var id = transform_elems.attributes.getNamedItem('id').value;
 		
 		if( id == undefined )
-			return "Transformation -> ID -> Missing required information";
+			return "Transformations -> Transformation -> ID -> Missing required information";
 	
 		// Making sure that there are no two transformations with the same id
 		if( this.transformations[id] != undefined )
-			return "Transformations -> " + this.transformations[id] + " -> Same id error";
+			return "Transformations -> Transformation id: " + this.transformations[id] + " -> Same id error";
 
 		var matrix = mat4.create();
 		this.transformations[id] = matrix;
 		
 		if(transform_elems.children.length == 0)
-			return "Transformation -> You need at least one transformation (translate, rotate or scale)";
+			return "Transformations -> Transformation id: " + id + " -> You need at least one transformation (translate, rotate or scale)";
 
 		for(var k = 0; k < transform_elems.children.length; k++){
 			var transformation = transform_elems.children[k].tagName;
 			
 			if( transformation == 'rotate' ) {
-				if(transform_elems.children[k].attributes.length != 2)
-					return "Transformation -> Rotate -> Wrong number of attributes";
+				if(transform_elems.children[k].attributes.length < 2)
+					return "Transformations -> Transformation id: " + id + " -> Wrong number of attributes";
+				else if(transform_elems.children[k].attributes.length > 2)
+					console.warn("Transformations -> Transformation id: " + id + " -> More attributes than required");
 				
 				var axis, angle;
 				angle = Math.PI * this.reader.getFloat(transform_elems.children[k], 'angle') / 180;
 				axis = this.reader.getString(transform_elems.children[k], 'axis');
 
 				if( angle == undefined || axis == undefined)
-					return "Transformation -> Rotate -> Missing required information";
+					return "Transformations -> Transformation id: " + id + " -> Rotate -> Missing required information";
 				else if(this.axis_length < 0)
 					console.warn("Axis length can't be negative");
 				
 				mat4.rotate(matrix, matrix, angle, axis == 'x' ? [1, 0, 0] : axis == 'y' ? [0, 1, 0] : [0, 0, 1]);
 			}
 			else {
-				if(transform_elems.children[k].attributes.length != 3)
-					return "Transformation -> Wrong number of attributes";
+				if(transform_elems.children[k].attributes.length < 3)
+					return "Transformations -> Transformation id: " + id + " -> Wrong number of attributes";
+				else if(transform_elems.children[k].attributes.length > 3)
+					console.warn("Transformations -> Transformation id: " + id + " -> More attributes than required");
+
 				
 				var x, y, z;
 				x = this.reader.getFloat(transform_elems.children[k], 'x');
@@ -862,7 +871,7 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 				z = this.reader.getFloat(transform_elems.children[k], 'z');
 				
 				if( x == undefined || y == undefined || z == undefined)
-					return "Transformation -> " + transformation + " -> Missing required information";
+					return "Transformations -> Transformation id: " + id + " -> Missing required information";
 				
 				if( transformation == 'scale' )
 					mat4.scale(matrix, matrix, [x, y, z]);

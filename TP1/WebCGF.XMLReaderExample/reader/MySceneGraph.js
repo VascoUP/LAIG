@@ -808,6 +808,12 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				x3 = this.reader.getFloat(prim_elems.children[0], 'x3');
 				y3 = this.reader.getFloat(prim_elems.children[0], 'y3');
 				z3 = this.reader.getFloat(prim_elems.children[0], 'z3');
+				
+				if(	x1 == 'undefined' || y1 == 'undefined' || z1 == 'undefined' ||
+					x2 == 'undefined' || y2 == 'undefined' || z2 == 'undefined' ||
+					x3 == 'undefined' || y3 == 'undefined' || z3 == 'undefined' )
+						return "Primitives -> Triangle -> Missing required information.";
+						
 				this.primitives[id] = new MyTriangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3);
 				break;
 			case 'cylinder':
@@ -817,6 +823,14 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				height = this.reader.getFloat(prim_elems.children[0], 'height');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
 				stacks = this.reader.getInteger(prim_elems.children[0], 'stacks');
+				
+				if( base == 'undefined' || top == 'undefined' || height == 'undefined' ||
+					slices == 'undefined' || stacks == 'undefined')
+						return "Primitives -> Cylinder -> Missing required information.";
+						
+				if( slices < 0 || stacks < 0)
+					console.warn("Number of slices or stacks of cylinder can't be negative");
+						
 				this.primitives[id] = new MyCylinder(this.scene, base, top, height, slices, stacks);
 				break;
 			case 'sphere':
@@ -824,6 +838,13 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				radius = this.reader.getFloat(prim_elems.children[0], 'radius');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
 				stacks = this.reader.getInteger(prim_elems.children[0], 'stacks');
+				
+				if( radius == 'undefined' || slices == 'undefined' || stacks == 'undefined')
+					return "Primitives -> Sphere -> Missing required information.";
+				
+				if( slices < 0 || stacks < 0)
+					console.warn("Number of slices or stacks of sphere can't be negative");
+				
 				this.primitives[id] = new MySphere(this.scene, radius, slices, stacks);
 				break;
 			case 'torus':
@@ -832,6 +853,13 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				outer = this.reader.getFloat(prim_elems.children[0], 'outer');
 				slices = this.reader.getInteger(prim_elems.children[0], 'slices');
 				loops = this.reader.getInteger(prim_elems.children[0], 'loops');
+				
+				if( inner == 'undefined' || outer == 'undefined' || slices == 'undefined' || loops == 'undefined')
+					return "Primitives -> Torus -> Missing required information.";
+				
+				if( slices < 0 || loops < 0)
+					console.warn("Number of slices or stacks of torus can't be negative");
+				
 				this.primitives[id] = new MyTorus(this.scene, inner, outer, slices, loops);
 				break;
 		}
@@ -840,14 +868,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 
 //Parses the componenets
 MySceneGraph.prototype.parseComponents = function (components) {
-	
-	/*
-		Components
 
-		TO DO:
-		Create a node and add it to the graph
-		Add materials, textures, transformations, ..., to the node
-	*/
 	var nnodes = components.children.length;
 	
 	if (components == null || nnodes < 1) 

@@ -159,11 +159,12 @@
     <transformations>
     
         <transformation id="t1">
-           <translate x="5" y="1" z="0" />
-           <rotate axis="x" angle="3.14" />
-           <scale x="2" y="2" z="2" />
+            <translate x="0" y="9.9" z="0" />
         </transformation>
         
+        <transformation id="t2">     
+            <rotate axis="x" angle="-20" />
+        </transformation>
     </transformations>
     
     <primitives>
@@ -223,7 +224,7 @@
 
         <component id="robot"> 
             <transformation>
-                <translate x="0" y="9.9" z="0" />
+                <transformationref id="t1" />
             </transformation>
             <materials>
                 <material id="w1" />
@@ -570,7 +571,7 @@
 
         <component id="mountains">   
             <transformation>
-                <rotate axis="x" angle="-20" />
+                <transformationref id="t2" />
             </transformation>
             <materials>
                 <material id="r1" />

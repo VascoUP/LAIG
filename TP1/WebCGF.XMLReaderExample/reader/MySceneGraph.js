@@ -339,11 +339,10 @@ MySceneGraph.prototype.parseIlluminations = function(illumination_elem) {
 
 	var ambient = illumination_elem.getElementsByTagName('ambient');
 
-	if( ambient == null || ambient.length != 1 || ambient.attributes.length < 4)
+	if( ambient == null || ambient.length < 1 || ambient[0].attributes.length < 4)
 		return "Illumination -> Ambient  attributes error";
-	else if(ambient.attributes.length > 4)
+	else if(ambient[0].attributes.length > 4)
 		console.warn("Illumination -> Ambient -> More attributes than required");
-	
 	else if( ambient.length > 1 ) 
 		//It shouldn't stop reading the dsx file because of this
 		console.warn("There are more than 1 ambient elements in illumination, only the first will be considered");
@@ -366,9 +365,11 @@ MySceneGraph.prototype.parseIlluminations = function(illumination_elem) {
 
 	var background = illumination_elem.getElementsByTagName('background');
 
-	if( background == null || background.length != 1 || background.attributes.length != 4)
+	if( background == null || background.length < 1 || background[0].attributes.length < 4)
 		return "Illumination -> Background attribute error";
-	else if( background.length > 1 ) 
+	else if( background[0].attributes.length > 4 )
+		console.warn("Illumination -> Background -> More attributes than required");
+	else if( background.length > 1 )
 		//It shouldn't' stop reading the dsx file because of this
 		console.warn("There are more than 1 ambient elements in illumination, only the first will be considered");
 
@@ -560,18 +561,26 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 	
 	var texture;
 	
-	if (texture == null ) 
+	if (texture == null) 
 		return "Texture error";
+	else if(texture.attributes.length != 0)
+		console.warn("Textures -> More attributes than required");
 	
 	this.textures = {};
 
 	var texture_elem = texture.getElementsByTagName('texture');
 	
-	if(texture_elem.length < 1)
+	if(texture_elem == undefined || texture_elem.length < 1)
 		return "Texture -> You need at least one texture.";
 	
 	for( var i = 0; i < texture_elem.length; i++ ) {
 		var textureElem = texture_elem[i];
+
+		if(textureElem.attributes.length < 4)
+			return "Textures -> Texture -> Missing required information";
+		else if(textureElem.attributes.length > 4)
+			console.warn("Textures -> Texture -> More attributes than required");
+
 		var id = this.reader.getString(texture_elem[i], 'id');
 		
 		if( id == undefined )
@@ -607,6 +616,8 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 	
 	if(material == null || nnodes < 1) 
 		return "Material error";
+	else if( material.attributes.length != 0 )
+		console.warn("Materials -> More attribute than required");
 	
 	this.materials = {};
 
@@ -614,8 +625,10 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 
 		var material_elems = material.children[i];
 
-		if (material_elems == null)
+		if (material_elems == null || material_elems.attributes.length < 1)
 			return "Materials -> Material error";
+		else if( material_elems.attributes.length > 1 )
+			console.warn("Materials -> Materials -> More attribute than required");
 
 		var id = material_elems.attributes.getNamedItem('id').value;
 		
@@ -624,93 +637,114 @@ MySceneGraph.prototype.parseMaterials = function(material) {
 	
 		// Making sure that there are no two materials with the same id 
 		if( this.materials[id] != undefined )
-			return "Materials -> " + this.materials[id] + " -> Same id error";
+			return "Materials -> Material " + id + " -> Same id error";
 
 		var appearance = new CGFappearance(this.scene);
-
 		var emission = material_elems.getElementsByTagName('emission');
 
 		if(emission == null || emission.length < 1)
-			return "Materials -> Emission-> Variable error";
+			return "Materials -> Material " + id + " -> Emission-> Variable error";
 
 		var r, g, b, a;
 		var emissionElem = emission[0];
+		if( emissionElem.attributes.length < 4 )
+			return "Materials -> Material " + id + " -> -> Emission -> Missing required information";
+		else if ( emissionElem.attributes.length > 4 )
+			console.warn("Materials -> Material " + id + " -> -> Emission -> More attributes than required");
 		r = this.reader.getFloat(emissionElem, 'r');
 		g = this.reader.getFloat(emissionElem, 'g');
 		b = this.reader.getFloat(emissionElem, 'b');
 		a = this.reader.getFloat(emissionElem, 'a');
 		
 		if(	r == undefined || g == undefined || b == undefined || a == undefined )
-			return "Material -> Emission -> Missing required information.";
+			return "Materials -> Material " + id + " -> Emission -> Missing required information.";
 			
 		if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1)
-			console.warn("Material -> Emission -> RGBA values must be between 0 and 1");
+			console.warn("MaterialS -> Material " + id + " -> Emission -> RGBA values must be between 0 and 1");
 		
 		appearance.setEmission(r, g, b, a);
 		
 		var ambient = material_elems.getElementsByTagName('ambient');
 		if(ambient == null || ambient.length < 1)
-			return "Materials -> Ambient-> Variable error";
+			return "Materials -> Material " + id + " -> Ambient-> Variable error";
 
 		var ambientElem = ambient[0];
+		if( ambientElem.attributes.length < 4 )
+			return "Materials -> Material " + id + " -> -> Ambient -> Missing required information";
+		else if ( ambientElem.attributes.length > 4 )
+			console.warn("Materials -> Material " + id + " -> -> Ambient -> More attributes than required");
 		r = this.reader.getFloat(ambientElem, 'r');
 		g = this.reader.getFloat(ambientElem, 'g');
 		b = this.reader.getFloat(ambientElem, 'b');
 		a = this.reader.getFloat(ambientElem, 'a');
 
 		if(	r == undefined || g == undefined || b == undefined || a == undefined )
-			return "Material -> Ambient -> Missing required information.";
+			return "Materials -> Material " + id + " -> Ambient -> Missing required information.";
 			
 		if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1)
-			console.warn("Material -> Ambient -> RGBA values must be between 0 and 1");
+			console.warn("Materials -> Material " + id + " -> Ambient -> RGBA values must be between 0 and 1");
 		
 		appearance.setAmbient(r, g, b, a);
 
 		var diffuse = material_elems.getElementsByTagName('diffuse');
 		if(diffuse == null || diffuse.length < 1)
-			return "Materials -> Diffuse-> Variable error";
+			return "Materials -> Material " + id + " -> Diffuse-> Variable error";
 
 		var diffuseElem = diffuse[0];
+		if( diffuseElem.attributes.length < 4 )
+			return "Materials -> Material " + id + " -> -> Diffuse -> Missing required information";
+		else if ( diffuseElem.attributes.length > 4 )
+			console.warn("Materials -> Material " + id + " -> -> Diffuse -> More attributes than required");
 		r = this.reader.getFloat(diffuseElem, 'r');
 		g = this.reader.getFloat(diffuseElem, 'g');
 		b = this.reader.getFloat(diffuseElem, 'b');
 		a = this.reader.getFloat(diffuseElem, 'a');
 
 		if(	r == undefined || g == undefined || b == undefined || a == undefined )
-			return "Material -> Diffuse -> Missing required information.";
+			return "Materials -> Material " + id + " -> Diffuse -> Missing required information.";
 			
 		if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1)
-			console.warn("Material -> Diffuse -> RGBA values must be between 0 and 1");
+			console.warn("Materials -> Material " + id + " -> Diffuse -> RGBA values must be between 0 and 1");
 		
 		appearance.setDiffuse(r, g, b, a);
 								
 		var specular = material_elems.getElementsByTagName('specular');
 		if(specular == null || specular.length < 1)
-			return "Materials -> Specular-> Variable error";
+			return "Materials -> Material " + id + " -> Specular-> Variable error";
 
 		var specularElem = specular[0];
+		if( specularElem.attributes.length < 4 )
+			return "Materials -> Material " + id + " -> Specular -> Missing required information";
+		else if ( specularElem.attributes.length > 4 )
+			console.warn("Materials -> Material " + id + " -> Specular -> More attributes than required");
 		r = this.reader.getFloat(specularElem, 'r');
 		g = this.reader.getFloat(specularElem, 'g');
 		b = this.reader.getFloat(specularElem, 'b');
 		a = this.reader.getFloat(specularElem, 'a');
 
 		if(	r == undefined || g == undefined || b == undefined || a == undefined )
-			return "Material -> Specular -> Missing required information.";
+			return "Materials -> Material " + id + " -> Specular -> Missing required information.";
 			
 		if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1)
-			console.warn("Material -> Specular -> RGBA values must be between 0 and 1");
+			console.warn("Materials -> Material " + id + " -> Specular -> RGBA values must be between 0 and 1");
 		
 		appearance.setSpecular(r, g, b, a);
 								
 		var shininess = material_elems.getElementsByTagName('shininess');
 		if(shininess == null || shininess.length < 1)
-			return "Materials -> Shininess-> Variable error";
+			return "Materials -> Material " + id + " -> Shininess-> Variable error";
 
 		var shininessElem = shininess[0];
+		if( shininessElem.attributes.length < 1 )
+			return "Materials -> Material " + id + " -> Material -> Shininess -> Missing required information";
+		else if ( shininessElem.attributes.length > 1 )
+			console.warn("Materials -> Material " + id + " -> Material -> Shininess -> More attributes than required");
 		var shininess = this.reader.getFloat(shininessElem, 'value');
 		
-		if ( shininess == undefined || shininess < 0)
-			return "Materials -> Shininess-> Missing required information or variable with wrong value (shininess must be a positive value)";
+		if ( shininess == undefined )
+			return "Materials -> Material " + id + " -> Shininess-> Missing required information or variable with wrong value (shininess must be a positive value)";
+		else if ( shininess < 0 )
+			console.warn("Materials -> Material " + id + " -> Shininess value is negative");
 		
 		appearance.setShininess(shininess);
 		appearance.setTextureWrap('REPEAT', 'REPEAT');

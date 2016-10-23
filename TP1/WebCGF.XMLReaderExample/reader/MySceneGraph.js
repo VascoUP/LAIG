@@ -1112,23 +1112,6 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 				node.setTransformationId(id);
 
 				break;
-			case 'translate':
-			
-				if(transform_elems.attributes.length < 3)
-					return "Component -> Transformation -> Translate -> Wrong number of attributes";
-					
-				if(transform_elems.attributes.length > 3)
-					console.warn("Component -> Transformation -> Translate -> More attributes than required");
-				
-				var x, y, z;
-				x = this.reader.getFloat(transform_elems, 'x');
-				y = this.reader.getFloat(transform_elems, 'y');
-				z = this.reader.getFloat(transform_elems, 'z');
-				
-				if(x == undefined || y == undefined || z == undefined)
-					return "Component -> Transformation -> Translate -> Missing required information";
-				node.addTransform(transformation, [x, y, z]);
-				break;
 			case 'rotate':
 				
 				if(transform_elems.attributes.length < 2)
@@ -1148,6 +1131,7 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 				
 				node.addTransform(transformation, [angle, axis]);
 				break;
+			case 'translate':
 			case 'scale':
 			
 				if(transform_elems.attributes.length < 3)

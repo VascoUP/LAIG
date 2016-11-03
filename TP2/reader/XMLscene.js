@@ -36,6 +36,12 @@ XMLscene.prototype.init = function (application) {
 	this.object = new MySphere(this, 0.5, 20, 20);
 
 	var loaded = false;
+
+	this.animation1 = new LinearAnimation( [ [0, 0, 0], [0, 1, 1], [1, 1, 1] ], 10 );
+	this.animation2 = new CircularAnimation();
+
+	/* 60 frames per second */
+	this.setUpdatePeriod(1/60);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -110,15 +116,8 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk) {
 		for(var i = 0; i < this.graph.nLights; i++)
 			this.lights[i].update();
-		//this.materialRed.apply();
 		this.graph.graph.drawScene();
 	};
-
-	//this.object.display();
-
-/*	for( var i = 0; i < this.graph.primitives.length; i++ )
-		this.graph.primitives[i].display();*/
-
 
 };
 
@@ -147,4 +146,10 @@ XMLscene.prototype.changeView = function() {
 //Changes the materials
 XMLscene.prototype.changeMaterial = function() {
 	this.graph.graph.changeMaterials();
+}
+
+
+XMLscene.prototype.update = function( dTime ) {
+	var dSec = dTime * Math.pow(10, -14);
+	this.animation1.animate(dSec);
 }

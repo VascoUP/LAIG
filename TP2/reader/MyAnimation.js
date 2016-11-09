@@ -34,7 +34,6 @@ LinearAnimation.prototype = Object.create(Animation.prototype);
 LinearAnimation.prototype.constructor = LinearAnimation;
 
 LinearAnimation.prototype.calcVelocity = function() {
-    this.velocity = 0;
     var distance = 0;
     for( var i = 1; i < this.control_points.length; i++ ) {
         distance += Math.sqrt( Math.pow( this.control_points[i][0] - this.control_points[i-1][0], 2) + 
@@ -49,23 +48,44 @@ LinearAnimation.prototype.animate = function( dTime ) {
     // Given the time, calculate the next point in the trajectory
     this.time += dTime;
     if( this.time >= this.duration ) { 
-        console.debug("Do nothing");
+        //console.debug("Do nothing");
         return ;
     }
-    console.debug(this.time);
+    //console.debug(this.time);
 }
 
 
 /*
     - CIRCULAR ANIMATION -
 */
-var CircularAnimation = function() {
-    Animation.apply(this, arguments);
+var CircularAnimation = function( center, radius, init_angle, rotate_angle, duration ) {
+    Animation.apply(this, arguments);    
+    
+    this.center = center;
+    this.radius = radius;
+    this.init_angle = init_angle;
+    this.rotate_angle = rotate_angle;
+    this.duration = duration > 0 ? duration : 1;
+    this.time = 0;
+
+    this.calcVelocity();
+
+    console.debug("Velocity: " + this.velocity);
 };
 
 CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
 
-CircularAnimation.prototype.animate = function() {
-    //console.debug("Hello drakness smile friend");
+CircularAnimation.prototype.calcVelocity = function() {
+    var distance = this.radius * this.rotate_angle;
+    this.velocity = distance / this.duration;
+}
+
+CircularAnimation.prototype.animate = function( dTime ) {
+    this.time += dTime;
+    if( this.time >= this.duration ) { 
+        //console.debug("Do nothing");
+        return ;
+    }
+    //console.debug(this.time);
 }

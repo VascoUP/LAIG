@@ -155,7 +155,6 @@
 
     </materials>
     
-    
     <transformations>
     
         <transformation id="t1">
@@ -167,6 +166,17 @@
         </transformation>
     </transformations>
     
+    <!-- novo bloco de animacao -->
+    <animations>
+        <animation id="l1" span="10" type="linear">
+            <controlpoint xx="0" yy="-1" zz="2" />
+            <controlpoint xx="0" yy="1" zz="1" />
+            <controlpoint xx="1" yy="1" zz="1" />
+        </animation>
+        <animation id="c1" span="2" type="circular" center="0 0 0"
+                radius="8" startang="20" rotang="270" />
+    </animations>
+
     <primitives>
     
         <primitive id="rect">

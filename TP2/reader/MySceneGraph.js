@@ -49,7 +49,7 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 	var elems = [ false, false, false, false, false, false, false, false, false ];
 	var err;
 
-	if( ch == null || ch.length != 9 )
+	if( ch == null || ch.length != 10 )
 		return "DSX -> Too few, or too many, elements";
 
 	for( var i = 0; i < ch.length; i++ ) {
@@ -162,15 +162,29 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 			break;
 
-		case 'primitives':
+		case 'animations':
 
 			if( i != 7 )
-				console.warn("<primitives> element is out of place");
+				console.warn("<animations> element is out of place");
 
 			if( elems[7] )
-				return "Found 2 <transformations> elements";
+				return "Found 2 <animations> elements";
 			else
 				elems[7] = true;
+			
+			/*if( (err = this.parsePrimitives(ch[i])) != null )
+				return err;*/
+
+			break;
+		case 'primitives':
+
+			if( i != 8 )
+				console.warn("<primitives> element is out of place");
+
+			if( elems[8] )
+				return "Found 2 <primitives> elements";
+			else
+				elems[8] = true;
 			
 			if( (err = this.parsePrimitives(ch[i])) != null )
 				return err;
@@ -179,13 +193,13 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 		case 'components':
 
-			if( i != 8 )
+			if( i != 9 )
 				console.warn("<components> element is out of place");
 
-			if( elems[8] )
-				return "Found 2 <transformations> elements";
+			if( elems[9] )
+				return "Found 2 <components> elements";
 			else
-				elems[8] = true;
+				elems[9] = true;
 			
 			if( (err = this.parseComponents(ch[i])) != null )
 				return err;
@@ -880,7 +894,12 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 			}
 		}
 	}
-};
+}
+
+//Parses the different animations
+MySceneGraph.prototype.parseAnimations = function(animations) {
+
+}
 
 //Parses the different primitives
 MySceneGraph.prototype.parsePrimitives = function(primitives) {

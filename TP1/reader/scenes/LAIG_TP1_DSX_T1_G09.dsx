@@ -80,10 +80,10 @@
     <textures>
 
         <texture id="t1" file="resources/WoodTexture.png" length_s="1" length_t="1" />
-        <texture id="g1" file="resources/FoliageTexture.jpg" length_s="2" length_t="2" />
-        <texture id="ground" file="resources/FoliageTexture.jpg" length_s="15" length_t="15" />
-        <texture id="t2" file="resources/RockTexture.jpg" length_s="3" length_t="3" />
-        <texture id="mountain" file="resources/RockTexture.jpg" length_s="15" length_t="5" />
+        <texture id="g1" file="resources/FoliageTexture.jpg" length_s="1" length_t="1" />
+        <texture id="ground" file="resources/FoliageTexture.jpg" length_s="2" length_t="2" />
+        <texture id="t2" file="resources/RockTexture.jpg" length_s="1" length_t="1" />
+        <texture id="mountain" file="resources/RockTexture.jpg" length_s="0.3" length_t="0.3" />
 
     </textures>
 

@@ -48,11 +48,7 @@ MyTriangle.prototype.initBuffers = function (x1, y1, z1, x2, y2, z2, x3, y3, z3)
 	this.initGLBuffers();
 };
 
-MyTriangle.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
-    this.minS = minS;
-    this.maxS = maxS;
-    this.minT = minT;
-    this.maxT = maxT;
+MyTriangle.prototype.setTexCoords = function (length_s, length_t) {
 
     var a = Math.sqrt( Math.pow(this.vertices[0] - this.vertices[6], 2) +
                             Math.pow(this.vertices[1] - this.vertices[7], 2) +
@@ -69,6 +65,11 @@ MyTriangle.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
     var cosB = ( Math.pow( a, 2 ) - Math.pow( b, 2 ) + Math.pow( c, 2 ) ) / ( 2 * a * c );
 
     var sinB = Math.sqrt( 1 - Math.pow( cosB, 2 ) ); 
+
+    this.minS = 0;
+	this.maxS = Math.pow(length_t, -1) * c;
+	this.minT = 0;
+	this.maxT = Math.pow(length_t, -1) * a * sinB;
 
     this.texCoords = [
         c - a * cosB, a * sinB,

@@ -37,21 +37,21 @@ MyRectangle.prototype.initBuffers = function (x1, y1, x2, y2) {
     ];
 
     this.texCoords = [
-        this.minS, this.maxT,
         this.minS, this.minT,
-        this.maxS, this.minT,
-        this.maxS, this.maxT
+        this.minS, this.maxT,
+        this.maxS, this.maxT,
+        this.maxS, this.minT
     ];
 		
 	this.primitiveType=this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 }
 
-MyRectangle.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
-    this.minS = minS;
-    this.maxS = maxS;
-    this.minT = minT;
-    this.maxT = maxT;
+MyRectangle.prototype.setTexCoords = function (length_s, length_t) {
+    this.minS = 0;
+	this.maxS = Math.pow(length_t, -1) * Math.abs(this.vertices[4] - this.vertices[0]);
+	this.minT = 0;
+	this.maxT = Math.pow(length_t, -1) * Math.abs(this.vertices[5] - this.vertices[1]);
 
     this.texCoords = [
         this.minS, this.minT,

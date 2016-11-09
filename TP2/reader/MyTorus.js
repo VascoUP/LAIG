@@ -83,11 +83,11 @@ MyTorus.prototype.initBuffers = function () {
 	this.initGLBuffers();
 };
 
- MyTorus.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
-    this.minS = minS;
-    this.maxS = maxS;
-    this.minT = minT;
-    this.maxT = maxT;
+ MyTorus.prototype.setTexCoords = function (length_s, length_t) {
+    this.minS = 0;
+	this.maxS = Math.pow(length_t, -1) * (this.outer * Math.PI * 2);
+	this.minT = 0;
+	this.maxT = Math.pow(length_t, -1) * (this.inner * Math.PI * 2);
 
 	this.texCoords = [];
 

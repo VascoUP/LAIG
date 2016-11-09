@@ -65,20 +65,17 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 		return true;
 	}
 
+	if( node.transformation == undefined && node.transformationId != undefined ) {
+		node.transformation = this.sceneGraph.transformations[ node.transformationId ];
+		console.log(node.transformation);
+		if( node.transformation == undefined ) {
+			console.error("Transformation " + node.transformationId + " not found.");
+			return true;	
+		}
+	}
+
 	//On success returns false
 	return false;
-}
-
-//Applies a transformation to a node
-Graph.prototype.applyTransformation = function( node ) {
-	var matrix;
-	if( node.transformation == undefined && node.transformationId == undefined)
-		return ;
-	else if( node.transformation == undefined )
-		matrix = this.sceneGraph.transformations[ node.transformationId ];
-	else
-		matrix = node.transformation;
-	this.sceneGraph.scene.multMatrix( matrix );
 }
 
 //Draws the scene represenetd by the graph
@@ -103,7 +100,8 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 						node.idTexture :
 						idTexture;
 
-	this.applyTransformation(node);
+	if( node.transformation != undefined )
+		this.sceneGraph.scene.multMatrix( node.transformation );
 
 	for( var i = 0; i < node.idChildren.length; i++ )
 		this.drawSceneNode( this.nodes[node.idChildren[i]], idMat, idTex );
@@ -117,7 +115,7 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 		var prim = this.sceneGraph.primitives[ node.idPrimitives[i] ];
 			
 		if( idTex != 'none' ) 
-			prim.setTexCoords( 0, 0, this.sceneGraph.textures[idTex].length_s, 
+			prim.setTexCoords( this.sceneGraph.textures[idTex].length_s, 
 									this.sceneGraph.textures[idTex].length_t )
 
 		prim.display();

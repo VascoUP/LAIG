@@ -153,11 +153,11 @@
 	this.initGLBuffers();
 };
 
-MyCylinder.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
-	this.minS = minS;
-	this.maxS = maxS;
-	this.minT = minT;
-	this.maxT = maxT;
+MyCylinder.prototype.setTexCoords = function (length_s, length_t) {
+	this.minS = 0;
+	this.maxS = Math.pow(length_t, -1) * (((this.top + this.base) / 2) * Math.PI * 2);
+	this.minT = 0;
+	this.maxT = Math.pow(length_t, -1) * this.height;
 
 	this.texCoords = [];
 

@@ -2,10 +2,7 @@
 function MySphere(scene, radius, slices, stacks) {
  	CGFobject.call(this,scene);
 	
-	//if( radius > 0 )
-		this.radius = radius;
-	/*else
-		this.radius = 1;*/
+	this.radius = radius;
 
 	if( slices >= 3 )
 		this.slices = slices;
@@ -135,11 +132,11 @@ function MySphere(scene, radius, slices, stacks) {
  	this.initGLBuffers();
  }
 
-MySphere.prototype.setTexCoords = function (minS, minT, maxS, maxT) {
-    this.minS = minS;
-    this.maxS = maxS;
-    this.minT = minT;
-    this.maxT = maxT;
+MySphere.prototype.setTexCoords = function (length_s, length_t) {
+    this.minS = 0;
+	this.maxS = Math.pow(length_t, -1) * (this.radius * Math.PI * 2);
+	this.minT = 0;
+	this.maxT = Math.pow(length_t, -1) * (this.radius * Math.PI * 2);
 
     this.texCoords = [ ];
 

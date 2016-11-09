@@ -37,7 +37,14 @@ XMLscene.prototype.init = function (application) {
 
 	var loaded = false;
 
-	this.animation1 = new LinearAnimation( [ [0, 0, 0], [0, 1, 1], [1, 1, 1] ], 10 );
+	var cp = [];
+	cp.push([5, 2, 4]);
+	cp.push([5, 2, 4]);
+	cp.push([0, 1, 4]);
+	cp.push([5, 7, 4]);
+
+	console.debug(cp);
+	this.animation1 = new LinearAnimation( cp, 10 );
 	this.animation2 = new CircularAnimation( [0, 0, 0], 8, 0, Math.PI, 3);
 
 	/* 60 frames per second */

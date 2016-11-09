@@ -67,7 +67,7 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 
 	if( node.transformation == undefined && node.transformationId != undefined ) {
 		node.transformation = this.sceneGraph.transformations[ node.transformationId ];
-		console.log(node.transformation);
+
 		if( node.transformation == undefined ) {
 			console.error("Transformation " + node.transformationId + " not found.");
 			return true;	

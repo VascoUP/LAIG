@@ -172,8 +172,8 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 			else
 				elems[7] = true;
 			
-			/*if( (err = this.parsePrimitives(ch[i])) != null )
-				return err;*/
+			if( (err = this.parseAnimations(ch[i])) != null )
+				return err;
 
 			break;
 		case 'primitives':
@@ -898,7 +898,74 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 
 //Parses the different animations
 MySceneGraph.prototype.parseAnimations = function(animations) {
-
+	
+	var nnodes = animations.children.length;
+	
+	if( animations == null )
+		return "Animations error";
+	
+	if( nnodes > 0) {
+		for(var i = 0; i < nnodes; i++){
+			
+			var anim_elems = animations.children[i];
+			
+			if(anim_elems == null)
+				return "Animations -> Animation error";
+			
+			if(anim_elems.attributes.length < 3)
+				return "Animation -> Wrong number of attributes";
+			else if(anim_elems.attributes.length > 9)
+				console.warn("Animation -> More attributes than required\n");
+			
+			var id = anim_elems.attributes.getNamedItem('id').value;
+			var span = anim_elems.attributes.getNamedItem('span').value;
+			var type = this.reader.getString(anim_elems, 'type');
+			
+			switch(type){
+				case 'linear':
+				
+					if(anim_elems.children.length < 1)
+						return "Animation -> Linear -> There isn't any control points";
+					
+					var xx = 0, yy = 0, zz = 0;
+					var controlPoint = [[xx, yy, zz]];
+					
+					for(var j = 0; j < anim_elems.children.length; j++){
+						
+						if(anim_elems.children[j].attributes.length < 3)
+							return "Animation -> Linear -> ControlPoint -> Wrong number of attributes";
+						else if(anim_elems.children[j].attributes.length > 3)
+							console.warn("Animation -> Linear -> ControlPoint -> More attributes than required\n");
+						
+						xx = this.reader.getFloat(anim_elems.children[j], 'xx');
+						yy = this.reader.getFloat(anim_elems.children[j], 'yy');
+						zz = this.reader.getFloat(anim_elems.children[j], 'zz');
+						
+						controlPoint[j] = [xx, yy, zz];
+					}
+					
+					var linearAnimation = new LinearAnimation(controlPoint, span);
+					break;
+				case 'circular':
+				
+					var centerX = this.reader.getFloat(anim_elems, 'centerx');
+					var centerY = this.reader.getFloat(anim_elems, 'centery');
+					var centerZ = this.reader.getFloat(anim_elems, 'centerz');
+					var radius = this.reader.getFloat(anim_elems, 'radius');
+					var startang = this.reader.getFloat(anim_elems, 'startang');
+					var rotang = this.reader.getFloat(anim_elems, 'rotang');
+					
+					var center = [centerX, centerY, centerZ];
+					
+					var circularAnimation = new CircularAnimation(center, radius, startang, rotang, span);
+					break;
+				default:
+					return "Animation -> Animation's type doesn't exist";
+			}
+		}
+			
+	}
+	
 }
 
 //Parses the different primitives
@@ -1043,6 +1110,62 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				
 				this.primitives[id] = new MyTorus(this.scene, inner, outer, slices, loops);
 				break;
+				
+			case 'plane':
+			
+				if(prim_elems.children[0].attributes.length < 4)
+					return "Primitives -> Plane -> Wrong number of attributes";
+				else if(prim_elems.children[0].attribrutes.length > 4)
+					console.warn("Primitives -> Plane -> More attributes than required");
+				
+				var dimX = this.reader.getFloat(prim_elems.children[0], 'dimX');
+				var dimY = this.reader.getFloat(prim_elems.children[0], 'dimY');
+				var partsX = this.reader.getFloat(prim_elems.children[0], 'partsX');
+				var partsY = this.reader.getFloat(prim_elems.children[0], 'partsY');
+				
+				if( dimX == undefined || dimY == undefined || partsX == undefined || partsY == undefined)
+					return "Primitives -> Plane -> Missing required information";
+				
+				//this.primitives[id] = new MyPlane(this.scene, ...)
+				break;
+			
+			case 'patch':
+				if(prim_elems.children[0].attributes.length < 4)
+					return "Primitives -> Patch -> Wrong number of attributes";
+				
+				var patch = prim_elems.children[0];
+				
+				var orderU = this.reader.getInteger(patch, 'orderU');
+				var orderV = this.reader.getInteger(patch, 'orderV');
+				var partsU = this.reader.getInteger(patch, 'partsU');
+				var partsV = this.reader.getInteger(patch, 'partsV');
+				
+				if(patch.children.length < 1)
+						return "Primitives -> Patch -> There isn't any control points";
+					
+				var xx = 0, yy = 0, zz = 0;
+				var controlPoint = [[xx, yy, zz]];
+					
+				for(var j = 0; j < patch.children.length; j++){
+						
+					if(patch.children[j].attributes.length < 3)
+						return "Primitives -> Patch -> ControlPoint -> Wrong number of attributes";
+					else if(patch.children[j].attributes.length < 3)
+						console.warn("Primitives -> Patch -> ControlPoint -> More attributes than required\n");
+						
+					var xx = this.reader.getFloat(anim_elems.children[j], 'xx');
+					var yy = this.reader.getFloat(anim_elems.children[j], 'yy');
+					var zz = this.reader.getFloat(anim_elems.children[j], 'zz');
+						
+					controlPoint[j] = [xx, yy, zz];
+						
+					console.debug("control point");
+					console.debug(controlPoint[j]);
+				}
+				
+				//this.primitives[id] = new MyPatch(this.scene, orderU, orderV, ....)
+				
+				break;
 		}
 	}
 };
@@ -1085,6 +1208,8 @@ MySceneGraph.prototype.parseComponents = function (components) {
 		
 		var err;
 		if( (err = this.readComponentTransformation(comp_elems,n)) != null )
+			return err;
+		if( (err = this.readComponentAnimation(comp_elems,n)) != null )
 			return err;
 		if( (err = this.readComponentMaterials(comp_elems,n)) != null )
 			return err;
@@ -1174,6 +1299,41 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 			break;
 	}
 };
+
+MySceneGraph.prototype.readComponentAnimation = function (compElem, node) {
+	
+	var animations = compElement.getElementsByTagName('animation');
+	var nnodes = animations[0].children.length;
+	if (animations == null) 
+		return "Component -> Tranformation error";
+	
+	for(var i = 0; i < nnodes; i++) {
+
+		var anim_elems = animations[0].children[i];
+		if (anim_elems == null)
+			return "Component -> Animation error";
+		
+		var id;
+
+		var animation = anim_elems.tagName;
+		
+		if(animation == 'animationref'){
+			if(anim_elems.attributes.length < 1)
+				return "Component -> Animation -> AnimationRef -> Wrong number of attributes";
+			if(anim_elems.attributes.length > 1)
+				console.warn("Component -> Animation -> AnimationRef -> More attributes than required");
+			
+			var id = this.reader.getString(anim_elems, 'id');
+			
+			if(id == undefined)
+				return "Component -> Animation -> ID AnimationRef -> Missing required information";
+			
+			//node.setAnimationID(id);
+		}
+		else
+			return "Component -> Animation -> Wrong element in Animation";
+	}
+}
 
 //Reads the materials of each component
 MySceneGraph.prototype.readComponentMaterials = function (compElement, node) {

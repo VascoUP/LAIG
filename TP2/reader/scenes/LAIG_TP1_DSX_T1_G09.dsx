@@ -172,7 +172,8 @@
             <controlpoint xx="0" yy="1" zz="1" />
             <controlpoint xx="1" yy="1" zz="1" />
         </animation>
-        <animation id="c1" span="2" type="circular" center="0 0 0"
+        <animation id="c1" span="2" type="circular" 
+				centerx="0" centery="0" centerz="0"
                 radius="8" startang="20" rotang="270" />
     </animations>
 
@@ -209,7 +210,7 @@
         <primitive id="tor">
             <torus inner="0.05" outer="1" slices="100" loops="100" />         
         </primitive>
-        
+	
     </primitives>
        
     <components>

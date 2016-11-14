@@ -1,9 +1,9 @@
 1 - Ver como criar a primitiva vehicle
 
 2 - Testar as novas primitivas:
-	- animation (ja est· testado -> acho que est· a ler tudo bem)
-	- patch
-	- chessboard
+	- animation (ja est√° testado -> acho que est√° a ler tudo bem)
+	- patch (falta guardar os valores)
+	- chessboard (faltam guardar os valores)
 	- vehicle (temos que ver como vamos criar)
 
 3 - Criar uma "classe" para:
@@ -11,8 +11,8 @@
 	- chessboard
 	- vehicle
 
-4 - Criar as superfÌcies curvas
+4 - Criar as superf√≠cies curvas
 
 5 - Colocar shaders
 
-6 - Outras cenas que ainda n„o me lembrei
+6 - Outras cenas que ainda n√£o me lembrei

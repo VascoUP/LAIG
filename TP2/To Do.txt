@@ -1,0 +1,18 @@
+1 - Ver como criar a primitiva vehicle
+
+2 - Testar as novas primitivas:
+	- animation (ja está testado -> acho que está a ler tudo bem)
+	- patch
+	- chessboard
+	- vehicle (temos que ver como vamos criar)
+
+3 - Criar uma "classe" para:
+	- patch
+	- chessboard
+	- vehicle
+
+4 - Criar as superfícies curvas
+
+5 - Colocar shaders
+
+6 - Outras cenas que ainda não me lembrei

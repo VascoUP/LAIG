@@ -971,6 +971,12 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 //Parses the different primitives
 MySceneGraph.prototype.parsePrimitives = function(primitives) {
 	
+	/**
+		A fazer:
+		Ver novas primitivas -> animations está testado
+		Falta ler o veículo, mas 1º temos que decidir como o fazer
+	**/
+	
 	var nnodes = primitives.children.length;
 	
 	if (primitives == null || nnodes < 1) 
@@ -1166,6 +1172,71 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				//this.primitives[id] = new MyPatch(this.scene, orderU, orderV, ....)
 				
 				break;
+				
+			case 'chessboard':
+				if(prim_elems.children[0].attributes.length < 5)
+					return "Primitives -> ChessBoard -> Wrong number of attributes";
+				
+				var chess = prim_elems.children[0];
+				
+				var dU = this.reader.getInteger(chess, 'du');
+				var dV = this.reader.getInteger(chess, 'dv');
+				var textureref = this.reader.getString(chess, 'textureref');
+				var sU = this.reader.getInteger(chess, 'su');
+				var sV = this.reader.getInteger(chess, 'sv');
+				
+				if(chess.children.length < 3)
+						return "Primitives -> Chessboard -> Wrong number of children";
+					
+				var c1 = chess.getElementsByTagName('c1');
+
+				if( c1 == null || c1.attributes.length < 4)
+					return "Primitives -> ChessBoard -> c1 -> Attributes error";
+				else if(c1.attributes.length > 4)
+					console.warn("Primitives -> ChessBoard -> c1 -> More attributes than required");
+				else if( c1.length > 1 ) 
+					console.warn("There are more than 1 c1 elements in chessboard, only the first will be considered");
+
+				var c1_elem = c1[0];
+
+				var r, g, b, a;
+				r = this.reader.getFloat(c1_elem, 'r');
+				g = this.reader.getFloat(c1_elem, 'g');
+				b = this.reader.getFloat(c1_elem, 'b');
+				a = this.reader.getFloat(c1_elem, 'a');
+				
+				var c2 = chess.getElementsByTagName('c2');
+
+				if( c2 == null || c2.attributes.length < 4)
+					return "Primitives -> ChessBoard -> c2 -> Attributes error";
+				else if(c2.attributes.length > 4)
+					console.warn("Primitives -> ChessBoard -> c2 -> More attributes than required");
+				else if( c2.length > 1 ) 
+					console.warn("There are more than 1 c2 elements in chessboard, only the first will be considered");
+
+				var c2_elem = c2[0];
+				
+				r = this.reader.getFloat(c2_elem, 'r');
+				g = this.reader.getFloat(c2_elem, 'g');
+				b = this.reader.getFloat(c2_elem, 'b');
+				a = this.reader.getFloat(c2_elem, 'a');
+				
+				var cs = chess.getElementsByTagName('cs');
+
+				if( cs == null || cs.attributes.length < 4)
+					return "Primitives -> ChessBoard -> cs -> Attributes error";
+				else if(cs.attributes.length > 4)
+					console.warn("Primitives -> ChessBoard -> cs -> More attributes than required");
+				else if( cs.length > 1 ) 
+					console.warn("There are more than 1 cs elements in chessboard, only the first will be considered");
+
+				var cs_elem = cs[0];
+				
+				r = this.reader.getFloat(cs_elem, 'r');
+				g = this.reader.getFloat(cs_elem, 'g');
+				b = this.reader.getFloat(cs_elem, 'b');
+				a = this.reader.getFloat(cs_elem, 'a');
+			
 		}
 	}
 };

@@ -1,20 +1,21 @@
-1 - Ver como criar a primitiva vehicle
-
-2 - Testar as novas primitivas/blocos:
+1 - Testar as novas primitivas/blocos:
 	- animation (ja está testado -> acho que está a ler tudo bem)
 	- plane (ja está testado acho eu)
 	- patch (falta guardar os valores)
 	- chessboard (faltam guardar os valores)
 	- vehicle (temos que ver como vamos criar)
 
-3 - Criar uma "classe" para:
+2 - Criar e desenvolver uma "classe" para:
+	- animation
 	- plane
 	- patch
 	- chessboard
 	- vehicle
+	
+3 - Criar as superfícies curvas
 
-4 - Criar as superfícies curvas
+4 - Colocar shaders
 
-5 - Colocar shaders
+5 - Ver como criar a primitiva vehicle
 
 6 - Outras cenas que ainda não me lembrei

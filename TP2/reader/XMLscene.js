@@ -37,15 +37,7 @@ XMLscene.prototype.init = function (application) {
 
 	var loaded = false;
 
-	var cp = [];
-	cp.push([5, 2, 4]);
-	cp.push([5, 2, 4]);
-	cp.push([0, 1, 4]);
-	cp.push([5, 7, 4]);
-
-	console.debug(cp);
-	this.animation1 = new LinearAnimation( cp, 10 );
-	this.animation2 = new CircularAnimation( [0, 0, 0], 8, 0, Math.PI, 3);
+	//this.animation2 = new CircularAnimation( [0, 0, 0], 8, 0, Math.PI, 3);
 
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);
@@ -158,6 +150,5 @@ XMLscene.prototype.changeMaterial = function() {
 
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
-	this.animation1.animate(dSec);
-	this.animation2.animate(dSec);
+	//this.animation2.animate(dSec);
 }

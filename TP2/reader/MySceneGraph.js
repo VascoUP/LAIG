@@ -1371,13 +1371,12 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 	}
 };
 
-MySceneGraph.prototype.readComponentAnimation = function (compElem, node) {
+MySceneGraph.prototype.readComponentAnimation = function (compElement, node) {
+	var animations = compElement.getElementsByTagName('animations');
+	if (animations == null || animation == undefined) 
+		return ;//"Component -> Animations error";
 	
-	var animations = compElement.getElementsByTagName('animation');
 	var nnodes = animations[0].children.length;
-	if (animations == null) 
-		return "Component -> Tranformation error";
-	
 	for(var i = 0; i < nnodes; i++) {
 
 		var anim_elems = animations[0].children[i];

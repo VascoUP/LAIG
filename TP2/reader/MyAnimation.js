@@ -14,26 +14,21 @@ Animation.prototype.animate = function() {
     - LINEAR ANIMATION -
 */
 var LinearAnimation = function ( control_points, duration ) {
-
-    console.debug(control_points);
     
     Animation.apply(this, arguments);
-
     if( control_points.length < 1 ) {
         console.Error("Invalid number of control_points");
         return ;
     }
 
+    this.lastFrame = false;  
     this.control_points = control_points;
-    console.debug("Control point");
-    this.position = control_points[1];
+    this.position = control_points[0].slice();
 
     this.duration = duration > 0 ? duration : 1;
     this.time = 0;
 
     this.calcVelocity();
-
-    console.debug("Velocity: " + this.velocity);
 };
 
 LinearAnimation.prototype = Object.create(Animation.prototype);
@@ -43,62 +38,61 @@ LinearAnimation.prototype.calcVelocity = function() {
     var distance = 0;
     var control_points_vel = [];
 
-    for( var i = 2; i < this.control_points.length; i++ ) {
+    for( var i = 1; i < this.control_points.length; i++ ) {
         var d = Math.sqrt( Math.pow( this.control_points[i][0] - this.control_points[i-1][0], 2) + 
                                 Math.pow( this.control_points[i][1] - this.control_points[i-1][1], 2) +
                                 Math.pow( this.control_points[i][2] - this.control_points[i-1][2], 2) );
         distance += d;
-        console.debug("D:");
-        console.debug(d);
         control_points_vel.push(d);
     }
 
     this.vel_dir = [];
     this.velocity = distance / this.duration;
 
-    console.debug("Velocity directions");
-    for( var i = 2; i < this.control_points.length; i++ ) {
-        var d = control_points_vel[i-2];
+    for( var i = 1; i < this.control_points.length; i++ ) {
+        var d = control_points_vel[i-1];
+        var t = this.duration * d / distance;
 
         var vel = [ 
                 //Duration of this control point
-                this.duration * d / distance,
+                t,
                 //Velocity in x                                 
-                this.velocity * (this.control_points[i][0] - this.control_points[i-1][0]) / d,
+                (this.control_points[i][0] - this.control_points[i-1][0]) / t,
                 //Velocity in y 
-                this.velocity * (this.control_points[i][1] - this.control_points[i-1][1]) / d,
+                (this.control_points[i][1] - this.control_points[i-1][1]) / t,
                 //Velocity in z
-                this.velocity * (this.control_points[i][2] - this.control_points[i-1][2]) / d,];
+                (this.control_points[i][2] - this.control_points[i-1][2]) / t];
               
-        console.debug( vel );
         this.vel_dir.push(vel);
     }
 }
 
 LinearAnimation.prototype.animate = function( dTime ) {
+    if( this.lastFrame )
+        return;
+        
     // Given the time, calculate the next point in the trajectory
     this.time += dTime;
-    if( this.time >= this.duration ) { 
+    if( this.time >= this.duration ) {
+        this.lastFrame = true;
+        this.position = this.control_points[this.control_points.length - 1].slice();
         return ;
     }
-
-    //console.debug("Got here");
-
+    
     var dur = 0; //Current calculated duration
-    for( var i = 0, dur; i < this.vel_dir.length; i++, dur += this.vel_dir[0] ) {
+    for( var i = 0; i < this.vel_dir.length; i++) {
 
-        if( this.time > dur + this.vel_dir[0] ) { //If the time is past this control point
+        if( this.time > dur + this.vel_dir[i][0] ) { //If the time is past this control point
+            dur += this.vel_dir[i][0]
             continue;
         }
 
         //If it gets here than this is the right stretch
-        this.position = this.control_points[i+1];
-        //console.debug(this.position);
+        this.position = this.control_points[i].slice();
         var t = this.time - dur;
-        this.position[0] += this.vel_dir[1] * t;
-        this.position[1] += this.vel_dir[2] * t;
-        this.position[2] += this.vel_dir[3] * t;
-        //console.debug(this.position);
+        this.position[0] = this.control_points[i][0] + this.vel_dir[i][1] * t;
+        this.position[1] = this.control_points[i][1] + this.vel_dir[i][2] * t;
+        this.position[2] = this.control_points[i][2] + this.vel_dir[i][3] * t;
         break;
     }
 }
@@ -118,8 +112,6 @@ var CircularAnimation = function( center, radius, init_angle, rotate_angle, dura
     this.time = 0;
 
     this.calcVelocity();
-
-    console.debug("Velocity: " + this.velocity);
 };
 
 CircularAnimation.prototype = Object.create(Animation.prototype);

@@ -37,8 +37,6 @@ XMLscene.prototype.init = function (application) {
 
 	var loaded = false;
 
-	//this.animation2 = new CircularAnimation( [0, 0, 0], 8, 0, Math.PI, 3);
-
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);
 };
@@ -150,5 +148,8 @@ XMLscene.prototype.changeMaterial = function() {
 
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
-	//this.animation2.animate(dSec);
+	
+	//Add cicle that iterates throught list of animations
+	//...
+
 }

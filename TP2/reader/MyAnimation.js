@@ -14,8 +14,8 @@ Animation.prototype.animate = function() {
     - LINEAR ANIMATION -
 */
 var LinearAnimation = function ( control_points, duration ) {
-    
     Animation.apply(this, arguments);
+
     if( control_points.length < 1 ) {
         console.Error("Invalid number of control_points");
         return ;
@@ -104,6 +104,7 @@ LinearAnimation.prototype.animate = function( dTime ) {
 var CircularAnimation = function( center, radius, init_angle, rotate_angle, duration ) {
     Animation.apply(this, arguments);    
     
+    this.lastFrame = false;
     this.center = center;
     this.radius = radius;
     this.init_angle = init_angle;
@@ -112,6 +113,7 @@ var CircularAnimation = function( center, radius, init_angle, rotate_angle, dura
     this.time = 0;
 
     this.calcVelocity();
+    this.calcInitPosition();
 };
 
 CircularAnimation.prototype = Object.create(Animation.prototype);
@@ -122,9 +124,42 @@ CircularAnimation.prototype.calcVelocity = function() {
     this.velocity = distance / this.duration;
 }
 
+CircularAnimation.prototype.calcInitPosition = function() {
+    this.position = this.center.slice();
+
+    //X coord
+    this.position[0] = this.radius * Math.cos(this.init_angle);
+    //Z coord
+    this.position[2] = this.radius * Math.sin(this.init_angle);
+}
+
+
 CircularAnimation.prototype.animate = function( dTime ) {
+
+    if( this.lastFrame )
+        return;
+
+    var ang;
+    this.position = this.center.slice();
+    
+    // Given the time, calculate the next point in the trajectory
     this.time += dTime;
-    if( this.time >= this.duration ) { 
+    if( this.time >= this.duration ) {
+        this.lastFrame = true;
+            
+        ang = this.init_angle + this.rotate_angle;
+        //X coord
+        this.position[0] += this.radius * Math.cos(ang);
+        //Z coord
+        this.position[2] += this.radius * Math.sin(ang);
+
         return ;
     }
+
+    ang = this.init_angle + (this.time * this.rotate_angle / this.duration);
+            
+    //X coord
+    this.position[0] += this.radius * Math.cos(ang);
+    //Z coord
+    this.position[2] += this.radius * Math.sin(ang);
 }

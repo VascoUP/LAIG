@@ -101,14 +101,9 @@ Graph.prototype.drawScene = function( ) {
 						head.idTexture );
 }
 
-Graph.prototype.applyAnimation = function() {
-	if( node.currAnimationIndex != -1 || node.currAnimationIndex == node.animations.length ) {
-		var animation = node.animations[node.currAnimationIndex]; 
-		animation.transform();
-
-		if(node.currAnimationIndex < node.animations.length - 1 || animation.lastFrame)
-			node.currAnimationIndex++;
-	}
+Graph.prototype.applyAnimation = function(node) {
+	if( node.currAnimationIndex != -1 || node.currAnimationIndex == node.animations.length )
+		node.animations[node.currAnimationIndex].transform(this.sceneGraph.scene);
 }
 
 //Draws the scene represented by the graph's nodes
@@ -128,7 +123,7 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 
 	this.sceneGraph.scene.pushMatrix();
 
-	this.applyAnimation();
+	this.applyAnimation(node);
 
 	for( var i = 0; i < node.idChildren.length; i++ )
 		this.drawSceneNode( this.nodes[node.idChildren[i]], idMat, idTex );
@@ -158,6 +153,24 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 Graph.prototype.changeMaterials = function() {
 	for(var key in this.nodes)
 		this.nodes[key].changeMaterial();
+}
+
+Graph.prototype.updateAnimations = function( dTime ) {
+	for(var key in this.nodes) {
+		if(this.nodes[key].currAnimationIndex == -1)
+			continue;
+
+		var animation = this.nodes[key].animations[this.nodes[key].currAnimationIndex];
+		
+		if(animation.lastFrame) {
+			if(this.nodes[key].currAnimationIndex < this.nodes[key].animations.length - 1)
+				this.nodes[key].currAnimationIndex++;
+			else
+				continue;
+		}
+
+		animation.update(dTime);
+	}
 }
 
 //Node's constructor

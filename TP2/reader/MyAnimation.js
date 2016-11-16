@@ -8,7 +8,7 @@ var Animation = function( ) {
 };
 
 //Abstract method used by children classes to apply the animation
-Animation.prototype.animate = function() {
+Animation.prototype.update = function() {
     throw new Error("Abstract method!");
 }
 
@@ -74,7 +74,7 @@ LinearAnimation.prototype.calcVelocity = function() {
     }
 }
 
-LinearAnimation.prototype.animate = function( dTime ) {
+LinearAnimation.prototype.update = function( dTime ) {
     if( this.lastFrame )
         return;
         
@@ -139,7 +139,7 @@ CircularAnimation.prototype.calcInitPosition = function() {
 }
 
 
-CircularAnimation.prototype.animate = function( dTime ) {
+CircularAnimation.prototype.update = function( dTime ) {
     if( this.lastFrame )
         return;
 

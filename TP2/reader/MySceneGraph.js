@@ -55,7 +55,7 @@ MySceneGraph.prototype.parseDSX= function(rootElement) {
 
 	for( var i = 0; i < ch.length; i++ ) {
 		var name = ch[i].tagName;
-
+		
 		switch(name) {
 		case 'scene':
 
@@ -1139,7 +1139,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				if( dimX == undefined || dimY == undefined || partsX == undefined || partsY == undefined)
 					return "Primitives -> Plane -> Missing required information";
 				
-				//this.primitives[id] = new MyPlane(this.scene, ...)
+				//this.primitives[id] = new MyPlane(this.scene, dimX, dimY, partsX, partsY);
 				break;
 			
 			case 'patch':
@@ -1155,28 +1155,31 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				
 				if(patch.children.length < 1)
 						return "Primitives -> Patch -> There isn't any control points";
+				
+				if(patch.children.length < (orderU + 1)*(orderV + 1))
+						return "Primitives -> Patch -> Wrong number of control points";
 					
-				var xx = 0, yy = 0, zz = 0;
-				var controlPoint = [[xx, yy, zz]];
+				if(patch.children.length > (orderU + 1)*(orderV + 1))
+						console.warn("Primitives -> Patch -> There is more control points than required");
 					
+				var controlPoint = [];
+				
 				for(var j = 0; j < patch.children.length; j++){
-						
+					
 					if(patch.children[j].attributes.length < 3)
 						return "Primitives -> Patch -> ControlPoint -> Wrong number of attributes";
+					
 					else if(patch.children[j].attributes.length < 3)
 						console.warn("Primitives -> Patch -> ControlPoint -> More attributes than required\n");
 						
-					var xx = this.reader.getFloat(anim_elems.children[j], 'xx');
-					var yy = this.reader.getFloat(anim_elems.children[j], 'yy');
-					var zz = this.reader.getFloat(anim_elems.children[j], 'zz');
-						
-					controlPoint[j] = [xx, yy, zz];
-						
-					console.debug("control point");
-					console.debug(controlPoint[j]);
+					var x = this.reader.getFloat(patch.children[j], 'x');
+					var y = this.reader.getFloat(patch.children[j], 'y');
+					var z = this.reader.getFloat(patch.children[j], 'z');
+					
+					controlPoint.push([x, y, z, 1]);
 				}
 				
-				//this.primitives[id] = new MyPatch(this.scene, orderU, orderV, ....)
+				//this.primitives[id] = new MyPatch(this.scene, orderU, orderV, partsU, partsV, controlPoint);
 				
 				break;
 				
@@ -1197,9 +1200,9 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 					
 				var c1 = chess.getElementsByTagName('c1');
 
-				if( c1 == null || c1.attributes.length < 4)
+				if( c1 == null || c1[0].attributes.length < 4)
 					return "Primitives -> ChessBoard -> c1 -> Attributes error";
-				else if(c1.attributes.length > 4)
+				else if(c1[0].attributes.length > 4)
 					console.warn("Primitives -> ChessBoard -> c1 -> More attributes than required");
 				else if( c1.length > 1 ) 
 					console.warn("There are more than 1 c1 elements in chessboard, only the first will be considered");
@@ -1207,43 +1210,66 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				var c1_elem = c1[0];
 
 				var r, g, b, a;
+				var rgbaC1 = [];
+				
 				r = this.reader.getFloat(c1_elem, 'r');
 				g = this.reader.getFloat(c1_elem, 'g');
 				b = this.reader.getFloat(c1_elem, 'b');
 				a = this.reader.getFloat(c1_elem, 'a');
 				
+				rgbaC1.push(r);
+				rgbaC1.push(g);
+				rgbaC1.push(b);
+				rgbaC1.push(a);
+				
 				var c2 = chess.getElementsByTagName('c2');
 
-				if( c2 == null || c2.attributes.length < 4)
+				if( c2 == null || c2[0].attributes.length < 4)
 					return "Primitives -> ChessBoard -> c2 -> Attributes error";
-				else if(c2.attributes.length > 4)
+				else if(c2[0].attributes.length > 4)
 					console.warn("Primitives -> ChessBoard -> c2 -> More attributes than required");
 				else if( c2.length > 1 ) 
 					console.warn("There are more than 1 c2 elements in chessboard, only the first will be considered");
 
 				var c2_elem = c2[0];
 				
+				var rgbaC2= [];
+				
 				r = this.reader.getFloat(c2_elem, 'r');
 				g = this.reader.getFloat(c2_elem, 'g');
 				b = this.reader.getFloat(c2_elem, 'b');
 				a = this.reader.getFloat(c2_elem, 'a');
 				
+				rgbaC2.push(r);
+				rgbaC2.push(g);
+				rgbaC2.push(b);
+				rgbaC2.push(a);
+				
 				var cs = chess.getElementsByTagName('cs');
 
-				if( cs == null || cs.attributes.length < 4)
+				if( cs == null || cs[0].attributes.length < 4)
 					return "Primitives -> ChessBoard -> cs -> Attributes error";
-				else if(cs.attributes.length > 4)
+				else if(cs[0].attributes.length > 4)
 					console.warn("Primitives -> ChessBoard -> cs -> More attributes than required");
 				else if( cs.length > 1 ) 
 					console.warn("There are more than 1 cs elements in chessboard, only the first will be considered");
 
 				var cs_elem = cs[0];
 				
+				var rgbaCS= [];
+				
 				r = this.reader.getFloat(cs_elem, 'r');
 				g = this.reader.getFloat(cs_elem, 'g');
 				b = this.reader.getFloat(cs_elem, 'b');
 				a = this.reader.getFloat(cs_elem, 'a');
-			
+				
+				rgbaCS.push(r);
+				rgbaCS.push(g);
+				rgbaCS.push(b);
+				rgbaCS.push(a);
+				
+				//this.primitive[id] = new MyChessboard(this.scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS);
+				break;
 		}
 	}
 };

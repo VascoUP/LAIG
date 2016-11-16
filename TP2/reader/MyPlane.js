@@ -22,7 +22,6 @@ MyPlane.prototype.createControlPoints = function() {
 	var dimX2 = this.dimX / 2;
 	var dimY2 = this.dimY / 2;
 	
-	//Não sei se está certo, porque não sei se esta é a ordem dos pontos -> Mostrar ao Vasco o desenho que fiz
 	//U = 0
 	this.controlPoints.push([-dimX2, -dimY2, 0]);
 	this.controlPoints.push([-dimX2, dimY2, 0]);
@@ -31,5 +30,5 @@ MyPlane.prototype.createControlPoints = function() {
 	this.controlPoints.push([dimX2, -dimY2, 0]);
 	this.controlPoints.push([dimX2, dimY2, 0]);	
 	
-	return controlPoints;   
+	return this.controlPoints;   
 };

@@ -8,7 +8,7 @@ function MyPatch(scene, orderU, orderV, partsU, partsV, controlPoints)
 	this.orderV = orderV;
 	this.partsU = partsU;
 	this.partsV = partsV;
-	this.controlPoints = this.createControlPoints(controlPoints);
+	this.controlPoints = controlPoints;
 	
 	this.patch = this.makeSurface();	
 };
@@ -39,22 +39,4 @@ MyPatch.prototype.makeSurface = function () {
 	};
 
 	return new CGFnurbsObject(this.scene, getSurfacePoint, this.partsU, this.partsV);		
-}
-
-MyPatch.prototype.createControlPoints = function(controlPoints)
-
- //segundo o lightScene fornecido, os control vertexes sao um array, de array, de array
-{
-	var control = [];
-	
-	for(var i = 0; i <= this.orderU; i++){
-		var controlPoint = [];
-		
-		for(var j = 0; j <= this.orderV; j++){
-			controlPoint.push(controlPoints[j]);
-    
-		control.push(controlPoint);
-  }
-
-  return control;
 }

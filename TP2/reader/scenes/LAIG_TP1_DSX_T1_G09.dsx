@@ -210,7 +210,25 @@
         <primitive id="tor">
             <torus inner="0.05" outer="1" slices="100" loops="100" />         
         </primitive>
-	
+			
+		<primitive id="patch">
+			<patch orderU="1" orderV="1" partsU="7" partsV="9" > 
+				<controlpoint x="0.0" y="0.0" z="0.0" />
+				<controlpoint x="2.0" y="1.0" z="0.0" />
+				<controlpoint x="1.0" y="2.0" z="0.0" />
+				<controlpoint x="2.0" y="2.0" z="0.0" />
+			</patch>
+		</primitive>
+		
+		<primitive id="chess">
+			<chessboard du="3" dv="3" textureref="mat" su="5" sv="6">
+                   <c1 r="1" g="1" b="1" a="1" />
+                   <c2 r="1" g="1" b="1" a="1" />
+                   <cs r="1" g="1" b="1" a="1" />
+			</chessboard>
+		</primitive>
+
+
     </primitives>
        
     <components>

@@ -1,14 +1,14 @@
-1 - Testar as novas primitivas/blocos:
+﻿1 - Testar as novas primitivas/blocos:
 	- animation (ja está testado -> acho que está a ler tudo bem)
-	- plane (ja está testado acho eu)
-	- patch (falta guardar os valores)
+	- plane (testado -> faltam as coordenadas de textura e ver se está a fazer bem)
+	- patch (testado -> faltam as coordenadas de textura e ver se está a fazer bem)
 	- chessboard (faltam guardar os valores)
 	- vehicle (temos que ver como vamos criar)
 
 2 - Criar e desenvolver uma "classe" para:
-	- animation
-	- plane
-	- patch
+	- animation (done)
+	- plane (done -> faltam as coordenadas de textura e ver se está a fazer bem)
+	- patch (done -> faltam as coordenadas de textura e ver se está a fazer bem)
 	- chessboard
 	- vehicle
 	

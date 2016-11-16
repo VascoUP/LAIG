@@ -220,6 +220,10 @@
 			</patch>
 		</primitive>
 		
+		<primitive id ="plane">
+			<plane dimX="2" dimY="2" partsX="2" partsY="2" />
+		</primitive>
+		
 		<primitive id="chess">
 			<chessboard du="3" dv="3" textureref="mat" su="5" sv="6">
                    <c1 r="1" g="1" b="1" a="1" />

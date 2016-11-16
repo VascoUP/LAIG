@@ -1,7 +1,5 @@
 function MyPatch(scene, orderU, orderV, partsU, partsV, controlPoints) 
 {
-	CGFobject.call(this,scene);
-	
 	this.scene = scene;
 	
 	this.orderU = orderU; 
@@ -9,14 +7,17 @@ function MyPatch(scene, orderU, orderV, partsU, partsV, controlPoints)
 	this.partsU = partsU;
 	this.partsV = partsV;
 	this.controlPoints = controlPoints;
+	//getControlPoints(controlPoints);
 	
-	this.patch = this.makeSurface();	
+	this.patch = makeSurface();
+
+	CGFnurbsObject.call(this, this.scene, this.patch, this.partsU, partsV);
 };
 
-MyPatch.prototype = Object.create(CGFobject.prototype);
-MyPatch.prototype.constructor=MyPatch;
+MyPatch.prototype = Object.create(CGFnurbsObject.prototype);
+MyPatch.prototype.constructor = MyPatch;
 
-MyPatch.prototype.getKnotsVector = function(degree) { 
+var getKnotsVector = function(degree) { 
 	
 	var v = new Array();
 	for (var i=0; i<=degree; i++)
@@ -28,15 +29,36 @@ MyPatch.prototype.getKnotsVector = function(degree) {
 	return v;
 }
 
-MyPatch.prototype.makeSurface = function () {
+var makeSurface = function () {
 		
-	var knotsU = this.getKnotsVector(this.orderU); 
-	var knotsV = this.getKnotsVector(this.orderV);
+	var knotsU = getKnotsVector(this.orderU); 
+	var knotsV = getKnotsVector(this.orderV);
 		
 	var nurbsSurface = new CGFnurbsSurface(this.orderU, this.orderv, knotsU, knotsV, this.controlPoints);
 	getSurfacePoint = function(u, v) {
 		return nurbsSurface.getPoint(u, v);
 	};
 
-	return new CGFnurbsObject(this.scene, getSurfacePoint, this.partsU, this.partsV);		
+	return getSurfacePoint;		
 }
+
+/*var getControlPoints = function(controlPoints)
+{
+	var CP = [];
+	
+	for(var i = 0; i <= this.orderU; i++)
+	{
+		var CPtemp = [];
+		for(var j = 0; j <= this.orderV; j++)
+		{
+			var indexArray = i * (this.orderV + 1) + j;
+			var controlPoint = controlPoints[indexArray];
+			CPtemp.push(controlPoint);
+		}
+		CP.push(CPtemp);
+	}
+	
+	console.debug(CP);
+	
+	return CP;
+}*/

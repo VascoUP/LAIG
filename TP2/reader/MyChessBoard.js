@@ -1,6 +1,4 @@
-function MyChessboard(scene, du, dv, textureref, su, sv, rgbaC1, rgbaC2, rgbaCS) {
-	CGFobject.call(this,scene);
-	
+function MyChessBoard(scene, du, dv, textureref, su, sv, rgbaC1, rgbaC2, rgbaCS) {
 	this.scene = scene;
 	this.du = du; 
 	this.dv = dv; 
@@ -17,8 +15,8 @@ function MyChessboard(scene, du, dv, textureref, su, sv, rgbaC1, rgbaC2, rgbaCS)
 	var VPARTS = 5;
 	this.partsV = dv * VPARTS;
 
-	this.plane = new MyPlane(this.scene, 1, 1, this.partsU, this.partsV);
+	MyPlane.call(this, scene, 1, 1, this.partsU, this.partsV);
 };
 
-MyChessboard.prototype = Object.create(CGFobject.prototype);
-MyChessboard.prototype.constructor=MyChessboard;
+MyChessBoard.prototype = Object.create(CGFnurbsObject.prototype);
+MyChessBoard.prototype.constructor = MyChessBoard;

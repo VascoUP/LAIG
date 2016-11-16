@@ -7,8 +7,7 @@ function MyPatch(scene, orderU, orderV, partsU, partsV, controlPoints)
 	this.partsU = partsU;
 	this.partsV = partsV;
 	this.controlPoints = controlPoints;
-	//getControlPoints(controlPoints);
-	
+
 	this.patch = makeSurface();
 
 	CGFnurbsObject.call(this, this.scene, this.patch, this.partsU, partsV);
@@ -42,23 +41,21 @@ var makeSurface = function () {
 	return getSurfacePoint;		
 }
 
-/*var getControlPoints = function(controlPoints)
+/*
+var getControlPoints = function(controlPoints)
 {
-	var CP = [];
-	
+	var newControlPoints = [];
 	for(var i = 0; i <= this.orderU; i++)
 	{
-		var CPtemp = [];
-		for(var j = 0; j <= this.orderV; j++)
+		var subArray = [];
+		for(let j = 0; j <= this.orderV; j++)
 		{
-			var indexArray = i * (this.orderV + 1) + j;
-			var controlPoint = controlPoints[indexArray];
-			CPtemp.push(controlPoint);
+			var newControlPoint = controlPoints[i*(this.orderV + 1) + j];
+			newControlPoint.push(1);
+			subArray.push(newControlPoint);
 		}
-		CP.push(CPtemp);
+		newControlPoints.push(subArray);
 	}
 	
-	console.debug(CP);
-	
-	return CP;
+	return newControlPoints;
 }*/

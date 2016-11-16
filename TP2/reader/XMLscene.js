@@ -33,8 +33,6 @@ XMLscene.prototype.init = function (application) {
 
     this.currentCamera = 0;
 
-	this.object = new MySphere(this, 0.5, 20, 20);
-
 	var loaded = false;
 
 	/* 60 frames per second */
@@ -114,8 +112,11 @@ XMLscene.prototype.display = function () {
 		for(var i = 0; i < this.graph.nLights; i++)
 			this.lights[i].update();
 		this.graph.graph.drawScene();
-	};
+	}
 
+	for( key in this.graph.animations) {
+		this.graph.animations[key].transform();
+	}
 };
 
 //Changes the cameras
@@ -149,6 +150,9 @@ XMLscene.prototype.changeMaterial = function() {
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
 	
+	for( key in this.graph.animations) {
+		this.graph.animations[key].animate(dSec);
+	}
 	//Add cicle that iterates throught list of animations
 	//...
 

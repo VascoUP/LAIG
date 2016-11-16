@@ -2,6 +2,9 @@ var Animation = function( ) {
     if (this.constructor === Animation) {
       throw new Error("Can't instantiate abstract class!");
     }
+
+    this.position = [0, 0, 0];
+    this.rotate = 0;
 };
 
 //Abstract method used by children classes to apply the animation
@@ -9,11 +12,16 @@ Animation.prototype.animate = function() {
     throw new Error("Abstract method!");
 }
 
+Animation.prototype.transform = function(scene) {
+    scene.translate(this.position[0], this.position[1], this.position[2]);
+    scene.rotate(this.rotate, 0, 1, 0);
+}
+
 
 /*
     - LINEAR ANIMATION -
 */
-var LinearAnimation = function ( control_points, duration ) {
+var LinearAnimation = function ( id, control_points, duration ) {
     Animation.apply(this, arguments);
 
     if( control_points.length < 1 ) {
@@ -47,7 +55,6 @@ LinearAnimation.prototype.calcVelocity = function() {
     }
 
     this.vel_dir = [];
-    this.velocity = distance / this.duration;
 
     for( var i = 1; i < this.control_points.length; i++ ) {
         var d = control_points_vel[i-1];
@@ -93,6 +100,10 @@ LinearAnimation.prototype.animate = function( dTime ) {
         this.position[0] = this.control_points[i][0] + this.vel_dir[i][1] * t;
         this.position[1] = this.control_points[i][1] + this.vel_dir[i][2] * t;
         this.position[2] = this.control_points[i][2] + this.vel_dir[i][3] * t;
+
+        this.rotate = Math.atan( (this.control_points[i+1][2] - this.control_points[i][2]) / 
+                                (this.control_points[i+1][0] - this.control_points[i][0]) );
+
         break;
     }
 }
@@ -101,7 +112,7 @@ LinearAnimation.prototype.animate = function( dTime ) {
 /*
     - CIRCULAR ANIMATION -
 */
-var CircularAnimation = function( center, radius, init_angle, rotate_angle, duration ) {
+var CircularAnimation = function( id, center, radius, init_angle, rotate_angle, duration ) {
     Animation.apply(this, arguments);    
     
     this.lastFrame = false;
@@ -112,17 +123,11 @@ var CircularAnimation = function( center, radius, init_angle, rotate_angle, dura
     this.duration = duration > 0 ? duration : 1;
     this.time = 0;
 
-    this.calcVelocity();
     this.calcInitPosition();
 };
 
 CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
-
-CircularAnimation.prototype.calcVelocity = function() {
-    var distance = this.radius * this.rotate_angle;
-    this.velocity = distance / this.duration;
-}
 
 CircularAnimation.prototype.calcInitPosition = function() {
     this.position = this.center.slice();
@@ -135,12 +140,12 @@ CircularAnimation.prototype.calcInitPosition = function() {
 
 
 CircularAnimation.prototype.animate = function( dTime ) {
-
     if( this.lastFrame )
         return;
 
     var ang;
     this.position = this.center.slice();
+
     
     // Given the time, calculate the next point in the trajectory
     this.time += dTime;
@@ -157,9 +162,11 @@ CircularAnimation.prototype.animate = function( dTime ) {
     }
 
     ang = this.init_angle + (this.time * this.rotate_angle / this.duration);
-            
+    
     //X coord
     this.position[0] += this.radius * Math.cos(ang);
     //Z coord
     this.position[2] += this.radius * Math.sin(ang);
+
+    this.rotate = ang + Math.PI / 2;
 }

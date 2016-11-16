@@ -8,6 +8,7 @@ function MySceneGraph(filename, scene) {
 
 	this.transformations = {};
 	this.primitives = {};
+	this.animations = {};
 	this.graph = new Graph(this);
 
 	// File reading 
@@ -920,6 +921,10 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 			var id = anim_elems.attributes.getNamedItem('id').value;
 			var span = anim_elems.attributes.getNamedItem('span').value;
 			var type = this.reader.getString(anim_elems, 'type');
+			var animation;
+
+			if( this.animations[id] != undefined )
+				return "Animations -> Different animations with the same id = " + id;
 			
 			switch(type){
 				case 'linear':
@@ -927,8 +932,8 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 					if(anim_elems.children.length < 1)
 						return "Animation -> Linear -> There isn't any control points";
 					
-					var xx = 0, yy = 0, zz = 0;
-					var controlPoint = [[xx, yy, zz]];
+					var xx, yy, zz;
+					var controlPoint = [];
 					
 					for(var j = 0; j < anim_elems.children.length; j++){
 						
@@ -944,7 +949,7 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 						controlPoint[j] = [xx, yy, zz];
 					}
 					
-					var linearAnimation = new LinearAnimation(controlPoint, span);
+					animation = new LinearAnimation(id, controlPoint, span);
 					break;
 				case 'circular':
 				
@@ -957,11 +962,13 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 					
 					var center = [centerX, centerY, centerZ];
 					
-					var circularAnimation = new CircularAnimation(center, radius, startang, rotang, span);
+					animation = new CircularAnimation(id,center, radius, startang, rotang, span);
 					break;
 				default:
 					return "Animation -> Animation's type doesn't exist";
 			}
+
+			this.animations[id] = animation;
 		}
 			
 	}

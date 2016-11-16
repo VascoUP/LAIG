@@ -69,10 +69,23 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 		node.transformation = this.sceneGraph.transformations[ node.transformationId ];
 
 		if( node.transformation == undefined ) {
-			console.error("Transformation " + node.transformationId + " not found.");
+			console.error("Transformation " + node.transformationId + " not found");
 			return true;	
 		}
 	}
+
+	// Check animations and update their values
+	for( var i = 0; i < node.animations.length; i++ ) {
+		var animation = this.sceneGraph.animations[node.animations[i]];
+		if( animation == undefined ) {
+			console.error("Animation " + node.animations[i] + " not found");
+			return true;
+		}
+		node.animations[i] = animation;
+	}
+
+	if( node.animations.length > 0 )
+		node.currAnimationIndex = 0;
 
 	//On success returns false
 	return false;
@@ -86,6 +99,16 @@ Graph.prototype.drawScene = function( ) {
 	this.drawSceneNode( head, 
 						head.idMaterials[head.currMaterialIndex],
 						head.idTexture );
+}
+
+Graph.prototype.applyAnimation = function() {
+	if( node.currAnimationIndex != -1 || node.currAnimationIndex == node.animations.length ) {
+		var animation = node.animations[node.currAnimationIndex]; 
+		animation.transform();
+
+		if(node.currAnimationIndex < node.animations.length - 1 || animation.lastFrame)
+			node.currAnimationIndex++;
+	}
 }
 
 //Draws the scene represented by the graph's nodes
@@ -102,6 +125,10 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 
 	if( node.transformation != undefined )
 		this.sceneGraph.scene.multMatrix( node.transformation );
+
+	this.sceneGraph.scene.pushMatrix();
+
+	this.applyAnimation();
 
 	for( var i = 0; i < node.idChildren.length; i++ )
 		this.drawSceneNode( this.nodes[node.idChildren[i]], idMat, idTex );
@@ -121,6 +148,8 @@ Graph.prototype.drawSceneNode = function( node, idMaterial, idTexture ) {
 		prim.display();
 	}
 
+	this.sceneGraph.scene.popMatrix();
+
 	mat.setTexture(null);
 	this.sceneGraph.scene.popMatrix();
 }
@@ -136,9 +165,12 @@ function Node (id) {
 	this.idChildren = [];
 	this.idPrimitives = [];
 	this.idMaterials = [];
+	this.animations = [];
 	this.idTexture;
 
 	this.currMaterialIndex = 0; //Current material used
+	this.currAnimationIndex = -1;
+
 	this.visited = false;
 }
 
@@ -188,6 +220,10 @@ Node.prototype.addIdChildren = function( id ) {
 //Sets the node's id's primitive
 Node.prototype.addIdPrimitive = function( id ) {
 	this.idPrimitives.push(id);
+}
+
+Node.prototype.addAnimation = function( id ) {
+	this.animations.push(id);
 }
 
 //Changes the node's material

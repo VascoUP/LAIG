@@ -1,24 +1,23 @@
 function MyPatch(scene, orderU, orderV, partsU, partsV, controlPoints) 
 {
-	CGFobject.call(this,scene);
-	
 	this.scene = scene;
-	
-	this.orderU = orderU; 
+	this.orderU = orderU;
 	this.orderV = orderV;
 	this.partsU = partsU;
 	this.partsV = partsV;
-	this.controlPoints = controlPoints;
-	
-	this.patch = this.makeSurface();	
+	this.controlPoints = getControlPoints(this.orderU, this.orderV, controlPoints);
+
+	this.patch = makeSurface(this.orderU, this.orderV, this.controlPoints);
+
+	CGFnurbsObject.call(this, this.scene, this.patch, this.partsU, partsV);
 };
 
-MyPatch.prototype = Object.create(CGFobject.prototype);
-MyPatch.prototype.constructor=MyPatch;
+MyPatch.prototype = Object.create(CGFnurbsObject.prototype);
+MyPatch.prototype.constructor = MyPatch;
 
-MyPatch.prototype.getKnotsVector = function(degree) { 
+var getKnotsVector = function(degree) { 
 	
-	var v = new Array();
+	var v = [];
 	for (var i=0; i<=degree; i++)
 		v.push(0);
 	
@@ -28,15 +27,34 @@ MyPatch.prototype.getKnotsVector = function(degree) {
 	return v;
 }
 
-MyPatch.prototype.makeSurface = function () {
+var makeSurface = function (orderU, orderV, controlPoints) {
+	var knotsU = this.getKnotsVector(orderU); 
+	var knotsV = this.getKnotsVector(orderV);
 		
-	var knotsU = this.getKnotsVector(this.orderU); 
-	var knotsV = this.getKnotsVector(this.orderV);
-		
-	var nurbsSurface = new CGFnurbsSurface(this.orderU, this.orderv, knotsU, knotsV, this.controlPoints);
+	var nurbsSurface = new CGFnurbsSurface(orderU, orderV, knotsU, knotsV, controlPoints);
 	getSurfacePoint = function(u, v) {
 		return nurbsSurface.getPoint(u, v);
 	};
 
-	return new CGFnurbsObject(this.scene, getSurfacePoint, this.partsU, this.partsV);		
+	return getSurfacePoint;		
+}
+
+
+var getControlPoints = function(orderU, orderV, controlPoints)
+{
+	var controlPointsNew = [];
+	for(var i = 0; i <= orderU; i++)
+	{
+		var temp = [];
+		for(var j = 0; j <= orderV; j++)
+		{
+			var indexArray = i * (orderV + 1) + j;
+			var cp = controlPoints[indexArray];
+			temp.push(cp);
+		}
+		
+		controlPointsNew.push(temp);
+	}
+	console.debug(controlPointsNew);
+	return controlPointsNew;
 }

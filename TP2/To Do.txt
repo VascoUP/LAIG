@@ -1,15 +1,15 @@
 ﻿1 - Testar as novas primitivas/blocos:
-	- animation (ja está testado -> acho que está a ler tudo bem)
-	- plane (testado -> faltam as coordenadas de textura e ver se está a fazer bem)
-	- patch (testado -> faltam as coordenadas de textura e ver se está a fazer bem)
-	- chessboard (faltam guardar os valores)
+	- animation (DONE)
+	- plane (valor estão a ler bem, só falta fazer display)
+	- patch (valor estão a ler bem, só falta fazer display)
+	- chessboard (valor estão a ler bem, só falta fazer display e shaders)
 	- vehicle (temos que ver como vamos criar)
 
 2 - Criar e desenvolver uma "classe" para:
-	- animation (done)
-	- plane (done -> faltam as coordenadas de textura e ver se está a fazer bem)
-	- patch (done -> faltam as coordenadas de textura e ver se está a fazer bem)
-	- chessboard
+	- animation (DONE)
+	- plane (DONE)
+	- patch (DONE)
+	- chessboard (falta shaders)
 	- vehicle
 	
 3 - Criar as superfícies curvas

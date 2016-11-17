@@ -1131,7 +1131,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 			
 				if(prim_elems.children[0].attributes.length < 4)
 					return "Primitives -> Plane -> Wrong number of attributes";
-				else if(prim_elems.children[0].attribrutes.length > 4)
+				else if(prim_elems.children[0].attributes.length > 4)
 					console.warn("Primitives -> Plane -> More attributes than required");
 				
 				var dimX = this.reader.getFloat(prim_elems.children[0], 'dimX');
@@ -1142,7 +1142,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				if( dimX == undefined || dimY == undefined || partsX == undefined || partsY == undefined)
 					return "Primitives -> Plane -> Missing required information";
 				
-				//this.primitives[id] = new MyPlane(this.scene, dimX, dimY, partsX, partsY);
+				this.primitives[id] = new MyPlane(this.scene, dimX, dimY, partsX, partsY);
 				break;
 			
 			case 'patch':
@@ -1181,8 +1181,8 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 					
 					controlPoint.push([x, y, z, 1]);
 				}
-				
-				//this.primitives[id] = new MyPatch(this.scene, orderU, orderV, partsU, partsV, controlPoint);
+
+				this.primitives[id] = new MyPatch(this.scene, orderU, orderV, partsU, partsV, controlPoint);
 				
 				break;
 				
@@ -1271,13 +1271,13 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				rgbaCS.push(b);
 				rgbaCS.push(a);
 				
-				//this.primitive[id] = new MyChessboard(this.scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS);
+				this.primitives[id] = new MyChessBoard(this.scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS);
 				break;
 		}
 	}
 };
 
-//Parses the componenets
+//Parses the components
 MySceneGraph.prototype.parseComponents = function (components) {
 
 	var nnodes = components.children.length;

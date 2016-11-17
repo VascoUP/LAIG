@@ -1,7 +1,4 @@
 function MyPlane(scene, dimX, dimY, partsX, partsY) {
-	
-	CGFobject.call(this,scene);
-
     this.scene = scene;
 	
     this.dimX = dimX;
@@ -9,26 +6,33 @@ function MyPlane(scene, dimX, dimY, partsX, partsY) {
 	this.partsX = partsX;
 	this.partsY = partsY;
 	
-	this.controlPoints = [];
+	this.controlPoints = createControlPoints();
+	
+	 this.texCoords = [	0,1,
+						1,1,
+						0,0,
+						1,0
+					  ];
 
-	this.patch = new MyPatch(this,scene, 1, 1, partsX, partsY, this.createControlPoints());
+	MyPatch.call(this, this.scene, 1, 1, this.partsX, this.partsY, this.controlPoints);
 }
 
 MyPlane.prototype = Object.create(CGFnurbsObject.prototype);
 MyPlane.prototype.constructor = MyPlane;
 
-MyPlane.prototype.createControlPoints = function() {
-
+var createControlPoints = function() {
+	
+	var controlPoints = [];
 	var dimX2 = this.dimX / 2;
 	var dimY2 = this.dimY / 2;
 	
 	//U = 0
-	this.controlPoints.push([-dimX2, -dimY2, 0]);
-	this.controlPoints.push([-dimX2, dimY2, 0]);
+	controlPoints.push([-dimX2, -dimY2, 0, 1]);
+	controlPoints.push([-dimX2, dimY2, 0, 1]);
 	
 	//U = 1
-	this.controlPoints.push([dimX2, -dimY2, 0]);
-	this.controlPoints.push([dimX2, dimY2, 0]);	
+	controlPoints.push([dimX2, -dimY2, 0, 1]);
+	controlPoints.push([dimX2, dimY2, 0, 1]);	
 	
-	return this.controlPoints;   
+	return controlPoints;   
 };

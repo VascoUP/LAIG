@@ -1,12 +1,10 @@
-function MyChessboard(scene, du, dv, textureref, su, sv, rgbaC1, rgbaC2, rgbaCS) {
-	CGFobject.call(this,scene);
-	
+function MyChessBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS) {
 	this.scene = scene;
-	this.du = du; 
-	this.dv = dv; 
+	this.dU = dU; 
+	this.dV = dV; 
 	this.textureref = textureref;
-	this.su = su;
-	this.sv = sv;
+	this.sU = sU;
+	this.sV = sV;
 	this.rgbaC1 = rgbaC1;
 	this.rgbaC2 = rgbaC2;
 	this.rgbaCS = rgbaCS;
@@ -17,8 +15,29 @@ function MyChessboard(scene, du, dv, textureref, su, sv, rgbaC1, rgbaC2, rgbaCS)
 	var VPARTS = 5;
 	this.partsV = dv * VPARTS;
 
-	this.plane = new MyPlane(this.scene, 1, 1, this.partsU, this.partsV);
+	MyPlane.call(this, this.scene, 1, 1, this.partsU, this.partsV);
+	
+	/*this.shader = new CGFshader(this.scene.gl, "shaders/chessboard.vert", "shaders/chessboard.frag");
+	this.setValuesShader();*/
 };
 
-MyChessboard.prototype = Object.create(CGFobject.prototype);
-MyChessboard.prototype.constructor=MyChessboard;
+MyChessBoard.prototype = Object.create(CGFnurbsObject.prototype);
+MyChessBoard.prototype.constructor = MyChessBoard;
+
+/*MyChessBoard.prototype.setValuesShader = function(){	
+	this.shader.setUniformsValues({dU: this.dU});
+	this.shader.setUniformsValues({dV: this.dV});
+
+	this.shader.setUniformsValues({sU: this.sU});
+	this.shader.setUniformsValues({sV: this.sV});
+
+	this.shader.setUniformsValues({rgbaC1: this.rgbaC1});
+	this.shader.setUniformsValues({rgbaC2: this.rgbaC2});
+	this.shader.setUniformsValues({rgbaCS: this.rgbaCS});
+}*/
+
+MyChessBoard.prototype.display = function(){
+	//this.scene.setActiveShader(this.shader);
+	MyPlane.display();
+	//this.scene.setActiveShader(this.scene.defaultShader);
+}

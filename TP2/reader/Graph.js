@@ -84,7 +84,7 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 		node.animations[i] = animation;
 	}
 
-	if( node.animations.length > 0 )
+	if( node.animations.length > 0 ) 
 		node.currAnimationIndex = 0;
 
 	//On success returns false
@@ -168,7 +168,6 @@ Graph.prototype.updateAnimations = function( dTime ) {
 			else
 				continue;
 		}
-
 		animation.update(dTime);
 	}
 }

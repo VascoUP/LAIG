@@ -31,18 +31,19 @@ var LinearAnimation = function ( id, control_points, duration ) {
 
     this.lastFrame = false;  
     this.control_points = control_points;
-    this.position = control_points[0].slice();
 
     this.duration = duration > 0 ? duration : 1;
     this.time = 0;
 
-    this.calcVelocity();
+    this.currControlPoint = -1;
+
+    this.calcInit();
 };
 
 LinearAnimation.prototype = Object.create(Animation.prototype);
 LinearAnimation.prototype.constructor = LinearAnimation;
 
-LinearAnimation.prototype.calcVelocity = function() {
+LinearAnimation.prototype.calcInit = function() {
     var distance = 0;
     var control_points_vel = [];
 
@@ -72,6 +73,16 @@ LinearAnimation.prototype.calcVelocity = function() {
               
         this.vel_dir.push(vel);
     }
+
+
+    this.position = this.control_points[0].slice();
+
+    var dX = this.control_points[0][0] - this.control_points[1][0];
+    var dZ = this.control_points[1][2] - this.control_points[0][2];
+    this.rotate = Math.atan( dZ / dX );
+
+    if( dX > 0 )
+        this.rotate -= Math.PI;
 }
 
 LinearAnimation.prototype.update = function( dTime ) {
@@ -89,20 +100,29 @@ LinearAnimation.prototype.update = function( dTime ) {
     var dur = 0; //Current calculated duration
     for( var i = 0; i < this.vel_dir.length; i++) {
 
-        if( this.time > dur + this.vel_dir[i][0] ) { //If the time is past this control point
-            dur += this.vel_dir[i][0]
+        if( this.currControlPoint > i || 
+            this.time > dur + this.vel_dir[i][0] ) { //If the time is past this control point
+            dur += this.vel_dir[i][0];
             continue;
         }
 
-        //If it gets here than this is the right stretch
-        this.position = this.control_points[i].slice();
+        //If it gets here than this is the right index
+        if( this.currControlPoint != i ) {
+            //Only needs to update rotate when it changes control_points
+            this.currControlPoint = i;
+
+            var dX = this.control_points[i][0] - this.control_points[i+1][0];
+            var dZ = this.control_points[i+1][2] - this.control_points[i][2];
+            this.rotate = Math.atan( dZ / dX );
+
+            if( dX > 0 )
+                this.rotate -= Math.PI;
+        }
+
         var t = this.time - dur;
         this.position[0] = this.control_points[i][0] + this.vel_dir[i][1] * t;
         this.position[1] = this.control_points[i][1] + this.vel_dir[i][2] * t;
         this.position[2] = this.control_points[i][2] + this.vel_dir[i][3] * t;
-
-        this.rotate = Math.atan( (this.control_points[i+1][2] - this.control_points[i][2]) / 
-                                (this.control_points[i+1][0] - this.control_points[i][0]) );
 
         break;
     }
@@ -113,7 +133,9 @@ LinearAnimation.prototype.update = function( dTime ) {
     - CIRCULAR ANIMATION -
 */
 var CircularAnimation = function( id, center, radius, init_angle, rotate_angle, duration ) {
-    Animation.apply(this, arguments);    
+    Animation.apply(this, arguments);   
+
+    console.debug(arguments); 
     
     this.lastFrame = false;
     this.center = center;
@@ -123,19 +145,21 @@ var CircularAnimation = function( id, center, radius, init_angle, rotate_angle, 
     this.duration = duration > 0 ? duration : 1;
     this.time = 0;
 
-    this.calcInitPosition();
+    this.calcInit();
 };
 
 CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
 
-CircularAnimation.prototype.calcInitPosition = function() {
+CircularAnimation.prototype.calcInit = function() {
     this.position = this.center.slice();
 
     //X coord
     this.position[0] = this.radius * Math.cos(this.init_angle);
     //Z coord
     this.position[2] = this.radius * Math.sin(this.init_angle);
+
+    this.rotate = this.init_angle + Math.PI / 2;
 }
 
 
@@ -154,9 +178,11 @@ CircularAnimation.prototype.update = function( dTime ) {
             
         ang = this.init_angle + this.rotate_angle;
         //X coord
-        this.position[0] += this.radius * Math.cos(ang);
+        this.position[0] += this.radius * Math.sin(ang);
         //Z coord
-        this.position[2] += this.radius * Math.sin(ang);
+        this.position[2] += this.radius * Math.cos(ang);
+
+        this.rotate = ang + Math.PI / 2;
 
         return ;
     }
@@ -164,9 +190,9 @@ CircularAnimation.prototype.update = function( dTime ) {
     ang = this.init_angle + (this.time * this.rotate_angle / this.duration);
     
     //X coord
-    this.position[0] += this.radius * Math.cos(ang);
+    this.position[0] += this.radius * Math.sin(ang);
     //Z coord
-    this.position[2] += this.radius * Math.sin(ang);
+    this.position[2] += this.radius * Math.cos(ang);
 
     this.rotate = ang + Math.PI / 2;
 }

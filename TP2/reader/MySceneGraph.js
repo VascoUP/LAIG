@@ -634,7 +634,7 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 
 	var texture_elem = texture.getElementsByTagName('texture');
 	
-	if(texture_elem == undefined || texture_elem.length < 1)
+	if(texture_elem == undefined)
 		return "Texture -> You need at least one texture";
 	
 	for( var i = 0; i < texture_elem.length; i++ ) {
@@ -822,7 +822,7 @@ MySceneGraph.prototype.parseTransformations = function(transformations) {
 
 	var nnodes = transformations.children.length;
 	
-	if (transformations == null || nnodes < 1) 
+	if (transformations == null ) 
 		return "Transformations error";
 	else if( transformations.attributes.length != 0 )
 		console.warn("Transformations -> More attributes than required");
@@ -961,6 +961,9 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 					var rotang = this.reader.getFloat(anim_elems, 'rotang');
 					
 					var center = [centerX, centerY, centerZ];
+
+					startang = startang * Math.PI / 180;
+					rotang = rotang * Math.PI / 180;
 					
 					animation = new CircularAnimation(id,center, radius, startang, rotang, span);
 					break;
@@ -1405,10 +1408,13 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 };
 
 MySceneGraph.prototype.readComponentAnimation = function (compElement, node) {
-	var animations = compElement.getElementsByTagName('animations');
-	if (animations == null || animation == undefined) 
-		return ;//"Component -> Animations error";
+	var animations = compElement.getElementsByTagName('animation');
+	if (animations == null || animations == undefined) 
+		return "Component -> Animations error";
 	
+	if (animations.length == 0)
+		return ;
+
 	var nnodes = animations[0].children.length;
 	for(var i = 0; i < nnodes; i++) {
 
@@ -1430,8 +1436,8 @@ MySceneGraph.prototype.readComponentAnimation = function (compElement, node) {
 			
 			if(id == undefined)
 				return "Component -> Animation -> ID AnimationRef -> Missing required information";
-			
-			//node.setAnimationID(id);
+
+			node.addAnimation(id);
 		}
 		else
 			return "Component -> Animation -> Wrong element in Animation";

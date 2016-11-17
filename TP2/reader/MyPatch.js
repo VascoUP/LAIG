@@ -53,7 +53,7 @@ var getControlPoints = function(orderU, orderV, controlPoints)
 			temp.push(cp);
 		}
 		
-		ControlPointsNew.push(temp);
+		controlPointsNew.push(temp);
 	}
 	console.debug(controlPointsNew);
 	return controlPointsNew;

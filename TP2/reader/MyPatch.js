@@ -55,6 +55,9 @@ var getControlPoints = function(orderU, orderV, controlPoints)
 		
 		controlPointsNew.push(temp);
 	}
-	console.debug(controlPointsNew);
 	return controlPointsNew;
+}
+
+MyPatch.prototype.setTexCoords = function(length_t, length_s){
+	
 }

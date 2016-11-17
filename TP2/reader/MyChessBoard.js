@@ -10,12 +10,15 @@ function MyChessBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS)
 	this.rgbaCS = rgbaCS;
 
 	var UPARTS= 5;
-	this.partsU = du * UPARTS;
+	this.partsU = dU * UPARTS;
 
 	var VPARTS = 5;
-	this.partsV = dv * VPARTS;
+	this.partsV = dV * VPARTS;
+	
+	var dimX = 1;
+	var dimY = 1;
 
-	MyPlane.call(this, this.scene, 1, 1, this.partsU, this.partsV);
+	MyPlane.call(this, this.scene, dimX, dimY, this.partsU, this.partsV);
 	
 	/*this.shader = new CGFshader(this.scene.gl, "shaders/chessboard.vert", "shaders/chessboard.frag");
 	this.setValuesShader();*/
@@ -36,8 +39,8 @@ MyChessBoard.prototype.constructor = MyChessBoard;
 	this.shader.setUniformsValues({rgbaCS: this.rgbaCS});
 }*/
 
-MyChessBoard.prototype.display = function(){
+/*MyChessBoard.prototype.display = function(){
 	//this.scene.setActiveShader(this.shader);
-	MyPlane.display();
+	//MyPlane.display();
 	//this.scene.setActiveShader(this.scene.defaultShader);
-}
+}*/

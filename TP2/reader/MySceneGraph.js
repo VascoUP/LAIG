@@ -1178,7 +1178,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 					
 					controlPoint.push([x, y, z, 1]);
 				}
-				
+
 				this.primitives[id] = new MyPatch(this.scene, orderU, orderV, partsU, partsV, controlPoint);
 				
 				break;

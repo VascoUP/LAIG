@@ -6,7 +6,7 @@ function MyPlane(scene, dimX, dimY, partsX, partsY) {
 	this.partsX = partsX;
 	this.partsY = partsY;
 	
-	this.controlPoints = createControlPoints();
+	this.controlPoints = createControlPoints(this.dimX, this.dimY);
 	
 	 this.texCoords = [	0,1,
 						1,1,
@@ -20,11 +20,11 @@ function MyPlane(scene, dimX, dimY, partsX, partsY) {
 MyPlane.prototype = Object.create(CGFnurbsObject.prototype);
 MyPlane.prototype.constructor = MyPlane;
 
-var createControlPoints = function() {
+var createControlPoints = function(dimX, dimY) {
 	
 	var controlPoints = [];
-	var dimX2 = this.dimX / 2;
-	var dimY2 = this.dimY / 2;
+	var dimX2 = dimX / 2;
+	var dimY2 = dimY / 2;
 	
 	//U = 0
 	controlPoints.push([-dimX2, -dimY2, 0, 1]);

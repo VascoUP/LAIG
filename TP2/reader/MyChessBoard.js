@@ -41,6 +41,6 @@ MyChessBoard.prototype.constructor = MyChessBoard;
 
 /*MyChessBoard.prototype.display = function(){
 	//this.scene.setActiveShader(this.shader);
-	//MyPlane.display();
+	//this.display();
 	//this.scene.setActiveShader(this.scene.defaultShader);
 }*/

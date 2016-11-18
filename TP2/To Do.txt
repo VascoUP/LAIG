@@ -1,8 +1,8 @@
 ﻿1 - Testar as novas primitivas/blocos:
 	- animation (DONE)
-	- plane (valor estão a ler bem, só falta fazer display)
-	- patch (valor estão a ler bem, só falta fazer display)
-	- chessboard (valor estão a ler bem, só falta fazer display e shaders)
+	- plane (DONE)
+	- patch (DONE)
+	- chessboard (falta shaders)
 	- vehicle (temos que ver como vamos criar)
 
 2 - Criar e desenvolver uma "classe" para:
@@ -12,7 +12,7 @@
 	- chessboard (falta shaders)
 	- vehicle
 	
-3 - Criar as superfícies curvas
+3 - Criar as superfícies curvas (DONE)
 
 4 - Colocar shaders
 

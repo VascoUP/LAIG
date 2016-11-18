@@ -22,5 +22,5 @@ void main() {
 
 	normal = vec4(aVertexNormal, 1.0);
 
-	coords=vertex/10.0;
+	coords=vertex;
 }

@@ -10,7 +10,7 @@ void main() {
 		gl_FragColor =  normal;
 	else
 	{
-		gl_FragColor.rgb = abs(coords.xyz)/3.0;
+		gl_FragColor.rgb = abs(coords.xyz)/30.0;
 		gl_FragColor.a = 1.0;
 	}
 }

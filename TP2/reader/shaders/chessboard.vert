@@ -21,11 +21,20 @@ uniform vec4 c2;
 uniform vec4 cs;
 
 varying vec4 coords;
+varying float indexU;
+varying float indexV;
 
 void main() {
-	vec4 vertex=vec4(aVertexPosition+aVertexNormal, 1.0);
+	vec4 vertex=vec4(aVertexPosition, 1.0);
+
+	coords.xy=vertex.xy+0.5;
+	coords.z=vertex.z;
+
+    indexU = floor(coords.x * dU);
+    indexV = floor(coords.y * dV);
+
+    if( indexU == sU && indexV == sV )
+        vertex.z += 0.1;
 
 	gl_Position = uPMatrix * uMVMatrix * vertex;
-
-	coords=vertex+0.5;
 }

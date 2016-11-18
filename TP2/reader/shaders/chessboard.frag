@@ -15,15 +15,14 @@ uniform vec4 c2;
 uniform vec4 cs;
 
 varying vec4 coords;
+varying float indexU;
+varying float indexV;
 
 void main() {
    vec2 texcoord = vec2(coords.x, coords.y);
    gl_FragColor = texture2D(u_texture, texcoord);
 
    vec4 color;
-
-    float indexU = floor(coords.x * dU);
-    float indexV = floor(coords.y * dV);
 
     if( indexU == sU && indexV == sV )
         color = cs;

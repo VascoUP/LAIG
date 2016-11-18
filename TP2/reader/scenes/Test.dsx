@@ -61,6 +61,10 @@
 
     <primitives>
 		
+		<primitive id ="plane">
+			<plane dimX="2" dimY="2" partsX="2" partsY="2" />
+		</primitive>
+		
 		<primitive id="chess1">
 			<chessboard du="4" dv="4" textureref="t1" su="2" sv="2">
                    <c1 r="1.0" g="0.0" b="0.0" a="1.0" />
@@ -114,7 +118,8 @@
 
         <component id="chess2">        
             <transformation>
-                <rotate angle="45" axis="z" />
+                <rotate angle="-45" axis="y" />
+                <rotate angle="-90" axis="x" />
             </transformation>
             <animation>
             </animation>

@@ -241,8 +241,8 @@
 		</primitive>
 		
 		<primitive id="chess">
-			<chessboard du="3" dv="3" textureref="mat" su="5" sv="6">
-                   <c1 r="1" g="1" b="1" a="1" />
+			<chessboard du="3" dv="3" textureref="t2" su="5" sv="6">
+                   <c1 r="1.0" g="0.0" b="0.0" a="1.0" />
                    <c2 r="1" g="1" b="1" a="1" />
                    <cs r="1" g="1" b="1" a="1" />
 			</chessboard>

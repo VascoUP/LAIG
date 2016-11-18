@@ -651,7 +651,7 @@ MySceneGraph.prototype.parseTextures = function(texture) {
 			return "Texture -> ID -> Missing the required information"
 
 		// Making sure that there are no two textures with the same id 
-		if( this.textures[id] != undefined)
+		if( this.textures[id] != undefined )
 			return "Textures-> There are 2 textures with the same id (id="+id+")";
 
 		var file = this.reader.getString(texture_elem[i], 'file');
@@ -1194,7 +1194,11 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				
 				var dU = this.reader.getInteger(chess, 'du');
 				var dV = this.reader.getInteger(chess, 'dv');
+
 				var textureref = this.reader.getString(chess, 'textureref');
+				if( this.textures[textureref] == undefined )
+					return "Primitives -> ChessBoard -> Missing texture " + this.textureref;
+
 				var sU = this.reader.getInteger(chess, 'su');
 				var sV = this.reader.getInteger(chess, 'sv');
 				

@@ -155,8 +155,15 @@ Graph.prototype.changeMaterials = function() {
 		this.nodes[key].changeMaterial();
 }
 
-Graph.prototype.updateAnimations = function( dTime ) {
+Graph.prototype.update = function( dTime ) {
 	for(var key in this.nodes) {
+		for( var i = 0; i < this.nodes[key].idPrimitives.length; i++ ) {
+			var prim = this.sceneGraph.primitives[ this.nodes[key].idPrimitives[i] ];
+
+			if(prim instanceof MyChessBoard)
+				prim.update(dTime);
+		}
+
 		if(this.nodes[key].currAnimationIndex == -1)
 			continue;
 

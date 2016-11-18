@@ -148,5 +148,5 @@ XMLscene.prototype.update = function( dTime ) {
 	
 	//Add cicle that iterates throught list of animations
 	//...
-	this.graph.graph.updateAnimations(dSec);
+	this.graph.graph.update(dSec);
 }

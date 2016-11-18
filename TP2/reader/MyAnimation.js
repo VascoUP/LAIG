@@ -133,9 +133,7 @@ LinearAnimation.prototype.update = function( dTime ) {
     - CIRCULAR ANIMATION -
 */
 var CircularAnimation = function( id, center, radius, init_angle, rotate_angle, duration ) {
-    Animation.apply(this, arguments);   
-
-    console.debug(arguments); 
+    Animation.apply(this, arguments);
     
     this.lastFrame = false;
     this.center = center;

@@ -32,7 +32,7 @@ function MyChessBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS)
 MyChessBoard.prototype = Object.create(CGFnurbsObject.prototype);
 MyChessBoard.prototype.constructor = MyChessBoard;
 
-MyChessBoard.prototype.setValuesShader = function(){	
+MyChessBoard.prototype.setValuesShader = function(){
 	this.shader.setUniformsValues({dU: this.dU});
 	this.shader.setUniformsValues({dV: this.dV});
 	this.shader.setUniformsValues({sU: this.sU});

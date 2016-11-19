@@ -2,9 +2,6 @@ var Animation = function( ) {
     if (this.constructor === Animation) {
       throw new Error("Can't instantiate abstract class!");
     }
-
-    this.position = [0, 0, 0];
-    this.rotate = 0;
 };
 
 //Abstract method used by children classes to apply the animation
@@ -153,9 +150,9 @@ CircularAnimation.prototype.calcInit = function() {
     this.position = this.center.slice();
 
     //X coord
-    this.position[0] = this.radius * Math.cos(this.init_angle);
+    this.position[0] += this.radius * Math.sin(this.init_angle);
     //Z coord
-    this.position[2] = this.radius * Math.sin(this.init_angle);
+    this.position[2] += this.radius * Math.cos(this.init_angle);
 
     this.rotate = this.init_angle + Math.PI / 2;
 }

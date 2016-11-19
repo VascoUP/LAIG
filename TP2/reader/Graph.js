@@ -170,9 +170,11 @@ Graph.prototype.update = function( dTime ) {
 		var animation = this.nodes[key].animations[this.nodes[key].currAnimationIndex];
 		
 		if(animation.lastFrame) {
-			if(this.nodes[key].currAnimationIndex < this.nodes[key].animations.length - 1)
+			if(this.nodes[key].currAnimationIndex < this.nodes[key].animations.length - 1) {
 				this.nodes[key].currAnimationIndex++;
-			else
+				animation = this.nodes[key].animations[this.nodes[key].currAnimationIndex];
+			}
+			else 
 				continue;
 		}
 		animation.update(dTime);

@@ -9,7 +9,7 @@ function MyPatch(scene, orderU, orderV, partsU, partsV, controlPoints)
 
 	this.patch = makeSurface(this.orderU, this.orderV, this.controlPoints);
 
-	CGFnurbsObject.call(this, this.scene, this.patch, this.partsU, partsV);
+	CGFnurbsObject.call(this, this.scene, this.patch, this.partsU, this.partsV);
 };
 
 MyPatch.prototype = Object.create(CGFnurbsObject.prototype);

@@ -973,9 +973,7 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 
 			this.animations[id] = animation;
 		}
-			
 	}
-	
 }
 
 //Parses the different primitives
@@ -1276,6 +1274,9 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				rgbaCS.push(a);
 				
 				this.primitives[id] = new MyChessBoard(this.scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS);
+				break;
+			case 'vehicle':
+				this.primitives[id] = new MyVehicle(this.scene);
 				break;
 		}
 	}

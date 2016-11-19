@@ -35,8 +35,6 @@ XMLscene.prototype.init = function (application) {
 
 	var loaded = false;
 
-	this.vehicle = new MyVehicle(this);
-
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);
 };
@@ -113,10 +111,8 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk) {
 		for(var i = 0; i < this.graph.nLights; i++)
 			this.lights[i].update();
-		//this.graph.graph.drawScene();
+		this.graph.graph.drawScene();
 	}
-
-	this.vehicle.display();
 };
 
 //Changes the cameras
@@ -149,8 +145,5 @@ XMLscene.prototype.changeMaterial = function() {
 
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
-	
-	//Add cicle that iterates throught list of animations
-	//...
 	this.graph.graph.update(dSec);
 }

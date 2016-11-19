@@ -1,3 +1,6 @@
+/**
+	Plane constructor
+*/
 function MyPlane(scene, dimX, dimY, partsX, partsY) {
     this.scene = scene;
 	
@@ -8,18 +11,21 @@ function MyPlane(scene, dimX, dimY, partsX, partsY) {
 	
 	this.controlPoints = createControlPoints(this.dimX, this.dimY);
 	
-	 this.texCoords = [	0,1,
+	//Texture coordinates
+	this.texCoords = [	0,1,
 						1,1,
 						0,0,
 						1,0
 					  ];
-
+	
+	//MyPlane is a Patch with orderU and orderV equals to 1
 	MyPatch.call(this, this.scene, 1, 1, this.partsX, this.partsY, this.controlPoints);
 }
 
 MyPlane.prototype = Object.create(CGFnurbsObject.prototype);
 MyPlane.prototype.constructor = MyPlane;
 
+//Creates the controlPoints
 var createControlPoints = function(dimX, dimY) {
 	
 	var controlPoints = [];

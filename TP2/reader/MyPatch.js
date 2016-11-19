@@ -1,3 +1,6 @@
+/**
+	Patch constructor
+*/
 function MyPatch(scene, orderU, orderV, partsU, partsV, controlPoints) 
 {
 	this.scene = scene;
@@ -7,14 +10,17 @@ function MyPatch(scene, orderU, orderV, partsU, partsV, controlPoints)
 	this.partsV = partsV;
 	this.controlPoints = getControlPoints(this.orderU, this.orderV, controlPoints);
 
+	//Creates the surface
 	this.patch = makeSurface(this.orderU, this.orderV, this.controlPoints);
 
+	//Patch is a CGFnurbsObject
 	CGFnurbsObject.call(this, this.scene, this.patch, this.partsU, this.partsV);
 };
 
 MyPatch.prototype = Object.create(CGFnurbsObject.prototype);
 MyPatch.prototype.constructor = MyPatch;
 
+//Gets the knots vector
 var getKnotsVector = function(degree) { 
 	
 	var v = [];
@@ -27,6 +33,7 @@ var getKnotsVector = function(degree) {
 	return v;
 }
 
+//Makes the respective surface
 var makeSurface = function (orderU, orderV, controlPoints) {
 	var knotsU = this.getKnotsVector(orderU); 
 	var knotsV = this.getKnotsVector(orderV);
@@ -39,7 +46,7 @@ var makeSurface = function (orderU, orderV, controlPoints) {
 	return getSurfacePoint;		
 }
 
-
+//Gets the control points (array of array of array)
 var getControlPoints = function(orderU, orderV, controlPoints)
 {
 	var controlPointsNew = [];
@@ -58,6 +65,7 @@ var getControlPoints = function(orderU, orderV, controlPoints)
 	return controlPointsNew;
 }
 
+//Sets the texture's coordinates (in this case this function does nothing)
 MyPatch.prototype.setTexCoords = function(length_t, length_s){
 	
 }

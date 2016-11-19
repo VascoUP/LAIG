@@ -1,3 +1,6 @@
+/**
+ Animation's constructor
+*/
 var Animation = function( ) {
     if (this.constructor === Animation) {
       throw new Error("Can't instantiate abstract class!");
@@ -9,6 +12,7 @@ Animation.prototype.update = function() {
     throw new Error("Abstract method!");
 }
 
+//Creates the transformations needed to the animation
 Animation.prototype.transform = function(scene) {
     scene.translate(this.position[0], this.position[1], this.position[2]);
     scene.rotate(this.rotate, 0, 1, 0);
@@ -40,6 +44,7 @@ var LinearAnimation = function ( id, control_points, duration ) {
 LinearAnimation.prototype = Object.create(Animation.prototype);
 LinearAnimation.prototype.constructor = LinearAnimation;
 
+//LCalculations about the linear animation
 LinearAnimation.prototype.calcInit = function() {
     var distance = 0;
     var control_points_vel = [];
@@ -82,6 +87,7 @@ LinearAnimation.prototype.calcInit = function() {
         this.rotate -= Math.PI;
 }
 
+//Updates the linear animation
 LinearAnimation.prototype.update = function( dTime ) {
     if( this.lastFrame )
         return;
@@ -146,6 +152,7 @@ var CircularAnimation = function( id, center, radius, init_angle, rotate_angle, 
 CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
 
+//Calculations about the circular animation
 CircularAnimation.prototype.calcInit = function() {
     this.position = this.center.slice();
 
@@ -157,7 +164,7 @@ CircularAnimation.prototype.calcInit = function() {
     this.rotate = this.init_angle + Math.PI / 2;
 }
 
-
+//Updates the circular animatipon
 CircularAnimation.prototype.update = function( dTime ) {
     if( this.lastFrame )
         return;

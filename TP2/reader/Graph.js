@@ -101,6 +101,7 @@ Graph.prototype.drawScene = function( ) {
 						head.idTexture );
 }
 
+//Applies the animations
 Graph.prototype.applyAnimation = function(node) {
 	if( node.currAnimationIndex != -1 || node.currAnimationIndex == node.animations.length )
 		node.animations[node.currAnimationIndex].transform(this.sceneGraph.scene);
@@ -243,6 +244,7 @@ Node.prototype.addIdPrimitive = function( id ) {
 	this.idPrimitives.push(id);
 }
 
+//Adds a animation to a node
 Node.prototype.addAnimation = function( id ) {
 	this.animations.push(id);
 }

@@ -922,10 +922,14 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 			var span = anim_elems.attributes.getNamedItem('span').value;
 			var type = this.reader.getString(anim_elems, 'type');
 			var animation;
+			
+			if( id == undefined || span == undefined || type == undefined )
+				return "Animation -> Missing required information";
 
 			if( this.animations[id] != undefined )
 				return "Animations -> Different animations with the same id = " + id;
 			
+			//Different types of animations
 			switch(type){
 				case 'linear':
 				
@@ -946,11 +950,15 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 						yy = this.reader.getFloat(anim_elems.children[j], 'yy');
 						zz = this.reader.getFloat(anim_elems.children[j], 'zz');
 						
+						if(xx == undefined || yy == undefined || zz == undefined)
+							return "Animation -> Linear -> Missing required information";
+						
 						controlPoint[j] = [xx, yy, zz];
 					}
 					
 					animation = new LinearAnimation(id, controlPoint, span);
 					break;
+					
 				case 'circular':
 				
 					var centerX = this.reader.getFloat(anim_elems, 'centerx');
@@ -960,6 +968,10 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 					var startang = this.reader.getFloat(anim_elems, 'startang');
 					var rotang = this.reader.getFloat(anim_elems, 'rotang');
 					
+					if(centerX == undefined || centerY == undefined || centerZ == undefined	||
+						radius == undefined || startang == undefined || rotang == undefined)
+						return "Animation -> Circular -> Missing required information";
+					
 					var center = [centerX, centerY, centerZ];
 
 					startang = startang * Math.PI / 180;
@@ -967,6 +979,7 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 					
 					animation = new CircularAnimation(id,center, radius, startang, rotang, span);
 					break;
+					
 				default:
 					return "Animation -> Animation's type doesn't exist";
 			}
@@ -978,12 +991,6 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 
 //Parses the different primitives
 MySceneGraph.prototype.parsePrimitives = function(primitives) {
-	
-	/**
-		A fazer:
-		Ver novas primitivas -> animations está testado
-		Falta ler o veículo, mas 1º temos que decidir como o fazer
-	**/
 	
 	var nnodes = primitives.children.length;
 	
@@ -1140,6 +1147,12 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				if( dimX == undefined || dimY == undefined || partsX == undefined || partsY == undefined)
 					return "Primitives -> Plane -> Missing required information";
 				
+				if( dimX <= 0 || dimY <= 0 )
+					console.warn("Primitives -> Plane -> The dimensions of plane must be a positive number grater than zero");
+				
+				if( partsX <= 0 || partsY <= 0 )
+					console.warn("Primitives -> Plane -> The plane's parts must be a positive number greater than zero");
+				
 				this.primitives[id] = new MyPlane(this.scene, dimX, dimY, partsX, partsY);
 				break;
 			
@@ -1153,6 +1166,15 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				var orderV = this.reader.getInteger(patch, 'orderV');
 				var partsU = this.reader.getInteger(patch, 'partsU');
 				var partsV = this.reader.getInteger(patch, 'partsV');
+				
+				if(orderU == undefined || orderV == undefined || partsU == undefined || partsV == undefined)
+					return "Primitives -> Patch -> Missing required information";
+				
+				if(orderU <= 0 || orderV <= 0)
+					console.warn("Primitives -> Patch -> The patch orders must be a positive number greater than zero");
+				
+				if(partsU <= 0 || partsV <= 0)
+					console.warn("Primitives -> Patch -> The patch's parts must be a positive number greater than zero");
 				
 				if(patch.children.length < 1)
 						return "Primitives -> Patch -> There isn't any control points";
@@ -1177,11 +1199,14 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 					var y = this.reader.getFloat(patch.children[j], 'y');
 					var z = this.reader.getFloat(patch.children[j], 'z');
 					
+					if(x == undefined || y == undefined || z == undefined)
+						return "Primitives -> Patch -> Control Point -> Missing required information";
+					
+					//The laste value is 1 because we need the w value and in this case w=1
 					controlPoint.push([x, y, z, 1]);
 				}
 
 				this.primitives[id] = new MyPatch(this.scene, orderU, orderV, partsU, partsV, controlPoint);
-				
 				break;
 				
 			case 'chessboard':
@@ -1192,13 +1217,29 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				
 				var dU = this.reader.getInteger(chess, 'du');
 				var dV = this.reader.getInteger(chess, 'dv');
+				
+				if( dU == undefined || dV == undefined )
+					return "Primitives -> ChessBoard -> Missing required information";
+				
+				if( dU <= 0 || dV <= 0)
+					console.warn("Primitives -> ChessBoard -> The U and V dimensions must be a positive number greater than zero");
 
 				var textureref = this.reader.getString(chess, 'textureref');
+				
+				if(textureref == undefined)
+					return "Primitives -> ChessBoard -> Missing required information";
+				
 				if( this.textures[textureref] == undefined )
 					return "Primitives -> ChessBoard -> Missing texture " + this.textureref;
 
 				var sU = this.reader.getInteger(chess, 'su');
 				var sV = this.reader.getInteger(chess, 'sv');
+				
+				if( sU == undefined || sV == undefined )
+					return "Primitives -> ChessBoard -> Missing required information";
+				
+				if( sU <= 0 || sV <= 0)
+					console.warn("Primitives -> ChessBard -> sU and sV must be a positive number greater than zero");
 				
 				if(chess.children.length < 3)
 						return "Primitives -> Chessboard -> Wrong number of children";
@@ -1221,6 +1262,12 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				g = this.reader.getFloat(c1_elem, 'g');
 				b = this.reader.getFloat(c1_elem, 'b');
 				a = this.reader.getFloat(c1_elem, 'a');
+				
+				if( r == undefined || g == undefined || b == undefined || a == undefined )
+					return "Primitives -> ChessBoard -> C1 -> Missing required information";
+				
+				if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1 )
+					console.warn("Primitives -> ChessBoard -> C1 -> Wrong RGBA values");
 				
 				rgbaC1.push(r);
 				rgbaC1.push(g);
@@ -1245,6 +1292,12 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				b = this.reader.getFloat(c2_elem, 'b');
 				a = this.reader.getFloat(c2_elem, 'a');
 				
+				if( r == undefined || g == undefined || b == undefined || a == undefined )
+					return "Primitives -> ChessBoard -> C2 -> Missing required information";
+				
+				if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1 )
+					console.warn("Primitives -> ChessBoard -> C2 -> Wrong RGBA values");
+				
 				rgbaC2.push(r);
 				rgbaC2.push(g);
 				rgbaC2.push(b);
@@ -1268,6 +1321,12 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				b = this.reader.getFloat(cs_elem, 'b');
 				a = this.reader.getFloat(cs_elem, 'a');
 				
+				if( r == undefined || g == undefined || b == undefined || a == undefined )
+					return "Primitives -> ChessBoard -> CS -> Missing required information";
+				
+				if( r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1 )
+					console.warn("Primitives -> ChessBoard -> CS -> Wrong RGBA values");
+				
 				rgbaCS.push(r);
 				rgbaCS.push(g);
 				rgbaCS.push(b);
@@ -1275,6 +1334,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				
 				this.primitives[id] = new MyChessBoard(this.scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS);
 				break;
+				
 			case 'vehicle':
 				this.primitives[id] = new MyVehicle(this.scene);
 				break;
@@ -1412,6 +1472,7 @@ MySceneGraph.prototype.readComponentTransformation = function (compElement, node
 	}
 };
 
+//Parses the animation of each component
 MySceneGraph.prototype.readComponentAnimation = function (compElement, node) {
 	var animations = compElement.getElementsByTagName('animation');
 	if (animations == null || animations == undefined) 

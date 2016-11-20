@@ -83,7 +83,7 @@ LinearAnimation.prototype.calcInit = function() {
     var dZ = this.control_points[1][2] - this.control_points[0][2];
     this.rotate = Math.atan( dZ / dX );
 
-    if( dX > 0 )
+    if( dX >= 0 )
         this.rotate -= Math.PI;
 }
 
@@ -118,7 +118,7 @@ LinearAnimation.prototype.update = function( dTime ) {
             var dZ = this.control_points[i+1][2] - this.control_points[i][2];
             this.rotate = Math.atan( dZ / dX );
 
-            if( dX > 0 )
+            if( dX >= 0 )
                 this.rotate -= Math.PI;
         }
 
@@ -170,6 +170,7 @@ CircularAnimation.prototype.update = function( dTime ) {
         return;
 
     var ang;
+    var rotate_ang = this.rotate_angle < 0 ? Math.PI : -Math.PI;
     this.position = this.center.slice();
 
     
@@ -184,7 +185,7 @@ CircularAnimation.prototype.update = function( dTime ) {
         //Z coord
         this.position[2] += this.radius * Math.cos(ang);
 
-        this.rotate = ang + Math.PI / 2;
+        this.rotate = this.rotate_angle < 0 ? ang - Math.PI / 2 : ang + Math.PI / 2;
 
         return ;
     }
@@ -196,5 +197,5 @@ CircularAnimation.prototype.update = function( dTime ) {
     //Z coord
     this.position[2] += this.radius * Math.cos(ang);
 
-    this.rotate = ang + Math.PI / 2;
+    this.rotate = this.rotate_angle < 0 ? ang - Math.PI / 2 : ang + Math.PI / 2;
 }

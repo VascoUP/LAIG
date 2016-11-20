@@ -2,7 +2,14 @@
 
     <scene root="root" axis_length="2" />
         
-    <views default="p1" >
+    <views default="x1" >
+
+        <perspective id="x1" near="0.4" far="1000" angle="10">
+
+            <from x="400" y="400" z="400" />
+            <to x="0" y="10" z="0" />
+
+        </perspective>
 
         <perspective id="p1" near="0.4" far="500" angle="10">
 
@@ -84,12 +91,12 @@
         <texture id="ground" file="resources/FoliageTexture.jpg" length_s="2" length_t="2" />
         <texture id="t2" file="resources/RockTexture.jpg" length_s="1" length_t="1" />
         <texture id="mountain" file="resources/RockTexture.jpg" length_s="0.3" length_t="0.3" />
+        <texture id="v1" file="resources/Inox.jpg" length_s="1" length_t="1" />
 
     </textures>
     
     <materials>
 
-        <!-- Brown diffuse -->
         <material id="w1" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.18" g="0.13" b="0.05" a="1" />
@@ -98,7 +105,6 @@
             <shininess value="1" />
         </material>
 
-        <!-- Green diffuse/specular -->
         <material id="f1" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.18" g="0.13" b="0.05" a="1" />
@@ -107,7 +113,6 @@
             <shininess value="3" />
         </material>
 
-        <!-- Grey diffuse -->
         <material id="r1" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.18" g="0.18" b="0.18" a="1" />
@@ -116,7 +121,6 @@
             <shininess value="20" />
         </material>
 
-        <!-- Brown2 diffuse -->
         <material id="r2" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.10" g="0.10" b="0.10" a="1" />
@@ -125,7 +129,6 @@
             <shininess value="20" />
         </material>
 
-        <!-- Red diffuse -->
         <material id="r3" >
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.20" g="0.01" b="0.01" a="1" />
@@ -134,7 +137,6 @@
             <shininess value="20" />
         </material>
 
-        <!-- Fluorescent red -->
         <material id="e1" >
             <emission r="0.2" g="0" b="0" a="1" />
             <ambient r="1" g="0" b="0" a="1" />
@@ -143,13 +145,28 @@
             <shininess value="10" />
         </material>
 
-        <!-- Fluorescent blue -->
         <material id="s1" >
             <emission r="0.6" g="0.6" b="1" a="1" />
             <ambient r="0" g="0" b="0" a="1" />
             <diffuse r="0" g="0" b="0" a="1" />
             <specular r="0" g="0" b="0" a="1" />
             <shininess value="10" />
+        </material>        
+        
+        <material id="sa" >
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.3" g="0.3" b="0.3" a="1" />
+            <diffuse r="0.9" g="0.3" b="0.4" a="1" />
+            <specular r="0.2" g="0.2" b="0.2" a="1" />
+            <shininess value="1" />
+        </material>    
+
+        <material id="tt" >
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.3" g="0.3" b="0.3" a="1" />
+            <diffuse r="0.3" g="0.3" b="0.3" a="1" />
+            <specular r="0.9" g="0.9" b="0.9" a="1" />
+            <shininess value="1" />
         </material>
 
     </materials>
@@ -163,33 +180,85 @@
         <transformation id="t2">     
             <rotate axis="x" angle="-20" />
         </transformation>
+                
+        <transformation id="v1">     
+            <rotate axis="y" angle="90" />
+        </transformation>
+
     </transformations>
     
     <!-- novo bloco de animacao -->
     <animations>
 
-        <animation id="l1" span="5" type="linear">
-            <controlpoint xx="0" yy="0" zz="0" />
-            <controlpoint xx="1" yy="0" zz="0" />
-            <controlpoint xx="0" yy="2" zz="5" />
-            <controlpoint xx="4" yy="0" zz="0" />
-        </animation>
-
-        <animation id="c1" span="5" type="circular" 
+        <animation id="c1" span="1" type="circular" 
 				centerx="0" centery="0" centerz="0"
                 radius="0" startang="0" rotang="90" />
 
-        <animation id="c2" span="5" type="circular" 
+        <animation id="c2" span="1" type="circular" 
 				centerx="0" centery="0" centerz="0"
-                radius="0" startang="90" rotang="-180" />
+                radius="0" startang="-90" rotang="-180" />
 
-        <animation id="c3" span="5" type="circular" 
+        <animation id="c3" span="1" type="circular" 
 				centerx="0" centery="0" centerz="0"
-                radius="4" startang="-90" rotang="360" />
+                radius="0" startang="-90" rotang="360" />
 
-        <animation id="c4" span="5" type="circular" 
+        <animation id="c4" span="1" type="circular" 
 				centerx="0" centery="0" centerz="0"
-                radius="4" startang="270" rotang="-270" />
+                radius="0" startang="-270" rotang="-270" />        
+        
+
+        <animation id="vehicle_l1" span="2" type="linear">
+            <controlpoint xx="20" yy="0" zz="0" />
+            <controlpoint xx="19" yy="2" zz="5" />
+            <controlpoint xx="17.5" yy="2" zz="11" />
+            <controlpoint xx="16" yy="2" zz="16" />
+            <controlpoint xx="11" yy="2" zz="17.5" />
+            <controlpoint xx="5" yy="0" zz="19" />
+            <controlpoint xx="0" yy="0" zz="20" />
+        </animation>
+
+        <animation id="vehicle_c1" span="5" type="circular" 
+				centerx="0" centery="0" centerz="0"
+                radius="20" startang="0" rotang="-360" />
+
+        <animation id="vehicle_r1" span="2.5" type="circular" 
+				centerx="0" centery="0" centerz="20"
+                radius="0" startang="180" rotang="180" />  
+
+        <animation id="vehicle_c2" span="2.5" type="circular" 
+				centerx="0" centery="0" centerz="0"
+                radius="20" startang="0" rotang="270" />
+
+        <animation id="vehicle_l2" span="1.5" type="linear">
+            <controlpoint xx="-20" yy="0" zz="0" />
+            <controlpoint xx="-20" yy="5" zz="5" />
+            <controlpoint xx="-25" yy="7" zz="8" />
+            <controlpoint xx="-30" yy="5" zz="10" />
+            <controlpoint xx="-35" yy="5" zz="10" />
+        </animation>
+
+        <animation id="vehicle_c3" span="2.5" type="circular" 
+				centerx="-35" centery="5" centerz="-5"
+                radius="15" startang="0" rotang="-180" />
+
+        <animation id="vehicle_a1" span="1.5" type="linear">
+            <controlpoint xx="-35" yy="5" zz="-20" />
+            <controlpoint xx="-30" yy="5" zz="-20" />
+        </animation>
+
+        <animation id="vehicle_a2" span="1" type="linear">
+            <controlpoint xx="-30" yy="5" zz="-20" />
+            <controlpoint xx="10" yy="5" zz="-20" />
+        </animation>
+
+        <animation id="vehicle_a3" span="1.5" type="linear">
+            <controlpoint xx="10" yy="5" zz="-20" />
+            <controlpoint xx="500" yy="5" zz="-20" />
+        </animation>       
+        
+        <animation id="vehicle2_m" span="60" type="circular" 
+                centerx="0" centery="0" centerz="0"
+                radius="0" startang="0" rotang="10800" />
 
     </animations>
 
@@ -248,19 +317,80 @@
 			</chessboard>
 		</primitive>
 
+        <primitive id="vehicle">
+			<vehicle />
+		</primitive>
+
 
     </primitives>
        
     <components>
         
-        <!-- Root Element -->
+        <!-- Root Element -->        
         <component id="root">        
+            <transformation>
+            </transformation>
+            <animation>
+            </animation>
+            <materials>
+                <material id="w1" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="planet" />
+                <componentref id="vehicle1" />
+                <componentref id="vehicle2" />
+            </children>       
+        </component>
+
+        <component id="vehicle1">        
+            <transformation>
+            </transformation>
+            <animation>
+                <animationref id="vehicle_l1"/>
+                <animationref id="vehicle_c1"/>
+                <animationref id="vehicle_r1"/> 
+                <animationref id="vehicle_c2"/>
+                <animationref id="vehicle_l2"/>
+                <animationref id="vehicle_c3"/>
+                <animationref id="vehicle_a1"/>
+                <animationref id="vehicle_a2"/>
+                <animationref id="vehicle_a3"/>
+            </animation>
+            <materials>
+                <material id="sa" />
+                <material id="tt" />
+            </materials>
+            <texture id="v1" />
+            <children>
+                <primitiveref id="vehicle" />
+            </children>       
+        </component>
+
+        <component id="vehicle2">        
+            <transformation>
+                <translate x="50" y="50" z="50" />
+                <scale x="10" y="10" z="10" />
+            </transformation>
+            <animation>
+                <animationref id="vehicle2_m"/>
+            </animation>
+            <materials>
+                <material id="sa" />
+                <material id="tt" />
+            </materials>
+            <texture id="v1" />
+            <children>
+                <primitiveref id="vehicle" />
+            </children>       
+        </component>
+
+        <component id="planet">        
             <transformation>
             </transformation>
             <animation>
                 <animationref id="c1"/>
                 <animationref id="c2"/>
-                <animationref id="l1"/>
                 <animationref id="c3"/>
                 <animationref id="c4"/>
             </animation>
@@ -714,7 +844,7 @@
                 <primitiveref id="tor" />
             </children>            
         </component>
-
+-->
     </components>
 
 </dsx>

@@ -79,3 +79,7 @@ MyChessBoard.prototype.update = function( dSec ){
 		this.setValuesShader();
 	}
 }
+
+MyChessBoard.prototype.setTexCoords = function(length_t, length_s){
+	
+}

@@ -42,3 +42,7 @@ var createControlPoints = function(dimX, dimY) {
 	
 	return controlPoints;   
 };
+
+MyPlane.prototype.setTexCoords = function(length_t, length_s){
+	
+};

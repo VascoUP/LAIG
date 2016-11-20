@@ -31,7 +31,7 @@ var getKnotsVector = function(degree) {
 		v.push(1);
 	
 	return v;
-}
+};
 
 //Makes the respective surface
 var makeSurface = function (orderU, orderV, controlPoints) {
@@ -44,7 +44,7 @@ var makeSurface = function (orderU, orderV, controlPoints) {
 	};
 
 	return getSurfacePoint;		
-}
+};
 
 //Gets the control points (array of array of array)
 var getControlPoints = function(orderU, orderV, controlPoints)
@@ -63,9 +63,9 @@ var getControlPoints = function(orderU, orderV, controlPoints)
 		controlPointsNew.push(temp);
 	}
 	return controlPointsNew;
-}
+};
 
 //Sets the texture's coordinates (in this case this function does nothing)
 MyPatch.prototype.setTexCoords = function(length_t, length_s){
 	
-}
+};

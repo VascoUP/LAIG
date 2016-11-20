@@ -915,7 +915,7 @@ MySceneGraph.prototype.parseAnimations = function(animations) {
 			
 			if(anim_elems.attributes.length < 3)
 				return "Animation -> Wrong number of attributes";
-			else if(anim_elems.attributes.length > 9)
+			else if(anim_elems.attributes.length > 9) //In case of circular animations
 				console.warn("Animation -> More attributes than required\n");
 			
 			var id = anim_elems.attributes.getNamedItem('id').value;

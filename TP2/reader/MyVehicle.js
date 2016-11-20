@@ -1,3 +1,6 @@
+/**
+	Vehicle constructor
+*/
 function MyVehicle(scene) {
     CGFobject.call(this,scene);
 
@@ -86,5 +89,6 @@ MyVehicle.prototype.display = function() {
     this.scene.popMatrix();
 }
 
+//Sets the texture's coordinates (in this case this function does nothing)
 MyVehicle.prototype.setTexCoords = function (length_s, length_t) {
 }

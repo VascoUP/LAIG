@@ -155,7 +155,7 @@ Graph.prototype.changeMaterials = function() {
 	for(var key in this.nodes)
 		this.nodes[key].changeMaterial();
 }
-
+//Updates the graph's animations
 Graph.prototype.update = function( dTime ) {
 	for(var key in this.nodes) {
 		for( var i = 0; i < this.nodes[key].idPrimitives.length; i++ ) {

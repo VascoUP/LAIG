@@ -82,6 +82,7 @@ MyChessBoard.prototype.update = function( dSec ){
 	}
 }
 
+//Sets the texture's coordinates (in this case this function does nothing)
 MyChessBoard.prototype.setTexCoords = function(length_t, length_s){
 	
 }

@@ -12,10 +12,10 @@ function MyChessBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS)
 	this.rgbaC2 = rgbaC2;
 	this.rgbaCS = rgbaCS;
 
-	var UPARTS= 5;
+	var UPARTS= 10;
 	this.partsU = dU * UPARTS;
 
-	var VPARTS = 5;
+	var VPARTS = 10;
 	this.partsV = dV * VPARTS;
 
 	this.time = 0;
@@ -24,7 +24,7 @@ function MyChessBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS)
 	var dimY = 1;
 
 	//ChessBoard is a plane too
-	this.plane = new MyPlane(this.scene, dimX, dimY, this.partsU*4, this.partsV*4);
+	this.plane = new MyPlane(this.scene, dimX, dimY, this.partsU, this.partsV);
 
 	this.material = new CGFappearance(this.scene);
 	this.material.setTexture( this.scene.graph.textures[this.textureref].texture );

@@ -1238,8 +1238,8 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				if( sU == undefined || sV == undefined )
 					return "Primitives -> ChessBoard -> Missing required information";
 				
-				if( sU <= 0 || sV <= 0)
-					console.warn("Primitives -> ChessBard -> sU and sV must be a positive number greater than zero");
+				if( sU < 0 || sV < 0)
+					console.warn("Primitives -> ChessBard -> sU and sV must be a positive number");
 				
 				if(chess.children.length < 3)
 						return "Primitives -> Chessboard -> Wrong number of children";

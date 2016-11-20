@@ -12,10 +12,10 @@ function MyChessBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS)
 	this.rgbaC2 = rgbaC2;
 	this.rgbaCS = rgbaCS;
 
-	var UPARTS= 10;
+	var UPARTS= 4;
 	this.partsU = dU * UPARTS;
 
-	var VPARTS = 10;
+	var VPARTS = 4;
 	this.partsV = dV * VPARTS;
 
 	this.time = 0;
@@ -60,8 +60,10 @@ MyChessBoard.prototype.display = function(){
 
 //Updates the chessboard
 MyChessBoard.prototype.update = function( dSec ){
-	this.time += dSec || 0.0;
+	if( this.sU == -1 || this.sV == -1 )
+		return;
 
+	this.time += dSec || 0.0;
 	var NEXT = 0.1;
 	// Every NEXT seconds change the selected piece's position
 	if( this.time >= NEXT) {

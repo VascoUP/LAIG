@@ -21,8 +21,6 @@ uniform vec4 c2;
 uniform vec4 cs;
 
 varying vec4 coords;
-varying float indexU;
-varying float indexV;
 
 void main() {
 	vec4 vertex=vec4(aVertexPosition, 1.0);
@@ -30,10 +28,26 @@ void main() {
 	coords.xy=vertex.xy+0.5;
 	coords.z=vertex.z;
 
-    indexU = floor(coords.x * dU);
-    indexV = floor(coords.y * dV);
+    float indexU = coords.x * dU;
 
-    if( indexU == sU && indexV == sV )
+    if(floor(indexU) == indexU)
+        indexU = floor(indexU);
+    else 
+        indexU = floor(indexU)+1.0;
+
+    float indexV = coords.y * dV;
+
+    if(floor(indexV) < indexV)
+        indexV = floor(indexV)+1.0;
+    else
+        indexV = floor(indexV);
+
+   int indexU_floor = int(indexU);
+   int indexV_floor = int(indexV);    
+
+    if( (coords.x * dU == sU || indexU == sU+1.0) && 
+        (coords.y * dV == sV || indexV == sV+1.0) && 
+        sV >= 0.0 && sU >= 0.0 )
         vertex.z += 0.1;
 
 	gl_Position = uPMatrix * uMVMatrix * vertex;

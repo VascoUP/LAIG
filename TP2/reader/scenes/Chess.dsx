@@ -4,7 +4,7 @@
         
     <views default="x1" >
 
-        <perspective id="p1" near="0.4" far="500" angle="10">
+        <perspective id="x1" near="0.4" far="500" angle="10">
 
             <from x="2" y="2" z="50" />
             <to x="2" y="0" z="0" />

@@ -43,6 +43,7 @@ var createControlPoints = function(dimX, dimY) {
 	return controlPoints;   
 };
 
+//Sets the texture's coordinates (in this case this function does nothing)
 MyPlane.prototype.setTexCoords = function(length_t, length_s){
 	
 };

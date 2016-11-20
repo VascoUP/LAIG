@@ -44,7 +44,7 @@ var LinearAnimation = function ( id, control_points, duration ) {
 LinearAnimation.prototype = Object.create(Animation.prototype);
 LinearAnimation.prototype.constructor = LinearAnimation;
 
-//LCalculations about the linear animation
+//Calculations about the linear animation
 LinearAnimation.prototype.calcInit = function() {
     var distance = 0;
     var control_points_vel = [];

@@ -81,7 +81,7 @@ LinearAnimation.prototype.calcInit = function() {
 
     var dX = this.control_points[0][0] - this.control_points[1][0];
     var dZ = this.control_points[1][2] - this.control_points[0][2];
-    this.rotate = Math.atan( dZ / dX ) - Math.PI / 2;
+    this.rotate = Math.atan( dZ / dX ) + Math.PI / 2;
 
     if( dX >= 0 )
         this.rotate -= Math.PI;
@@ -116,7 +116,7 @@ LinearAnimation.prototype.update = function( dTime ) {
 
             var dX = this.control_points[i][0] - this.control_points[i+1][0];
             var dZ = this.control_points[i+1][2] - this.control_points[i][2];
-            this.rotate = Math.atan( dZ / dX ) - Math.PI / 2;
+            this.rotate = Math.atan( dZ / dX ) + Math.PI / 2;
 
             if( dX >= 0 )
                 this.rotate -= Math.PI;

@@ -306,6 +306,14 @@
 
         <primitive id="vehicle">
 			<vehicle />
+		</primitive>		
+        
+        <primitive id="chess">
+			<chessboard du="8" dv="8" textureref="g1" su="1" sv="7">
+                   <c1 r="1.0" g="0.0" b="0.0" a="1.0" />
+                   <c2 r="0.0" g="0.0" b="1.0" a="1" />
+                   <cs r="0.0" g="1.0" b="0.0" a="1" />
+			</chessboard>
 		</primitive>
 
 
@@ -628,7 +636,7 @@
             </materials>
             <texture id="inherit" />
             <children>
-                <primitiveref id="rect" />
+                <primitiveref id="chess" />
             </children>      
         </component>
 
@@ -831,7 +839,7 @@
                 <primitiveref id="tor" />
             </children>            
         </component>
--->
+
     </components>
 
 </dsx>

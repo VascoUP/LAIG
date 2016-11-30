@@ -1,0 +1,168 @@
+<dsx>
+
+    <scene root="root" axis_length="2" />
+        
+    <views default="x1" >
+
+        <perspective id="x1" near="0.4" far="500" angle="10">
+
+            <from x="2" y="2" z="50" />
+            <to x="2" y="0" z="0" />
+
+        </perspective>
+
+    </views>
+    
+
+    <illumination doublesided="0" local="1" >
+    
+        <ambient r="0.3" g="0.3" b="0.3" a="1.0" />
+        <background r="0" g="0" b="0" a="1.0" />
+        
+    </illumination>
+    
+    
+    <lights>
+
+        <omni id="l1" enabled="1" >
+            <location x="15" y="15" z="15" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="0.4" g="0.3" b="0.5" a="1.0" />
+        </omni>
+
+        <omni id="l3" enabled="1" >
+            <location x="-15" y="-20" z="20" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+        </omni>
+        
+        <omni id="l5" enabled="1" >
+            <location x="-30" y="-30" z="-30" w="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.1" g="0.1" b="0.1" a="1.0" />
+        </omni>
+
+    </lights>
+        
+    <textures>
+
+        <texture id="g1" file="resources/FoliageTexture.jpg" length_s="1" length_t="1" />
+        <texture id="t2" file="resources/RockTexture.jpg" length_s="1" length_t="1" />
+        <texture id="v1" file="resources/Inox.jpg" length_s="1" length_t="1" />
+
+    </textures>
+    
+    <materials>
+        <material id="w1" >
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.18" g="0.13" b="0.05" a="1" />
+            <diffuse r="0.89" g="0.55" b="0.09" a="1" />
+            <specular r="0.18" g="0.13" b="0.05" a="1" />
+            <shininess value="1" />
+        </material>
+    </materials>
+    
+    <transformations>
+    </transformations>
+    
+    <!-- novo bloco de animacao -->
+    <animations>
+        <animation id="r1" span="60" type="circular" 
+                centerx="0" centery="0" centerz="0"
+                radius="0" startang="0" rotang="10800" />
+    </animations>
+
+    <primitives>
+		<primitive id="chess0">
+			<chessboard du="16" dv="16" textureref="t2" su="0" sv="0">
+                   <c1 r="1.0" g="0.0" b="0.0" a="1.0" />
+                   <c2 r="0.0" g="0.0" b="1.0" a="1" />
+                   <cs r="0.0" g="1.0" b="0.0" a="1" />
+			</chessboard>
+		</primitive>
+		<primitive id="chess1">
+			<chessboard du="8" dv="8" textureref="g1" su="1" sv="7">
+                   <c1 r="1.0" g="0.0" b="0.0" a="1.0" />
+                   <c2 r="0.0" g="0.0" b="1.0" a="1" />
+                   <cs r="0.0" g="1.0" b="0.0" a="1" />
+			</chessboard>
+		</primitive>
+		<primitive id="chess2">
+			<chessboard du="4" dv="8" textureref="v1" su="2" sv="5">
+                   <c1 r="0.2" g="0.2" b="0.2" a="1.0" />
+                   <c2 r="1.0" g="1.0" b="1.0" a="1" />
+                   <cs r="1.0" g="0.0" b="0.0" a="1" />
+			</chessboard>
+		</primitive>
+    </primitives>
+       
+    <components>
+        <!-- Root Element -->        
+        <component id="root">        
+            <transformation>
+            </transformation>
+            <animation>
+            </animation>
+            <materials>
+                <material id="w1" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="chess0" />
+                <componentref id="chess1" />
+                <componentref id="chess2" />
+            </children>       
+        </component>
+
+        <component id="chess1">        
+            <transformation>
+                <translate x="1.0" y="2.0" z="1.0" />
+                <rotate angle="90" axis="x"/>
+            </transformation>
+            <animation>
+                <animationref id="r1" />
+            </animation>
+            <materials>
+                <material id="w1" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="chess12" />
+            </children>       
+        </component>        
+        
+        <component id="chess12">        
+            <transformation>
+                <rotate angle="-90" axis="x"/>
+            </transformation>
+            <animation>
+            </animation>
+            <materials>
+                <material id="w1" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="chess1" />
+            </children>       
+        </component>
+
+        <component id="chess2">        
+            <transformation>
+                <translate x="2.0" y="0.0" z="-1.0" />
+                <scale x="2.0" y="5.0" z="1.0" />
+            </transformation>
+            <animation>
+            </animation>
+            <materials>
+                <material id="w1" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="chess2" />
+            </children>       
+        </component>
+    </components>
+</dsx>

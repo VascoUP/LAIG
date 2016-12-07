@@ -9,6 +9,8 @@ XMLscene.prototype.constructor = XMLscene;
 
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
+	
+	this.setPickEnabled(true);
 
     this.initCameras();
 
@@ -34,6 +36,8 @@ XMLscene.prototype.init = function (application) {
     this.currentCamera = 0;
 
 	var loaded = false;
+
+	this.game = new Game(this);
 
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);
@@ -107,12 +111,18 @@ XMLscene.prototype.display = function () {
 
 	// it is important that things depending on the proper loading of the graph
 	// only get executed after the graph has loaded correctly.
-	// This is one possible way to do it
+	// This is one possible way to do it		
+	this.clearPickRegistration();
+
 	if (this.graph.loadedOk) {
 		for(var i = 0; i < this.graph.nLights; i++)
 			this.lights[i].update();
 		this.graph.graph.drawScene();
 	}
+
+	this.game.registerForPick(1);
+
+	this.logPicking();
 };
 
 //Changes the cameras
@@ -135,7 +145,7 @@ XMLscene.prototype.changeView = function() {
 			break;
 		}
 	}
-};
+}
 
 //Changes the materials
 XMLscene.prototype.changeMaterial = function() {
@@ -146,4 +156,21 @@ XMLscene.prototype.changeMaterial = function() {
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
 	this.graph.graph.update(dSec);
+}
+
+XMLscene.prototype.logPicking = function ()
+	{
+	if (this.pickMode == false) {
+		if (this.pickResults != null && this.pickResults.length > 0) {
+			for (var i=0; i< this.pickResults.length; i++) {
+				var obj = this.pickResults[i][0]; // o objeto seleccionado
+				if (obj)
+				{
+					var customId = this.pickResults[i][1]; // o ID do objeto seleccionado
+					console.log("Picked object: " + obj + ", with pick id " + customId);
+				}
+			}
+			this.pickResults.splice(0,this.pickResults.length);
+		}
+	}
 }

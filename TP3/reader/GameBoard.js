@@ -4,6 +4,10 @@ const numTiles = 3;
 */
 function GameBoard(scene) {
     CGFobject.call(this,scene);
+    this.board = new MyBoard(scene, 3, 3, null, -1, -1, 
+                                [0.9, 0.9, 0.9, 1], 
+                                [0.5, 0.5, 0.5, 1], 
+                                [0.2, 0.2, 0.8, 1]);
     this.init();
 };
 
@@ -22,11 +26,15 @@ GameBoard.prototype.log = function() {
 
 GameBoard.prototype.init = function() {
     this.tiles = [];
+    var x = -1, y = 1, z = 0;
     for( var i = 0; i < numTiles; i++ ) {
         var line = [];
         for( var j = 0; j < numTiles; j++ ) {
-            line.push( new RoundTile(this.scene) );
+            line.push( new RoundTile(this.scene, [x, y, z]) );
+            x++;
         }
+        y--;
+        x = -1;
         this.tiles.push( line );
     }
 }
@@ -53,5 +61,31 @@ GameBoard.prototype.setTexCoords = function(length_t, length_s){
 
 //Displays the GameBoard with the respective shader
 GameBoard.prototype.display = function(){
+    this.scene.pushMatrix();
+
+    this.scene.scale(3, 3, 1);
+    this.board.display();
+
+    this.scene.popMatrix();
+    this.scene.pushMatrix();
     
+    for( var i = 0; i < numTiles; i++ ) {
+        for( var j = 0; j < numTiles; j++ ) {
+            this.tiles[i][j].display();
+        }
+    }
+
+    this.scene.popMatrix();
+}
+
+GameBoard.prototype.registerForPick = function(){
+    var id = 1;
+    this.scene.pushMatrix();
+    for( var i = 0; i < numTiles; i++ ) {
+        for( var j = 0; j < numTiles; j++ ) {
+            this.tiles[i][j].registerTileForPick(id);
+            id++;
+        }
+    }
+    this.scene.popMatrix();
 }

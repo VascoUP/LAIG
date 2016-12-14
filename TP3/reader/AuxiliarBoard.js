@@ -3,9 +3,11 @@ const numTilesAux = 3;
 /**
 	AuxiliarBoard's constructor
 */
-function AuxiliarBoard(scene) {
+function AuxiliarBoard(scene, coords) {
     CGFobject.call(this,scene);
     this.init();
+
+    this.coords = coords;
 };
 
 AuxiliarBoard.prototype = Object.create(CGFnurbsObject.prototype);
@@ -19,10 +21,12 @@ AuxiliarBoard.prototype.log = function() {
 
 AuxiliarBoard.prototype.init = function() {
     this.tiles = [];
+    var x = -1, y = 0, z = 0.05;
     for( var i = 0; i < numTilesAux; i++ ) {
-        var tile = new RoundTile(this.scene);
+        var tile = new RoundTile(this.scene, [x, y, z]);
         tile.fill();
         this.tiles.push(tile);
+        x += 1;
     }
 }
 
@@ -42,25 +46,19 @@ AuxiliarBoard.prototype.setTexCoords = function(length_t, length_s){
         display
 */
 
-AuxiliarBoard.prototype.registerForPick = function(id){
-    var nId = id;
-    for( var i = 0; i < this.tiles.length; i++ ) {
-        this.scene.pushMatrix();
-
-        if( i == 0 )
-            this.scene.translate(-3, 0, 0);
-        else if( i == 2 )
-            this.scene.translate(3, 0, 0);
-
-        nId = this.tiles[i].registerForPick(nId);
-
-        this.scene.popMatrix();
-    }
-    return nId;
+AuxiliarBoard.prototype.registerForPick = function(){
+    this.scene.pushMatrix();
+    this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
+    for( var i = 0; i < this.tiles.length; i++ )
+        this.tiles[i].registerForPick();
+    this.scene.popMatrix();
 }
 
 //Displays the AuxiliarBoard with the respective shader
 AuxiliarBoard.prototype.display = function(){
-    for( var i = 0; i < numTilesAux; i++ )
+    this.scene.pushMatrix();
+    this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
+    for( var i = 0; i < this.tiles.length; i++ )
         this.tiles[i].display();
+    this.scene.popMatrix();
 }

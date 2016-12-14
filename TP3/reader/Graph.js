@@ -161,7 +161,7 @@ Graph.prototype.update = function( dTime ) {
 		for( var i = 0; i < this.nodes[key].idPrimitives.length; i++ ) {
 			var prim = this.sceneGraph.primitives[ this.nodes[key].idPrimitives[i] ];
 
-			if(prim instanceof MyChessBoard)
+			if(prim instanceof MyBoard)
 				prim.update(dTime);
 		}
 

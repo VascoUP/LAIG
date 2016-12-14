@@ -113,14 +113,16 @@ XMLscene.prototype.display = function () {
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it		
 	this.clearPickRegistration();
-
-	if (this.graph.loadedOk) {
-		for(var i = 0; i < this.graph.nLights; i++)
-			this.lights[i].update();
-		this.graph.graph.drawScene();
+	if (this.pickMode == false) {
+		if (this.graph.loadedOk) {
+			for(var i = 0; i < this.graph.nLights; i++)
+				this.lights[i].update();
+			//this.graph.graph.drawScene();
+			this.game.display();
+		}
 	}
-
-	this.game.registerForPick(1);
+	else
+		this.game.registerForPick(1);
 
 	this.logPicking();
 };

@@ -1332,7 +1332,7 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 				rgbaCS.push(b);
 				rgbaCS.push(a);
 				
-				this.primitives[id] = new MyChessBoard(this.scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS);
+				this.primitives[id] = new MyBoard(this.scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS);
 				break;
 				
 			case 'vehicle':

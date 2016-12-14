@@ -1,7 +1,7 @@
 /**
 	Chessboard's constructor
 */
-function MyChessBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS) {
+function MyBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS) {
 	this.scene = scene;
 	this.dU = dU; 
 	this.dV = dV; 
@@ -27,18 +27,19 @@ function MyChessBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS)
 	this.plane = new MyPlane(this.scene, dimX, dimY, this.partsU, this.partsV);
 
 	this.material = new CGFappearance(this.scene);
-	this.material.setTexture( this.scene.graph.textures[this.textureref].texture );
+	if( this.textureref != null )
+		this.material.setTexture( this.scene.graph.textures[this.textureref].texture );
 	
 	//Creates the shader
 	this.shader = new CGFshader(this.scene.gl, "shaders/chessboard.vert", "shaders/chessboard.frag");
 	this.setValuesShader();
 };
 
-MyChessBoard.prototype = Object.create(CGFnurbsObject.prototype);
-MyChessBoard.prototype.constructor = MyChessBoard;
+MyBoard.prototype = Object.create(CGFnurbsObject.prototype);
+MyBoard.prototype.constructor = MyBoard;
 
 //Sets the shader values
-MyChessBoard.prototype.setValuesShader = function(){
+MyBoard.prototype.setValuesShader = function(){
 	this.shader.setUniformsValues({dU: this.dU});
 	this.shader.setUniformsValues({dV: this.dV});
 	this.shader.setUniformsValues({sU: this.sU});
@@ -50,7 +51,7 @@ MyChessBoard.prototype.setValuesShader = function(){
 }
 
 //Displays the chessboard with the respective shader
-MyChessBoard.prototype.display = function(){
+MyBoard.prototype.display = function(){
 	this.material.apply();
 
 	this.scene.setActiveShader(this.shader);
@@ -59,7 +60,7 @@ MyChessBoard.prototype.display = function(){
 }
 
 //Updates the chessboard
-MyChessBoard.prototype.update = function( dSec ){
+MyBoard.prototype.update = function( dSec ){
 	if( this.sU == -1 || this.sV == -1 )
 		return;
 
@@ -83,6 +84,6 @@ MyChessBoard.prototype.update = function( dSec ){
 }
 
 //Sets the texture's coordinates (in this case this function does nothing)
-MyChessBoard.prototype.setTexCoords = function(length_t, length_s){
+MyBoard.prototype.setTexCoords = function(length_t, length_s){
 	
 }

@@ -2,9 +2,11 @@ const small = 0;
 const medium = 1;
 const large = 2;
 
-const smallCoord = 0.25;
-const mediumCoord = 0.5;
-const largeCoord = 1;
+const smallCoord = 0.1;
+const mediumCoord = 0.225;
+const largeCoord = 0.35;
+
+var pieceId = 1;
 
 /**
 	Piece's constructor - Abstract
@@ -16,6 +18,8 @@ function Piece(scene, type) {
     CGFobject.call(this,scene);
     this.type = type;
     this.obj = null;
+    this.id = pieceId;
+    pieceId++;
 };
 
 Piece.prototype = Object.create(CGFnurbsObject.prototype);
@@ -59,7 +63,7 @@ RoundPiece.prototype.constructor = RoundPiece;
 
 RoundPiece.prototype.init = function() {
     var coord = this.getCoord();
-    this.obj = new MyRectangle( this.scene, -coord, -coord, coord, coord);
+    this.obj = new MyTorus( this.scene, 0.05, coord, 40, 40 );
 }
 
 
@@ -67,24 +71,21 @@ RoundPiece.prototype.init = function() {
         display
 */
 
-Piece.prototype.registerForPick = function(id){
-    this.scene.registerForPick(id, this);
+Piece.prototype.registerForPick = function(){
+    this.scene.pushMatrix();
+    
+    this.scene.translate(0, 0, 0.05);
+    this.scene.registerForPick(this.id, this);
     this.display();
+
+    this.scene.popMatrix();
 }
 
 //Displays the Piece with the respective shader
 Piece.prototype.display = function(){
     this.scene.pushMatrix();
 
-    var dY;
-    if( this.type == large )
-        dY = 0;
-    else if( this.type == medium )
-        dY = 2;
-    else
-        dY = 3;
-
-    this.scene.translate(0, dY, 0);
+    this.scene.translate(0, 0, 0.05);
     this.obj.display();
 
     this.scene.popMatrix();

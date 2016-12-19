@@ -1,5 +1,6 @@
 :- use_module(library(random)).
 :- use_module(library(system)).
+:- use_module(library(lists)).
 :- ensure_loaded('menu.pl').
 
 %% Player type (r - red, b - blue)

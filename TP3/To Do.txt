@@ -1,0 +1,12 @@
+-> Picking (DONE / ALMOST DONE)
+-> Criar o protocolo
+-> Desenhar o tabuleiro
+-> Desenhar as peças
+-> Desenhar as caixas para as peças
+-> Criar as animações por imagens chave(Movimentação das peças e girar do tabuleiro)
+-> Níveis de dificuldade
+-> Tipo de jogo (humano vs humano, humano vs computador, etc)
+-> Undo (guardar as jogadas para rever)
+-> Medição de tempo (tempo para efetuar uma jogada ou tempo total de jogo)
+-> Resultados do jogo
+-> Tratar da cena (DSX)

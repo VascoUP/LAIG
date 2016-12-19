@@ -31,7 +31,7 @@ function MyBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS) {
 		this.material.setTexture( this.scene.graph.textures[this.textureref].texture );
 	
 	//Creates the shader
-	this.shader = new CGFshader(this.scene.gl, "shaders/chessboard.vert", "shaders/chessboard.frag");
+	this.shader = new CGFshader(this.scene.gl, "shaders/board.vert", "shaders/board.frag");
 	this.setValuesShader();
 };
 
@@ -54,6 +54,7 @@ MyBoard.prototype.setValuesShader = function(){
 MyBoard.prototype.display = function(){
 	this.material.apply();
 
+	this.setValuesShader();
 	this.scene.setActiveShader(this.shader);
 	this.plane.display();
 	this.scene.setActiveShader(this.scene.defaultShader);

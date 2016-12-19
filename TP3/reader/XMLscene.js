@@ -27,17 +27,23 @@ XMLscene.prototype.init = function (application) {
 
 	this.axis=new CGFaxis(this);
 
-	this.materialRed = new CGFappearance(this);
-    this.materialRed.setAmbient(1, 0, 0, 1);
-    this.materialRed.setDiffuse(1, 0, 0, 1);
-    this.materialRed.setSpecular(1, 0, 0, 1);    
-    this.materialRed.setShininess(200);
+	this.material1 = new CGFappearance(this);
+    this.material1.setAmbient(1, 0, 0, 1);
+    this.material1.setDiffuse(1, 0, 0, 1);
+    this.material1.setSpecular(1, 0, 0, 1);    
+    this.material1.setShininess(200);
+
+	this.material2 = new CGFappearance(this);
+    this.material2.setAmbient(0, 0.5, 0.5, 1);
+    this.material2.setDiffuse(0, 0.5, 0.5, 1);
+    this.material2.setSpecular(0, 0.5, 0.5, 1);    
+    this.material2.setShininess(200);
 
     this.currentCamera = 0;
 
 	var loaded = false;
 
-	this.game = new Game(this);
+	this.game = new Game(this, this.material1, this.material2);
 
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);
@@ -157,7 +163,7 @@ XMLscene.prototype.changeMaterial = function() {
 
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
-	this.graph.graph.update(dSec);
+	//this.graph.graph.update(dSec);
 }
 
 XMLscene.prototype.logPicking = function ()	{
@@ -167,8 +173,7 @@ XMLscene.prototype.logPicking = function ()	{
 				var obj = this.pickResults[i][0]; // o objeto seleccionado
 				if (obj) {
 					var customId = this.pickResults[i][1]; // o ID do objeto seleccionado
-					//console.debug("Obj id="+customId);
-					this.game.pickObj(customId, obj);
+					this.game.pickObj(obj);
 				}
 			}
 			this.pickResults.splice(0,this.pickResults.length);

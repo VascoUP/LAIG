@@ -13,7 +13,7 @@ var pieceId = 1;
 /**
  *  PIECE - ABSTRACT CLASS
  */
-function Piece(scene, type) {    
+function Piece(scene, type, material) {    
     if (this.constructor === Piece) {
       throw new Error("Can't instantiate abstract class!");
     }
@@ -21,6 +21,9 @@ function Piece(scene, type) {
     this.type = type;
     this.obj = null;
     this.id = pieceId;
+
+    this.material = material;
+
     this.selected = false;
     pieceId++;
 };
@@ -36,11 +39,6 @@ Piece.prototype.update = function(dSec){
 //Sets the texture's coordinates (in this case this function does nothing)
 Piece.prototype.setTexCoords = function(length_t, length_s){
 
-}
-
-Piece.prototype.log = function() {
-    console.debug("--Piece--");
-    console.debug(this.type);
 }
 
 Piece.prototype.getCoord = function() {
@@ -62,7 +60,7 @@ Piece.prototype.getCoord = function() {
  *  ROUND PIECE - CHILD CLASS OF PIECE
  */
 
-function RoundPiece(scene, type) {
+function RoundPiece(scene) {
     Piece.apply(this, arguments);
     this.init();
 };
@@ -96,6 +94,8 @@ Piece.prototype.display = function(){
     this.scene.pushMatrix();
 
     this.scene.translate(0, 0, 0.05);
+
+    this.material.apply();
     this.obj.display();
 
     this.scene.popMatrix();

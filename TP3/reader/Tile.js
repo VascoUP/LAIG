@@ -5,7 +5,7 @@ var tileId = 1;
 /**
  *  TILE - ABSTRACT CLASS
  */
-function Tile(scene, coords) {    
+function Tile(scene, coords, material) {    
     if (this.constructor === Tile) {
       throw new Error("Can't instantiate abstract class!");
     }
@@ -14,6 +14,8 @@ function Tile(scene, coords) {
     this.coords = coords;
 
     this.obj = new MyRectangle(scene, -0.5, -0.5, 0.5, 0.5);
+
+    this.material = material;
 
     this.id = tileId;
     tileId++;
@@ -31,12 +33,6 @@ Tile.prototype.update = function(dSec){
 //Sets the texture's coordinates (in this case this function does nothing)
 Tile.prototype.setTexCoords = function(length_t, length_s){
 
-}
-
-Tile.prototype.log = function() {
-    console.debug("--Tile--");
-    for( var i = 0; i < this.pieces.length; i++ )
-        this.pieces[i].log();
 }
 
 
@@ -70,7 +66,6 @@ Tile.prototype.removePiece = function(piece) {
     var index = this.pieces.indexOf(piece);
     if( index > -1 ) {
         this.pieces.splice(index, 1); //Removed one element from an index
-        console.debug(this.pieces);
         return true;
     }
     return false;
@@ -91,7 +86,7 @@ RoundTile.prototype.constructor = RoundTile;
 
 RoundTile.prototype.initPiece = function(type) {
     if( !this.hasPiece(type) )
-        this.pieces.push( new RoundPiece(this.scene, type) );
+        this.pieces.push( new RoundPiece(this.scene, type, this.material) );
 }
 
 RoundTile.prototype.fill = function() {

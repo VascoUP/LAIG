@@ -4,9 +4,9 @@ const numTilesAux = 6;
 /**
  *  AuxiliarBoard's constructor
  */
-function AuxiliarBoard(scene, coords) {
+function AuxiliarBoard(scene, coords, material) {
     CGFobject.call(this,scene);
-    this.init();
+    this.init(material);
 
     this.coords = coords;
 };
@@ -14,13 +14,7 @@ function AuxiliarBoard(scene, coords) {
 AuxiliarBoard.prototype = Object.create(CGFnurbsObject.prototype);
 AuxiliarBoard.prototype.constructor = AuxiliarBoard;
 
-AuxiliarBoard.prototype.log = function() {
-    console.debug("--Aux--");
-    for( var i = 0; i < numTilesAux; i++ )
-        this.tiles[i].log();
-}
-
-AuxiliarBoard.prototype.init = function() {
+AuxiliarBoard.prototype.init = function(material) {
     this.tiles = [];
     var x = -1, y = -0.5, z = 0.05;
     for( var i = 0; i < numTilesAux; i++ ) {
@@ -28,7 +22,7 @@ AuxiliarBoard.prototype.init = function() {
             x = -1;
             y += 1;
         }
-        var tile = new RoundTile(this.scene, [x, y, z]);
+        var tile = new RoundTile(this.scene, [x, y, z], material);
         tile.fill();
         this.tiles.push(tile);
         x += 1;

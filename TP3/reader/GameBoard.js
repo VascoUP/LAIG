@@ -1,4 +1,4 @@
-const numTiles = 3;
+const numTilesBoard = 3;
 
 
 /**
@@ -11,31 +11,22 @@ function GameBoard(scene) {
                                 [0.5, 0.5, 0.5, 1], 
                                 [0.2, 0.2, 0.8, 1]);
     this.init();
+    this.selectedTileId = null;
 };
 
 GameBoard.prototype = Object.create(CGFnurbsObject.prototype);
 GameBoard.prototype.constructor = GameBoard;
 
-GameBoard.prototype.log = function() {
-    console.debug("--Board--");
-    console.debug(this.tiles);
-    for( var i = 0; i < numTiles; i++ ) {
-        for( var j = 0; j < numTiles; j++ ) {
-            this.tiles[i][j].log();
-        }
-    }
-}
-
 GameBoard.prototype.init = function() {
     this.tiles = [];
-    var x = -1, y = 1, z = 0;
-    for( var i = 0; i < numTiles; i++ ) {
+    var x = -1, y = -1, z = 0;
+    for( var i = 0; i < numTilesBoard; i++ ) {
         var line = [];
-        for( var j = 0; j < numTiles; j++ ) {
+        for( var j = 0; j < numTilesBoard; j++ ) {
             line.push( new RoundTile(this.scene, [x, y, z]) );
             x++;
         }
-        y--;
+        y++;
         x = -1;
         this.tiles.push( line );
     }
@@ -59,6 +50,23 @@ GameBoard.prototype.setTexCoords = function(length_t, length_s){
 
 
 /**
+ *  GAME MECHANICS
+ */
+
+GameBoard.prototype.selectTile = function(id) {
+    if( id == null ) {
+        this.board.sV = -1;
+        this.board.sU = -1;
+    } else {
+        this.board.sV = Math.floor((id - 1) / numTilesBoard);
+        this.board.sU = (id - 1) - (this.board.sV * numTilesBoard);
+    }
+    this.selectedTileId = id;
+}
+
+
+
+/**
  *  DISPLAY FUNCTIONS
  */
 
@@ -72,8 +80,8 @@ GameBoard.prototype.display = function(){
     this.scene.popMatrix();
     this.scene.pushMatrix();
     
-    for( var i = 0; i < numTiles; i++ ) {
-        for( var j = 0; j < numTiles; j++ ) {
+    for( var i = 0; i < numTilesBoard; i++ ) {
+        for( var j = 0; j < numTilesBoard; j++ ) {
             this.tiles[i][j].display();
         }
     }
@@ -83,8 +91,8 @@ GameBoard.prototype.display = function(){
 
 GameBoard.prototype.registerForPick = function(){
     this.scene.pushMatrix();
-    for( var i = 0; i < numTiles; i++ )
-        for( var j = 0; j < numTiles; j++ )
+    for( var i = 0; i < numTilesBoard; i++ )
+        for( var j = 0; j < numTilesBoard; j++ )
             this.tiles[i][j].registerTileForPick();
     this.scene.popMatrix();
 }

@@ -1,8 +1,9 @@
-const numTilesAux = 3;
+const numTilesAux = 6;
+
 
 /**
-	AuxiliarBoard's constructor
-*/
+ *  AuxiliarBoard's constructor
+ */
 function AuxiliarBoard(scene, coords) {
     CGFobject.call(this,scene);
     this.init();
@@ -21,8 +22,12 @@ AuxiliarBoard.prototype.log = function() {
 
 AuxiliarBoard.prototype.init = function() {
     this.tiles = [];
-    var x = -1, y = 0, z = 0.05;
+    var x = -1, y = -0.5, z = 0.05;
     for( var i = 0; i < numTilesAux; i++ ) {
+        if( i == numTilesAux / 2 ) {
+            x = -1;
+            y += 1;
+        }
         var tile = new RoundTile(this.scene, [x, y, z]);
         tile.fill();
         this.tiles.push(tile);
@@ -42,14 +47,35 @@ AuxiliarBoard.prototype.setTexCoords = function(length_t, length_s){
 
 
 
-/*
-        display
-*/
+/**
+ * GAME MECHANICS
+ */
+
+AuxiliarBoard.prototype.getPiece = function(id) {
+    var piece;
+    for( var i = 0; i < numTilesAux; i++ )
+        if((piece = this.tiles[i].getPiece(id)) != null)
+            return piece;
+    return null;
+}
+
+AuxiliarBoard.prototype.removePiece = function(piece) {
+    for( var i = 0; i < numTilesAux; i++ )
+        if(this.tiles[i].removePiece(piece))
+            return true;
+    return false;
+}
+
+
+
+/**
+ *  DISPLAY FUNCTIONS
+ */
 
 AuxiliarBoard.prototype.registerForPick = function(){
     this.scene.pushMatrix();
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
-    for( var i = 0; i < this.tiles.length; i++ )
+    for( var i = 0; i < numTilesAux; i++ )
         this.tiles[i].registerForPick();
     this.scene.popMatrix();
 }
@@ -58,7 +84,7 @@ AuxiliarBoard.prototype.registerForPick = function(){
 AuxiliarBoard.prototype.display = function(){
     this.scene.pushMatrix();
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
-    for( var i = 0; i < this.tiles.length; i++ )
+    for( var i = 0; i < numTilesAux; i++ )
         this.tiles[i].display();
     this.scene.popMatrix();
 }

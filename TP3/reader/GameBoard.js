@@ -1,7 +1,9 @@
 const numTiles = 3;
+
+
 /**
-	GameBoard's constructor
-*/
+ *  GameBoard's constructor
+ */
 function GameBoard(scene) {
     CGFobject.call(this,scene);
     this.board = new MyBoard(scene, 3, 3, null, -1, -1, 
@@ -55,9 +57,10 @@ GameBoard.prototype.setTexCoords = function(length_t, length_s){
 }
 
 
-/*
-        display
-*/
+
+/**
+ *  DISPLAY FUNCTIONS
+ */
 
 //Displays the GameBoard with the respective shader
 GameBoard.prototype.display = function(){
@@ -79,13 +82,9 @@ GameBoard.prototype.display = function(){
 }
 
 GameBoard.prototype.registerForPick = function(){
-    var id = 1;
     this.scene.pushMatrix();
-    for( var i = 0; i < numTiles; i++ ) {
-        for( var j = 0; j < numTiles; j++ ) {
-            this.tiles[i][j].registerTileForPick(id);
-            id++;
-        }
-    }
+    for( var i = 0; i < numTiles; i++ )
+        for( var j = 0; j < numTiles; j++ )
+            this.tiles[i][j].registerTileForPick();
     this.scene.popMatrix();
 }

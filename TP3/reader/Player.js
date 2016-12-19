@@ -4,8 +4,7 @@ function Player(scene, id, state, coords) {
     this.state = state;
 
     this.pieces = new AuxiliarBoard(scene, coords);
-    console.debug(coords);
-    this.pieces.log();
+    this.selectedPiece = null;
 };
 
 Player.prototype.changeState = function() {
@@ -20,4 +19,17 @@ Player.prototype.changeState = function() {
             this.state = PlayerState.ChoosePiece;
             break;
     }
+}
+
+Player.prototype.pickObj = function(id, piece) {
+    var piece = this.pieces.getPiece(id);
+    if( piece == null ) //For debug purposes if a bug comes up
+        throw new Error("Found no piece with the id: " + id);
+    this.selectedPiece = piece;
+}
+
+Player.prototype.placePiece = function() {
+    if( !this.pieces.removePiece(this.selectedPiece) ) //For debug purposes if a bug comes up
+        throw new Error("Couldn't remove piece with the id: " + this.selectedPiece.id);
+    this.selectedPiece = null;
 }

@@ -6,11 +6,13 @@ const smallCoord = 0.1;
 const mediumCoord = 0.225;
 const largeCoord = 0.35;
 
+//  Used to identify the pieces (autoincremented in the constructor)
 var pieceId = 1;
 
+
 /**
-	Piece's constructor - Abstract
-*/
+ *  PIECE - ABSTRACT CLASS
+ */
 function Piece(scene, type) {    
     if (this.constructor === Piece) {
       throw new Error("Can't instantiate abstract class!");
@@ -19,6 +21,7 @@ function Piece(scene, type) {
     this.type = type;
     this.obj = null;
     this.id = pieceId;
+    this.selected = false;
     pieceId++;
 };
 
@@ -53,6 +56,12 @@ Piece.prototype.getCoord = function() {
     }
 }
 
+
+
+/**
+ *  ROUND PIECE - CHILD CLASS OF PIECE
+ */
+
 function RoundPiece(scene, type) {
     Piece.apply(this, arguments);
     this.init();
@@ -67,9 +76,10 @@ RoundPiece.prototype.init = function() {
 }
 
 
-/*
-        display
-*/
+
+/**
+ *  DISPLAY FUNCTIONS
+ */
 
 Piece.prototype.registerForPick = function(){
     this.scene.pushMatrix();

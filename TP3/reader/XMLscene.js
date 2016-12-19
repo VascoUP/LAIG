@@ -122,7 +122,7 @@ XMLscene.prototype.display = function () {
 		}
 	}
 	else
-		this.game.registerForPick(1);
+		this.game.registerForPick();
 
 	this.logPicking();
 };
@@ -160,16 +160,15 @@ XMLscene.prototype.update = function( dTime ) {
 	this.graph.graph.update(dSec);
 }
 
-XMLscene.prototype.logPicking = function ()
-	{
+XMLscene.prototype.logPicking = function ()	{
 	if (this.pickMode == false) {
 		if (this.pickResults != null && this.pickResults.length > 0) {
 			for (var i=0; i< this.pickResults.length; i++) {
 				var obj = this.pickResults[i][0]; // o objeto seleccionado
-				if (obj)
-				{
+				if (obj) {
 					var customId = this.pickResults[i][1]; // o ID do objeto seleccionado
-					console.log("Picked object: " + obj + ", with pick id " + customId);
+					//console.debug("Obj id="+customId);
+					this.game.pickObj(customId, obj);
 				}
 			}
 			this.pickResults.splice(0,this.pickResults.length);

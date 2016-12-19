@@ -1,8 +1,10 @@
-const numPieces = 3;
+
+//  Used to identify the tiles (autoincremented in the constructor)
+var tileId = 1;
 
 /**
-	Tile's constructor - Abstract
-*/
+ *  TILE - ABSTRACT CLASS
+ */
 function Tile(scene, coords) {    
     if (this.constructor === Tile) {
       throw new Error("Can't instantiate abstract class!");
@@ -12,6 +14,9 @@ function Tile(scene, coords) {
     this.coords = coords;
 
     this.obj = new MyRectangle(scene, -0.5, -0.5, 0.5, 0.5);
+
+    this.id = tileId;
+    tileId++;
 }
 
 Tile.prototype = Object.create(CGFnurbsObject.prototype);
@@ -28,6 +33,17 @@ Tile.prototype.setTexCoords = function(length_t, length_s){
 
 }
 
+Tile.prototype.log = function() {
+    console.debug("--Tile--");
+    for( var i = 0; i < this.pieces.length; i++ )
+        this.pieces[i].log();
+}
+
+
+
+/**
+ * GAME MECHANICS
+ */
 Tile.prototype.hasPiece = function(type) {
     for( var i = 0; i < this.pieces.length; i++ ) {
         if( this.pieces[i].type == type )
@@ -36,11 +52,35 @@ Tile.prototype.hasPiece = function(type) {
     return false;
 }
 
-Tile.prototype.log = function() {
-    console.debug("--Tile--");
+Tile.prototype.getPiece = function(id) {
     for( var i = 0; i < this.pieces.length; i++ )
-        this.pieces[i].log();
+        if( this.pieces[i].id == id ) //If id equals this pieces id return the piece
+            return this.pieces[i];
+    return null; //Else return null
 }
+
+Tile.prototype.addPiece = function(piece) {
+    if( this.hasPiece(piece.type) )
+        return false;
+    this.pieces.push(piece);
+    return true;
+}
+
+Tile.prototype.removePiece = function(piece) {
+    var index = this.pieces.indexOf(piece);
+    if( index > -1 ) {
+        this.pieces.splice(index, 1); //Removed one element from an index
+        console.debug(this.pieces);
+        return true;
+    }
+    return false;
+}
+
+
+
+/**
+ *  ROUND TILE - CHILD CLASS OF TILE
+ */
 
 function RoundTile(scene) {
     Tile.apply(this, arguments);
@@ -49,27 +89,28 @@ function RoundTile(scene) {
 RoundTile.prototype = Object.create(Tile.prototype);
 RoundTile.prototype.constructor = RoundTile;
 
-RoundTile.prototype.addPiece = function(type) {
+RoundTile.prototype.initPiece = function(type) {
     if( !this.hasPiece(type) )
         this.pieces.push( new RoundPiece(this.scene, type) );
 }
 
 RoundTile.prototype.fill = function() {
-    this.addPiece(small);
-    this.addPiece(medium);
-    this.addPiece(large);
+    this.initPiece(small);
+    this.initPiece(medium);
+    this.initPiece(large);
 }
 
 
-/* 
-        display
-*/
 
-Tile.prototype.registerTileForPick = function(id){
+/**
+ *  DISPLAY FUNCTIONS
+ */
+
+Tile.prototype.registerTileForPick = function(){
     this.scene.pushMatrix();
 
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
-    this.scene.registerForPick(id, this);
+    this.scene.registerForPick(this.id, this);
     this.obj.display();
 
     this.scene.popMatrix();

@@ -90,28 +90,38 @@ RoundPiece.prototype.init = function() {
  *  DISPLAY FUNCTIONS
  */
 
-Piece.prototype.registerForPick = function(){
+Piece.prototype.generalDisplay = function( func ){
+    var activateShaders = false;
+
     this.scene.pushMatrix();
-    
-    this.scene.translate(0, 0, 0.05);
-    this.scene.registerForPick(this.id, this);
-    this.display();
+    //this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
+
+    if( func == Piece.prototype.registerForPick ) {
+        //Register for pick
+        this.scene.registerForPick(this.id, this);
+    } else {
+        //Display 
+        if( this.selected )
+	        activateShaders = true;
+        this.material.apply();
+    }
+
+    if( activateShaders )
+        this.scene.setActiveShader(this.shader);
+
+    this.obj.display();
+
+    if( activateShaders )
+	    this.scene.setActiveShader(this.scene.defaultShader);
 
     this.scene.popMatrix();
 }
 
+Piece.prototype.registerForPick = function(){
+    this.generalDisplay( Piece.prototype.registerForPick );
+}
+
 //Displays the Piece with the respective shader
 Piece.prototype.display = function(){
-    this.scene.pushMatrix();
-
-    this.scene.translate(0, 0, 0.05);
-
-    this.material.apply();
-    if( this.selected )
-	    this.scene.setActiveShader(this.shader);
-    this.obj.display();
-    if( this.selected )
-	    this.scene.setActiveShader(this.scene.defaultShader);
-
-    this.scene.popMatrix();
+    this.generalDisplay( Piece.prototype.display );
 }

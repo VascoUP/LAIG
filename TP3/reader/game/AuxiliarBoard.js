@@ -73,42 +73,40 @@ AuxiliarBoard.prototype.removePiece = function(piece) {
  *  DISPLAY FUNCTIONS
  */
 
-AuxiliarBoard.prototype.registerForPick = function(){
-    this.scene.pushMatrix();
-    this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
-    for( var i = 0; i < numTilesAux; i++ )
-        this.tiles[i].registerForPick();
-    this.scene.popMatrix();
-}
-
-//Displays the AuxiliarBoard with the respective shader
-AuxiliarBoard.prototype.display = function(){
+//Used so that, when we change something, we don't have to change it in both functions
+AuxiliarBoard.prototype.generalDisplay = function( func ){   
     this.scene.pushMatrix();
 
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
     this.scene.rotate(this.rotation, 0, 0, 1);
     this.scene.scale(this.scale[0], this.scale[1], this.scale[2]);
-
-
-    this.scene.pushMatrix();
-
-    this.material.apply();
-    this.scene.translate(0, 0, -0.2);
     
-
     this.scene.pushMatrix();
+    
+    this.scene.translate(0, 0, -0.2);
+        
+    if( func == Tile.prototype.display ) {
+        this.scene.pushMatrix();
 
-    this.scene.scale(4, 3, 0.5)
-    this.box.display();
+        this.material.apply();
+        this.scene.scale(4, 3, 0.5);
+        this.box.display();
 
-    this.scene.popMatrix();
-
+        this.scene.popMatrix();
+    }
 
     for( var i = 0; i < numTilesAux; i++ )
-        this.tiles[i].display();
+        func.call(this.tiles[i]);
 
     this.scene.popMatrix();
 
-
     this.scene.popMatrix();
+}
+
+AuxiliarBoard.prototype.registerForPick = function(){
+    this.generalDisplay( Tile.prototype.registerForPick );
+}
+
+AuxiliarBoard.prototype.display = function(){
+    this.generalDisplay( Tile.prototype.display );
 }

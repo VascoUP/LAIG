@@ -101,37 +101,31 @@ RoundTile.prototype.fill = function() {
  *  DISPLAY FUNCTIONS
  */
 
-Tile.prototype.registerTileForPick = function(){
+Tile.prototype.generalDisplay = function( func ){
     this.scene.pushMatrix();
-
-    this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
-    this.scene.registerForPick(this.id, this);
-    this.obj.display();
-
-    this.scene.popMatrix();
-}
-
-//Returns the next available piece
-Tile.prototype.registerForPick = function(){
-    this.scene.pushMatrix();
-
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
 
-    for( var i = 0; i < this.pieces.length; i++ ) {
-        this.pieces[i].registerForPick();
+    if( func == Tile.prototype.registerTileForPick ) {
+        this.scene.registerForPick(this.id, this);
+        this.obj.display();
+    } else {
+        for( var i = 0; i < this.pieces.length; i++ )
+            func.call(this.pieces[i]);
     }
 
     this.scene.popMatrix();
 }
 
+Tile.prototype.registerTileForPick = function(){
+    this.generalDisplay( Tile.prototype.registerTileForPick );
+}
+
+//Returns the next available piece
+Tile.prototype.registerForPick = function(){
+    this.generalDisplay( Piece.prototype.registerForPick );
+}
+
 //Displays the Tile with the respective shader
 Tile.prototype.display = function(){
-    this.scene.pushMatrix();
-
-    this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
-
-    for( var i = 0; i < this.pieces.length; i++ )
-        this.pieces[i].display();
-
-    this.scene.popMatrix();
+    this.generalDisplay( Piece.prototype.display );
 }

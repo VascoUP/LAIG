@@ -11,6 +11,7 @@ function GameBoard(scene, material) {
                                 [0.5, 0.5, 0.5, 1], 
                                 [0.2, 0.2, 0.8, 1]);
     this.support = new MyGameBoard(scene);
+
     this.material = material;
     this.material.setTextureWrap('REPEAT', 'REPEAT');
     this.material.setTexture(new CGFtexture(this.scene, "resources/purty_wood.png"));
@@ -75,32 +76,34 @@ GameBoard.prototype.selectTile = function(id) {
  *  DISPLAY FUNCTIONS
  */
 
-//Displays the GameBoard with the respective shader
-GameBoard.prototype.display = function(){
-    this.scene.pushMatrix();
-
-    this.scene.scale(3, 3, 1);
-    this.material.apply();
-    this.board.display();
-    this.material.apply();
-    this.support.display();
-
-    this.scene.popMatrix();
-    this.scene.pushMatrix();
+//Used so that, when we change something, we don't have to change it in both functions
+GameBoard.prototype.generalDisplay = function( func ){
     
-    for( var i = 0; i < numTilesBoard; i++ ) {
-        for( var j = 0; j < numTilesBoard; j++ ) {
-            this.tiles[i][j].display();
-        }
+    this.scene.pushMatrix();
+
+    this.scene.scale(4, 4, 1);
+
+    if( func == Tile.prototype.display ) {
+        this.material.apply();
+        this.board.display();
+        this.material.apply();
+        this.support.display();
     }
+
+    this.scene.pushMatrix();
+    this.scene.scale(1/3, 1/3, 1);
+    for( var i = 0; i < numTilesBoard; i++ )
+        for( var j = 0; j < numTilesBoard; j++ )
+            func.call(this.tiles[i][j]);
+    this.scene.popMatrix();
 
     this.scene.popMatrix();
 }
 
 GameBoard.prototype.registerForPick = function(){
-    this.scene.pushMatrix();
-    for( var i = 0; i < numTilesBoard; i++ )
-        for( var j = 0; j < numTilesBoard; j++ )
-            this.tiles[i][j].registerTileForPick();
-    this.scene.popMatrix();
+    this.generalDisplay( Tile.prototype.registerTileForPick );
+}
+
+GameBoard.prototype.display = function(){
+    this.generalDisplay( Tile.prototype.display );
 }

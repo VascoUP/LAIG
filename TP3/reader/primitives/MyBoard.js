@@ -44,9 +44,7 @@ MyBoard.prototype.setValuesShader = function(){
 	this.shader.setUniformsValues({dV: this.dV});
 	this.shader.setUniformsValues({sU: this.sU});
 	this.shader.setUniformsValues({sV: this.sV});
-
-	this.shader.setUniformsValues({c1: this.rgbaC1});
-	this.shader.setUniformsValues({c2: this.rgbaC2});
+	
 	this.shader.setUniformsValues({cs: this.rgbaCS});
 }
 

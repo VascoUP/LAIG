@@ -17,12 +17,12 @@ var PlayerState = {
 /**
  *  Game's constructor
  */
-function Game(scene, material1, material2) {
+function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1, materialPieces2) {
     this.scene = scene;
 
-    this.gameBoard = new GameBoard(scene);
-    this.player1 = new Player(scene, 1, PlayerState.ChoosePiece, [-1, -4, 0], material1);
-    this.player2 = new Player(scene, 2, PlayerState.Wait, [1, 4, 0], material2);
+    this.gameBoard = new GameBoard(scene, materialBoard);
+    this.player1 = new Player(scene, 1, PlayerState.ChoosePiece, [-4, -4, 0], materialBox1, materialPieces1);
+    this.player2 = new Player(scene, 2, PlayerState.Wait, [4, 4, 0], materialBox2, materialPieces2);
 
     this.gameState = GameState.Player1;
 

@@ -4,13 +4,16 @@ const numTilesBoard = 3;
 /**
  *  GameBoard's constructor
  */
-function GameBoard(scene) {
+function GameBoard(scene, material) {
     CGFobject.call(this,scene);
     this.board = new MyBoard(scene, 3, 3, null, -1, -1, 
                                 [0.9, 0.9, 0.9, 1], 
                                 [0.5, 0.5, 0.5, 1], 
                                 [0.2, 0.2, 0.8, 1]);
     this.support = new MyGameBoard(scene);
+    this.material = material;
+    this.material.setTextureWrap('REPEAT', 'REPEAT');
+    this.material.setTexture(new CGFtexture(this.scene, "resources/purty_wood.png"));
 
     this.init();
     this.selectedTileId = null;
@@ -77,7 +80,9 @@ GameBoard.prototype.display = function(){
     this.scene.pushMatrix();
 
     this.scene.scale(3, 3, 1);
+    this.material.apply();
     this.board.display();
+    this.material.apply();
     this.support.display();
 
     this.scene.popMatrix();

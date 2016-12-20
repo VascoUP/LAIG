@@ -11,8 +11,6 @@ uniform float dV;
 uniform float sU;
 uniform float sV;
 
-uniform vec4 c1;
-uniform vec4 c2;
 uniform vec4 cs;
 
 varying vec4 coords;
@@ -38,17 +36,12 @@ void main() {
    int indexU_floor = int(indexU);
    int indexV_floor = int(indexV);    
    
-
-   vec4 color;
-
-    if( indexU_floor == int(sU) && indexV_floor == int(sV) )
-        color = cs;
-    else if( (mod(float(indexU_floor), 2.0) == 0.0 && mod(float(indexV_floor), 2.0) == 0.0) || 
-            (mod(float(indexU_floor), 2.0) != 0.0 && mod(float(indexV_floor), 2.0) != 0.0) ) 
-        color = c1;
-    else
-        color = c2;
-        
-    gl_FragColor.rgba = (texture2D(u_texture, texcoord) + color) / 2.0;
-    gl_FragColor.a = 1.0;
+    if( indexU_floor == int(sU) && indexV_floor == int(sV) ) {
+        gl_FragColor.rgba = (texture2D(u_texture, texcoord) + cs) / 2.0;
+        gl_FragColor.a = 1.0;
+    }
+    else {
+        gl_FragColor = texture2D(u_texture, texcoord);
+    }
+    
 }

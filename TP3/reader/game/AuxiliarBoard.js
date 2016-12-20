@@ -4,11 +4,18 @@ const numTilesAux = 6;
 /**
  *  AuxiliarBoard's constructor
  */
-function AuxiliarBoard(scene, coords, material) {
+function AuxiliarBoard(scene, coords, materialBoard, materialPieces) {
     CGFobject.call(this,scene);
-    this.init(material);
+    this.init(materialPieces);
 
+    // Transformation
     this.coords = coords;
+    this.rotation = -Math.PI / 4;
+    this.scale = [1, 1, 1];
+
+    this.material = materialBoard;
+
+    this.box = new MyBox(scene);
 };
 
 AuxiliarBoard.prototype = Object.create(CGFnurbsObject.prototype);
@@ -77,8 +84,31 @@ AuxiliarBoard.prototype.registerForPick = function(){
 //Displays the AuxiliarBoard with the respective shader
 AuxiliarBoard.prototype.display = function(){
     this.scene.pushMatrix();
+
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
+    this.scene.rotate(this.rotation, 0, 0, 1);
+    this.scene.scale(this.scale[0], this.scale[1], this.scale[2]);
+
+
+    this.scene.pushMatrix();
+
+    this.material.apply();
+    this.scene.translate(0, 0, -0.2);
+    
+
+    this.scene.pushMatrix();
+
+    this.scene.scale(4, 3, 0.5)
+    this.box.display();
+
+    this.scene.popMatrix();
+
+
     for( var i = 0; i < numTilesAux; i++ )
         this.tiles[i].display();
+
+    this.scene.popMatrix();
+
+
     this.scene.popMatrix();
 }

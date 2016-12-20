@@ -21,7 +21,7 @@ serialInclude(['../lib/CGF.js',
                 'primitives/MyRectangle.js', 'primitives/MyTriangle.js', 'primitives/MyCylinder.js', 
                 'primitives/MySphere.js','primitives/MyTorus.js', 'primitives/MyVehicle.js',
                 'primitives/MyPatch.js', 'primitives/MyPlane.js', 'primitives/MyBoard.js',
-                'primitives/MyGameBoard.js',
+                'primitives/MyGameBoard.js', 'primitives/MyBox.js',
 
                 'animations/MyAnimation.js', 
                 

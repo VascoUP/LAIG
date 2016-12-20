@@ -1,5 +1,5 @@
 /**
-	Vehicle constructor
+	MyGameBoard's constructor
 */
 function MyGameBoard(scene) {
     CGFobject.call(this,scene);
@@ -23,19 +23,6 @@ function MyGameBoard(scene) {
     ]);
 
     this.side = new MyPlane(scene, 1, 1, 1, 50);
-
-    //Materials
-    this.blackMaterial = new CGFappearance(scene);
-    this.blackMaterial.setAmbient(0.0, 0.0, 0.0, 1.0);
-    this.blackMaterial.setSpecular(0.8, 0.8, 0.8, 1.0);
-    this.blackMaterial.setDiffuse(0.1, 0.1, 0.1, 1.0);
-    this.blackMaterial.setShininess(20);
-
-    this.greyMaterial = new CGFappearance(scene);
-    this.greyMaterial.setAmbient(0.1, 0.1, 0.1, 1.0);
-    this.greyMaterial.setSpecular(0.8, 0.8, 0.8, 1.0);
-    this.greyMaterial.setDiffuse(0.3, 0.3, 0.3, 1.0);
-    this.greyMaterial.setShininess(20);
 };
 
 MyGameBoard.prototype = Object.create(CGFobject.prototype);

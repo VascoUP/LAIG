@@ -27,23 +27,29 @@ XMLscene.prototype.init = function (application) {
 
 	this.axis=new CGFaxis(this);
 
+	this.material = new CGFappearance(this);
+    this.material.setAmbient(0, 0, 0, 1);
+    this.material.setDiffuse(1, 1, 1, 1);
+    this.material.setSpecular(0, 0, 0, 1);    
+    this.material.setShininess(1);
+
 	this.material1 = new CGFappearance(this);
-    this.material1.setAmbient(1, 0, 0, 1);
+    this.material1.setAmbient(0.2, 0, 0, 1);
     this.material1.setDiffuse(1, 0, 0, 1);
-    this.material1.setSpecular(1, 0, 0, 1);    
-    this.material1.setShininess(200);
+    this.material1.setSpecular(0.6, 0, 0, 1);    
+    this.material1.setShininess(10);
 
 	this.material2 = new CGFappearance(this);
-    this.material2.setAmbient(0, 0.5, 0.5, 1);
-    this.material2.setDiffuse(0, 0.5, 0.5, 1);
-    this.material2.setSpecular(0, 0.5, 0.5, 1);    
-    this.material2.setShininess(200);
+    this.material2.setAmbient(0, 0.1, 0.1, 1);
+    this.material2.setDiffuse(0, 0.8, 0.8, 1);
+    this.material2.setSpecular(0, 0.3, 0.3, 1);    
+    this.material2.setShininess(10);
 
     this.currentCamera = 0;
 
 	var loaded = false;
 
-	this.game = new Game(this, this.material1, this.material2);
+	this.game = new Game(this, this.material, this.material2, this.material1, this.material1, this.material2);
 
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);

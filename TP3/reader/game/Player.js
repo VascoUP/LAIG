@@ -1,10 +1,10 @@
 
-function Player(scene, id, state, coords, material) {
+function Player(scene, id, state, coords, materialBox, materialPieces) {
     this.scene = scene;
     this.state = state;
     this.id = id;
 
-    this.pieces = new AuxiliarBoard(scene, coords, material);
+    this.pieces = new AuxiliarBoard(scene, coords, materialBox, materialPieces);
     this.selectedPiece = null;
 };
 

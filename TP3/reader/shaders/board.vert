@@ -16,8 +16,6 @@ uniform float dV;
 uniform float sU;
 uniform float sV;
 
-uniform vec4 c1;
-uniform vec4 c2;
 uniform vec4 cs;
 
 varying vec4 coords;

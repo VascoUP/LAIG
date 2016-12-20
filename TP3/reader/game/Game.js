@@ -21,13 +21,23 @@ function Game(scene, material1, material2) {
     this.scene = scene;
 
     this.gameBoard = new GameBoard(scene);
-    this.player1 = new Player(scene, 1, PlayerState.ChoosePiece, [0, -2.5, 0], material1);
-    this.player2 = new Player(scene, 2, PlayerState.Wait, [0, 2.5, 0], material2);
+    this.player1 = new Player(scene, 1, PlayerState.ChoosePiece, [-1, -4, 0], material1);
+    this.player2 = new Player(scene, 2, PlayerState.Wait, [1, 4, 0], material2);
 
     this.gameState = GameState.Player1;
 
+    this.history = [];
+
 	this.material = new CGFappearance(this.scene);
 };
+
+Game.prototype.logHistory = function() {
+    for( var i = 0; i < this.history.length; i++ ) {
+        console.log("--Play--");
+        console.log("Player " + (this.history[i].PlayerId == this.player1.id ? "player1" : "player2"));
+        console.log("Piece " + this.history[i].PieceId + " -- Tile " + this.history[i].TileId);
+    }
+}
 
 //Updates the Game
 Game.prototype.update = function( dSec ){
@@ -88,6 +98,13 @@ Game.prototype.confirmTile = function(obj, player) {
             player.state = PlayerState.ChooseTile;
         //If piece was added to the game board then remove it from the player's board
         else {
+            console.debug(player.id);
+            this.history.push({
+                PlayerId: player.id,
+                PieceId: player.selectedPiece.id,
+                TileId: this.gameBoard.selectedTileId
+            });
+
             player.placePiece();
             this.changeState();
         }
@@ -99,9 +116,10 @@ Game.prototype.confirmTile = function(obj, player) {
 
 }
 
-Game.prototype.chooseTie = function(id, player) {
-        this.gameBoard.selectTile(id);
-        player.changeState();
+Game.prototype.chooseTile = function(id, player) {
+
+    this.gameBoard.selectTile(id);
+    player.changeState();
 }
 
 Game.prototype.pickObj = function(obj) {
@@ -113,9 +131,9 @@ Game.prototype.pickObj = function(obj) {
     if( player.state == PlayerState.TileConfirmation) {
         this.confirmTile(obj, player)
     } else if( player.state == PlayerState.ChooseTile ) {
-        this.chooseTie(obj.id, player);
+        this.chooseTile(obj.id, player);
     } else {
-        if( player.pickObj(obj.id) )
+        if( player.pickObj(obj) )
             player.changeState();
     }
 

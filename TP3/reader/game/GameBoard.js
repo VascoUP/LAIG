@@ -10,6 +10,8 @@ function GameBoard(scene) {
                                 [0.9, 0.9, 0.9, 1], 
                                 [0.5, 0.5, 0.5, 1], 
                                 [0.2, 0.2, 0.8, 1]);
+    this.support = new MyGameBoard(scene);
+
     this.init();
     this.selectedTileId = null;
 };
@@ -76,6 +78,7 @@ GameBoard.prototype.display = function(){
 
     this.scene.scale(3, 3, 1);
     this.board.display();
+    this.support.display();
 
     this.scene.popMatrix();
     this.scene.pushMatrix();

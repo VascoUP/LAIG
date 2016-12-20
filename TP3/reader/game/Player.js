@@ -2,6 +2,7 @@
 function Player(scene, id, state, coords, material) {
     this.scene = scene;
     this.state = state;
+    this.id = id;
 
     this.pieces = new AuxiliarBoard(scene, coords, material);
     this.selectedPiece = null;
@@ -34,32 +35,30 @@ Player.prototype.changeState = function() {
     }
 }
 
-Player.prototype.choosePiece = function (id) {
-    var piece = this.pieces.getPiece(id);
-    if( piece == null ) {//For debug purposes if a bug comes up 
-        throw new Error("Found no piece with the id: " + id);
-        return false;
-    }
+Player.prototype.choosePiece = function (piece) {
     this.selectedPiece = piece;
+    piece.selected = true;
     return true;
 }
 
-Player.prototype.confirmPiece = function (id) {
+Player.prototype.confirmPiece = function (piece) {
     //Second click should be on the wanted piece
     //If it's not then revert to the first state
-    if( this.selectedPiece.id != id ) {
+    if( this.selectedPiece.id != piece.id ) {
         this.state = PlayerState.ChoosePiece;
+        this.selectedPiece.selected = false;
         this.selectedPiece = null;
         return false;
     }
+    this.selectedPiece.selected = false;
     return true;
 }
 
-Player.prototype.pickObj = function(id) {
+Player.prototype.pickObj = function(piece) {
     if( this.state == PlayerState.ChoosePiece )
-        return this.choosePiece(id);
+        return this.choosePiece(piece);
     else if( this.state == PlayerState.PieceConfirmation )
-        return this.confirmPiece(id);
+        return this.confirmPiece(piece);
 }
 
 Player.prototype.placePiece = function() {

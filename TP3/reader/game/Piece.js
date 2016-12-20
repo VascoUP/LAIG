@@ -6,6 +6,8 @@ const smallCoord = 0.1;
 const mediumCoord = 0.225;
 const largeCoord = 0.35;
 
+const selectedColor = [0.2, 0.5, 1, 1];
+
 //  Used to identify the pieces (autoincremented in the constructor)
 var pieceId = 1;
 
@@ -28,12 +30,17 @@ function Piece(scene, type, material) {
     pieceId++;	
     
     //Creates the shader
-	//this.shader = new CGFshader(this.scene.gl, "shaders/piece.vert", "shaders/piece.frag");
-	//this.setValuesShader();
+	this.shader = new CGFshader(this.scene.gl, "shaders/piece.vert", "shaders/piece.frag");
+	this.setValuesShader();
 };
 
 Piece.prototype = Object.create(CGFnurbsObject.prototype);
 Piece.prototype.constructor = Piece;
+
+//Sets the shader values
+Piece.prototype.setValuesShader = function(){
+	this.shader.setUniformsValues({color: selectedColor});
+}
 
 //Updates the Piece
 Piece.prototype.update = function(dSec){
@@ -100,7 +107,11 @@ Piece.prototype.display = function(){
     this.scene.translate(0, 0, 0.05);
 
     this.material.apply();
+    if( this.selected )
+	    this.scene.setActiveShader(this.shader);
     this.obj.display();
+    if( this.selected )
+	    this.scene.setActiveShader(this.scene.defaultShader);
 
     this.scene.popMatrix();
 }

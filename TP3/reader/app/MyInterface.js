@@ -11,7 +11,7 @@ MyInterface.prototype.init = function(application) {
 	// call CGFinterface init
 	CGFinterface.prototype.init.call(this, application);
 	
-	this.gui = new dat.GUI();	
+	this.gui = new dat.GUI();
 
 	return true;
 };
@@ -48,14 +48,16 @@ MyInterface.prototype.processKeyboard = function(event) {
 	var code = (event.keyCode >= 97 && event.keyCode <= 122)? event.keyCode - 32 : event.keyCode;
 	code = (code >= 97 && code <= 122) ? code - 32 : code;
 
-	switch (code)
+	switch (String.fromCharCode(code))
 	{
-		case (77): 		// M key
+		case ("M"): 		// M key
 			this.scene.changeMaterial();
 			break;
-		case (86): 		// V key
+		case ("V"): 		// V key
 			this.scene.changeView();
 			break;
-		
+		case ("Q"): 		// V key
+			this.scene.game.logHistory();
+			break;
 	};	
 };

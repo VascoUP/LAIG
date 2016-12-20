@@ -25,7 +25,11 @@ function Piece(scene, type, material) {
     this.material = material;
 
     this.selected = false;
-    pieceId++;
+    pieceId++;	
+    
+    //Creates the shader
+	//this.shader = new CGFshader(this.scene.gl, "shaders/piece.vert", "shaders/piece.frag");
+	//this.setValuesShader();
 };
 
 Piece.prototype = Object.create(CGFnurbsObject.prototype);

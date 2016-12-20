@@ -48,20 +48,6 @@ void main() {
         color = c1;
     else
         color = c2;
-
-    if( floor(indexU) == 0.0 )
-        gl_FragColor.rgba = vec4(0.0, 0.0, 0.0, 1.0);
-    else if(floor(indexU) == 1.0)
-        gl_FragColor.rgba = vec4(1.0, 0.0, 0.0, 1.0);
-    else if(floor(indexU) == 2.0)
-        gl_FragColor.rgba = vec4(0.0, 1.0, 0.0, 1.0);
-    else if(floor(indexU) == 3.0)
-        gl_FragColor.rgba = vec4(0.0, 0.0, 1.0, 1.0);
-    else
-        gl_FragColor.rgba = vec4(1.0, 1.0, 1.0, 1.0);
-
-    //gl_FragColor.rgb = vec3(indexU,indexV,0.0)/3.0;
-    //gl_FragColor.a = 1.0;
         
     gl_FragColor.rgba = (texture2D(u_texture, texcoord) + color) / 2.0;
     gl_FragColor.a = 1.0;

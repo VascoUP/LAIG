@@ -104,9 +104,13 @@ print_header_line(_).
 % Require your Prolog Files here
 
 parse_input(handshake, handshake).
-parse_input(test(C,N), Res) :- test(C,Res,N).
+
+parse_input(p_play(Player, LineC, ColumnC), PairC) :- p_play(Player, LineC, ColumnC, PairC).
+parse_input(ask_piece, P) :- ask_piece(P).
+parse_input(ask_coords, C, L) :- ask_coords(C, L).
+parse_input(next_win(Board, Mv, Player, Line, Column), Pair) :- next_win(Board, Mv, Player, Line, Column, Pair).
+parse_input(has_options(Board, Mv, Player, Line, LineC, ColumnC), PairC) :- has_options(Board, Mv, Player, Line, LineC, ColumnC, PairC).
+
 parse_input(quit, goodbye).
 
-test(_,[],N) :- N =< 0.
-test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
 	

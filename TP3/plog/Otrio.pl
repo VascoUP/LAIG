@@ -103,7 +103,7 @@ play(computer, Difficulty, Board, Player, Mv, Mv2, BoardC, PlayerC, MvC, Mv2C, f
         next_cicle(Board, Line, Column, Pair, BoardC, Player, PlayerC, Mv, Mv2, MvC, Mv2C, _), !.
 
 
-%% Predicate that allows an user to input the coordenates of the next piece
+%% Predicate that allows an user to input the coordinates of the next piece
 p_play(Player, LineC, ColumnC, PairC):-
         ask_piece(Piece), !, ask_coords(ColumnC, LineC), !,
         piece_to_player(Piece, Player, PairC).

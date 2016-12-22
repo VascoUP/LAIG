@@ -146,6 +146,8 @@ Game.prototype.pickObj = function(obj) {
  */
 
 Game.prototype.registerForPick = function() {
+    this.scene.pushMatrix();
+    this.scene.translate(0, 0, 0.2);
     if( this.player1.state == PlayerState.ChoosePiece || 
         this.player1.state == PlayerState.PieceConfirmation )
         this.player1.pieces.registerForPick();
@@ -159,11 +161,15 @@ Game.prototype.registerForPick = function() {
             this.player2.state == PlayerState.ChooseTile || 
             this.player2.state == PlayerState.TileConfirmation )
         this.gameBoard.registerForPick();
+    this.scene.popMatrix();
 }
 
 //Displays the Game with the respective shader
 Game.prototype.display = function(){
+    this.scene.pushMatrix();
+    this.scene.translate(0, 0, 0.2);
     this.gameBoard.display();
     this.player1.pieces.display();
     this.player2.pieces.display();
+    this.scene.popMatrix();
 }

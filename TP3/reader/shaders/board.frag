@@ -5,7 +5,6 @@ precision mediump int;
 
 uniform sampler2D u_texture;
 
-
 uniform float dU;
 uniform float dV;
 uniform float sU;

@@ -158,13 +158,6 @@ Graph.prototype.changeMaterials = function() {
 //Updates the graph's animations
 Graph.prototype.update = function( dTime ) {
 	for(var key in this.nodes) {
-		for( var i = 0; i < this.nodes[key].idPrimitives.length; i++ ) {
-			var prim = this.sceneGraph.primitives[ this.nodes[key].idPrimitives[i] ];
-
-			if(prim instanceof MyBoard)
-				prim.update(dTime);
-		}
-
 		if(this.nodes[key].currAnimationIndex == -1)
 			continue;
 

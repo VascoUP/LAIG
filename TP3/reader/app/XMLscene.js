@@ -45,10 +45,19 @@ XMLscene.prototype.init = function (application) {
     this.material2.setSpecular(0, 0.3, 0.3, 1);    
     this.material2.setShininess(10);
 
+	this.material3 = new CGFappearance(this);
+    this.material3.setAmbient(0.1, 0.1, 0.1, 1);
+    this.material3.setDiffuse(0.8, 0.8, 0.8, 1);
+    this.material3.setSpecular(0, 0, 0, 1);    
+    this.material3.setShininess(1);
+    this.material3.setTextureWrap('REPEAT', 'REPEAT');
+    this.material3.setTexture(new CGFtexture(this, "resources/rough_wood.png"));
+
     this.currentCamera = 0;
 
 	var loaded = false;
 
+	this.table = new MyTable(this, 0.2, 0.5);
 	this.game = new Game(this, this.material, this.material2, this.material1, this.material1, this.material2);
 
 	/* 60 frames per second */
@@ -130,6 +139,12 @@ XMLscene.prototype.display = function () {
 			for(var i = 0; i < this.graph.nLights; i++)
 				this.lights[i].update();
 			//this.graph.graph.drawScene();
+			this.pushMatrix();
+			this.scale(18, 18, 18);
+			this.translate(0, 0, -0.025);
+			this.material3.apply();
+			this.table.display();
+			this.popMatrix();
 			this.game.display();
 		}
 	}

@@ -106,6 +106,7 @@ print_header_line(_).
 
 parse_input(handshake, handshake).
 
+parse_input(board, Board) :- board(Board).
 parse_input(p_play(Player, LineC, ColumnC), PairC) :- p_play(Player, LineC, ColumnC, PairC).
 parse_input(next_player(Player, Mv2), [PlayerC, Mv1C]) :- next_player(Player, PlayerC, Mv2, Mv1C).
 parse_input(ask_piece, P) :- ask_piece(P).

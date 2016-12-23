@@ -25,7 +25,7 @@ XMLscene.prototype.init = function (application) {
 
 	this.enableTextures(true);
 
-	this.axis=new CGFaxis(this);
+	this.axis = new CGFaxis(this);
 
 	this.material = new CGFappearance(this);
     this.material.setAmbient(0, 0, 0, 1);

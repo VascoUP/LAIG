@@ -1,7 +1,6 @@
 :-use_module(library(sockets)).
 :-use_module(library(lists)).
 :-use_module(library(codesio)).
-:-include('Otrio.pl').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%                                        Server                                                   %%%%
@@ -103,21 +102,41 @@ print_header_line(_).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Require your Prolog Files here
+:-include('Otrio.pl').
+
+% Player's turn
+parse_input(next_cicle(Board, Line, Column, Pair, Player, Mv, Mv2), [BoardC, PlayerC, MvC, Mv2C, Replay]) :-
+	next_cicle(Board, Line, Column, Pair, BoardC, Player, PlayerC, Mv, Mv2, MvC, Mv2C, Replay).
+
+% Computer's turn
+parse_input(e_play(Difficulty, Board, Mv, Player, Mv2), [Line, Column, Pair, BoardC, PlayerC, MvC, Mv2C, Replay]) :-
+	e_play(Difficulty, Board, Mv, Player, Mv2, Line, Column, Pair), 
+	next_cicle(Board, Line, Column, Pair, BoardC, Player, PlayerC, Mv, Mv2, MvC, Mv2C, Replay).
+
+% Check end of game (used before the turn ends)
+parse_input(end_game(Board, Player)) :-
+	end_game(Board, Player).
+
+% Change turn (this tells us who's the next player, their pieces and the type of player (Mode))
+parse_input(change_turn(Replay, Board, Player, NPlayer, NMv1, NMv2, ModeGame1, ModeGame2), [NextPlayer, NextMv1, NextMv2, NextMode1, NextMode2]) :-
+	change_turn(Replay, Board, Player, NPlayer, NMv1, NMv2, ModeGame1, ModeGame2, NextPlayer, NextMv1, NextMv2, NextMode1, NextMode2).
+
+
+%parse_input(board, Board) :- board(Board).
+%parse_input(board, Board) :- board(Board).
+%parse_input(p_play(Player, LineC, ColumnC), PairC) :- p_play(Player, LineC, ColumnC, PairC).
+%parse_input(next_player(Player, Mv2), [PlayerC, Mv1C]) :- next_player(Player, PlayerC, Mv2, Mv1C).
+%parse_input(ask_piece, P) :- ask_piece(P).
+%parse_input(ask_coords, [C, L]) :- ask_coords(C, L).
+%parse_input(e_play(easy, Board, Mv, Player, _), [LineC, ColumnC, PairC]) :- e_play(easy, Board, Mv, Player, _, LineC, ColumnC, PairC).
+%parse_input(e_play(hard, Board, Mv, Player, _), [LineC, ColumnC, PairC]) :- e_play(hard, Board, Mv, Player, _, LineC, ColumnC, PairC).
+%parse_input(analyze_board(_, Board, Player, Mv), [LineC, ColumnC, PairC]) :- analyze_board(_, Board, Player, Mv, LineC, ColumnC, PairC).
+%parse_input(play_tier(Tier, Board, Mv, Player), [LineC, ColumnC, PairC]) :- play_tier(Tier, Board, Mv, Player, LineC, ColumnC, PairC).
+%parse_input(next_win(Board, Mv, Player, Line, Column), Pair) :- next_win(Board, Mv, Player, Line, Column, Pair).
+%parse_input(has_options(Board, Mv, Player, Line, LineC, ColumnC), PairC) :- has_options(Board, Mv, Player, Line, LineC, ColumnC, PairC).
+
 
 parse_input(handshake, handshake).
-
-parse_input(board, Board) :- board(Board).
-parse_input(p_play(Player, LineC, ColumnC), PairC) :- p_play(Player, LineC, ColumnC, PairC).
-parse_input(next_player(Player, Mv2), [PlayerC, Mv1C]) :- next_player(Player, PlayerC, Mv2, Mv1C).
-parse_input(ask_piece, P) :- ask_piece(P).
-parse_input(ask_coords, [C, L]) :- ask_coords(C, L).
-parse_input(e_play(easy, Board, Mv, Player, _), [LineC, ColumnC, PairC]) :- e_play(easy, Board, Mv, Player, _, LineC, ColumnC, PairC).
-parse_input(e_play(easy, Board, Mv, Player, _), [LineC, ColumnC, PairC]) :- e_play(hard, Board, Mv, Player, _, LineC, ColumnC, PairC).
-parse_input(analyze_board(_, Board, Player, Mv), [LineC, ColumnC, PairC]) :- analyze_board(_, Board, Player, Mv, LineC, ColumnC, PairC).
-parse_input(play_tier(Tier, Board, Mv, Player), [LineC, ColumnC, PairC]) :- play_tier(Tier, Board, Mv, Player, LineC, ColumnC, PairC).
-parse_input(next_win(Board, Mv, Player, Line, Column), Pair) :- next_win(Board, Mv, Player, Line, Column, Pair).
-parse_input(has_options(Board, Mv, Player, Line, LineC, ColumnC), PairC) :- has_options(Board, Mv, Player, Line, LineC, ColumnC, PairC).
-
 parse_input(quit, goodbye).
 
 	

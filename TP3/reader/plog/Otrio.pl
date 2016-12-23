@@ -80,16 +80,22 @@ cicle(Board, Player, Mv1, Mv2, ModeGame1, ModeGame2, Difficulty):-
 
         play(ModeGame1, Difficulty, Board, Player, Mv1, Mv2, Board2, PlayerC, Mv1C, Mv2C, Replay), !,
         not(cicle_end_game(Board2, Player)), !,
+        change_turn(Replay, Board2, Player, PlayerC, Mv1C, Mv2C, ModeGame1, ModeGame2, Player2, NextMv1, NextMv2, NextMode1, NextMode2), 
+        cicle(Board2, Player2, NextMv1, NextMv2, NextMode1, NextMode2, Difficulty).
+
+
+%% Changes the turn for the next cicle
+change_turn(Replay, Board, Player, PlayerC, Mv1C, Mv2C, ModeGame1, ModeGame2, NextPlayer, NextMv1, NextMv2, NextMode1, NextMode2) :-
         next_player(PlayerC, Pl2),
-        has_movable_pieces(Board2, PlayerC, Pl2, Mv1C, Mv2C), nl, !,
+        has_movable_pieces(Board, PlayerC, Pl2, Mv1C, Mv2C), nl, !,
         (
-                ( not(Replay), not(has_pieces(Mv1C)), has_options(Board2, Mv1C, Pl2, 0, _, _, _) ) ->
-                        equal_player(PlayerC, Player2), equal_mv(Mv1C, NextMv1), equal_mv(Mv2C, NextMv2),
+                ( not(Replay), not(has_pieces(Mv1C)), has_options(Board, Mv1C, Pl2, 0, _, _, _) ) ->
+                        equal_player(PlayerC, NextPlayer), equal_mv(Mv1C, NextMv1), equal_mv(Mv2C, NextMv2),
                         equal_mode(ModeGame2, NextMode1), equal_mode(ModeGame1, NextMode2)
                 ;
-                        equal_player(Player, Player2), equal_mv(Mv1C, NextMv1), equal_mv(Mv2C, NextMv2),
+                        equal_player(Player, NextPlayer), equal_mv(Mv1C, NextMv1), equal_mv(Mv2C, NextMv2),
                         equal_mode(ModeGame1, NextMode1), equal_mode(ModeGame2, NextMode2)
-        ), cicle(Board2, Player2, NextMv1, NextMv2, NextMode1, NextMode2, Difficulty).
+        ).
 
 
 %% Predicates that creates the turn of each player and allows them to play

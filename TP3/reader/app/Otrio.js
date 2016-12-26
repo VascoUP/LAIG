@@ -13,7 +13,7 @@ Otrio.prototype.constructor = Otrio;
 Otrio.prototype.getNextCicle = function(){
   var otrio = this;
 
-  this.client.getPrologRequest("next__cicle", function(data) {
+  this.client.getPrologRequest("next_cicle", function(data) {
     otrio.nextCicle = data.target.responseText;
   });
 }

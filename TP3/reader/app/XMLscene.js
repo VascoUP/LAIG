@@ -56,8 +56,7 @@ XMLscene.prototype.init = function (application) {
     this.currentCamera = 0;
 
 	var loaded = false;
-
-	this.table = new MyTable(this, 0.2, 0.5);
+	
 	this.game = new Game(this, this.material, this.material2, this.material1, this.material1, this.material2);
 
 	/* 60 frames per second */
@@ -139,13 +138,7 @@ XMLscene.prototype.display = function () {
 			for(var i = 0; i < this.graph.nLights; i++)
 				this.lights[i].update();
 			//this.graph.graph.drawScene();
-			this.pushMatrix();
-			this.scale(2, 1, 1);
-			//this.translate(0, 0, -0.025);
-			this.material3.apply();
-			this.table.display();
-			this.popMatrix();
-			//this.game.display();
+			this.game.display();
 		}
 	}
 	else

@@ -26,7 +26,8 @@ serialInclude(['../lib/CGF.js',
                 'animations/MyAnimation.js', 
                 
                 'game/Game.js', 'game/GameBoard.js', 'game/AuxiliarBoard.js', 
-                'game/Tile.js', 'game/Piece.js', 'game/Player.js',
+                'game/Tile.js', 'game/Piece.js', 'game/Player.js', 
+                'game/GameMove.js', 'game/GameSequence.js',
 
 main=function()
 {

@@ -48,11 +48,11 @@ Tile.prototype.hasPiece = function(type) {
     return false;
 }
 
-Tile.prototype.getPiece = function(id) {
+Tile.prototype.getTilePiece = function(id) {
     for( var i = 0; i < this.pieces.length; i++ )
         if( this.pieces[i].id == id ) //If id equals this pieces id return the piece
-            return this.pieces[i];
-    return null; //Else return null
+            return true;
+    return false; //Else return null
 }
 
 Tile.prototype.addPiece = function(piece) {

@@ -5,7 +5,9 @@ function Player(scene, id, state, coords, materialBox, materialPieces) {
     this.id = id;
 
     this.pieces = new AuxiliarBoard(scene, coords, materialBox, materialPieces);
+
     this.selectedPiece = null;
+    this.selectedTile = null;
 };
 
 
@@ -24,7 +26,6 @@ Player.prototype.changeState = function() {
             break;
         case PlayerState.ChooseTile:
             this.state = PlayerState.TileConfirmation;
-            //this.state = PlayerState.Wait;
             break;
         case PlayerState.TileConfirmation:
             this.state = PlayerState.Wait;
@@ -38,6 +39,8 @@ Player.prototype.changeState = function() {
 Player.prototype.choosePiece = function (piece) {
     this.selectedPiece = piece;
     piece.selected = true;
+    
+    this.selectedTile = this.pieces.getTilePiece(piece.id);
     return true;
 }
 
@@ -48,6 +51,7 @@ Player.prototype.confirmPiece = function (piece) {
         this.state = PlayerState.ChoosePiece;
         this.selectedPiece.selected = false;
         this.selectedPiece = null;
+        this.selectedTile = null;
         return false;
     }
     this.selectedPiece.selected = false;
@@ -61,8 +65,7 @@ Player.prototype.pickObj = function(piece) {
         return this.confirmPiece(piece);
 }
 
-Player.prototype.placePiece = function() {
-    if( !this.pieces.removePiece(this.selectedPiece) ) //For debug purposes if a bug comes up
-        throw new Error("Couldn't remove piece with the id: " + this.selectedPiece.id);
+Player.prototype.placedPiece = function() {
     this.selectedPiece = null;
+    this.selectedTile = null;
 }

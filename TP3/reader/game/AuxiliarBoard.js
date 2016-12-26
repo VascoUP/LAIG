@@ -52,11 +52,11 @@ AuxiliarBoard.prototype.setTexCoords = function(length_t, length_s){
  * GAME MECHANICS
  */
 
-AuxiliarBoard.prototype.getPiece = function(id) {
+AuxiliarBoard.prototype.getTilePiece = function(id) {
     var piece;
     for( var i = 0; i < numTilesAux; i++ )
-        if((piece = this.tiles[i].getPiece(id)) != null)
-            return piece;
+        if( this.tiles[i].getTilePiece(id) )
+            return this.tiles[i];
     return null;
 }
 

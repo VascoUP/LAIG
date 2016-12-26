@@ -105,6 +105,7 @@ print_header_line(_).
 :-include('Otrio.pl').
 
 parse_input(handshake, handshake).
+parse_input(quit, goodbye).
 
 % Player's turn
 parse_input(next_cicle(Board, Line, Column, Pair, Player, Mv, Mv2), [BoardC, PlayerC, MvC, Mv2C, Replay]) :-
@@ -123,7 +124,6 @@ parse_input(end_game(Board, Player)) :-
 parse_input(change_turn(Replay, Board, Player, NPlayer, NMv1, NMv2, ModeGame1, ModeGame2), [NextPlayer, NextMv1, NextMv2, NextMode1, NextMode2]) :-
 	change_turn(Replay, Board, Player, NPlayer, NMv1, NMv2, ModeGame1, ModeGame2, NextPlayer, NextMv1, NextMv2, NextMode1, NextMode2).
 
-
 %parse_input(board, Board) :- board(Board).
 %parse_input(board, Board) :- board(Board).
 %parse_input(p_play(Player, LineC, ColumnC), PairC) :- p_play(Player, LineC, ColumnC, PairC).
@@ -136,7 +136,3 @@ parse_input(change_turn(Replay, Board, Player, NPlayer, NMv1, NMv2, ModeGame1, M
 %parse_input(play_tier(Tier, Board, Mv, Player), [LineC, ColumnC, PairC]) :- play_tier(Tier, Board, Mv, Player, LineC, ColumnC, PairC).
 %parse_input(next_win(Board, Mv, Player, Line, Column), Pair) :- next_win(Board, Mv, Player, Line, Column, Pair).
 %parse_input(has_options(Board, Mv, Player, Line, LineC, ColumnC), PairC) :- has_options(Board, Mv, Player, Line, LineC, ColumnC, PairC).
-
-parse_input(quit, goodbye).
-
-	

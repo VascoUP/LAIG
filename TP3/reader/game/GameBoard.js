@@ -17,7 +17,7 @@ function GameBoard(scene, material) {
     this.material.setTexture(new CGFtexture(this.scene, "resources/purty_wood.png"));
 
     this.init();
-    this.selectedTileId = null;
+    this.selectedTile = null;
 };
 
 GameBoard.prototype = Object.create(CGFnurbsObject.prototype);
@@ -59,15 +59,15 @@ GameBoard.prototype.setTexCoords = function(length_t, length_s){
  *  GAME MECHANICS
  */
 
-GameBoard.prototype.selectTile = function(id) {
-    if( id == null ) {
+GameBoard.prototype.selectTile = function(tile) {
+    if( tile == null ) {
         this.board.sV = -1;
         this.board.sU = -1;
     } else {
-        this.board.sV = Math.floor((id - 1) / numTilesBoard);
-        this.board.sU = (id - 1) - (this.board.sV * numTilesBoard);
+        this.board.sV = Math.floor((tile.id - 1) / numTilesBoard);
+        this.board.sU = (tile.id - 1) - (this.board.sV * numTilesBoard);
     }
-    this.selectedTileId = id;
+    this.selectedTile = tile;
 }
 
 

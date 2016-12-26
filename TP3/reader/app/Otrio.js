@@ -1,6 +1,6 @@
 function Otrio(){
 
-	this.client = new Client();
+	this.client = new Client("Starting Otrio ...");
 
 	this.nextCicle = null;
 	this.computerPlaying = null;
@@ -11,11 +11,10 @@ function Otrio(){
 Otrio.prototype.constructor = Otrio;
 
 Otrio.prototype.getNextCicle = function(){
-  var otrio = this;
-
-  this.client.getPrologRequest("next__cicle", function(data) {
-    otrio.nextCicle = data.target.responseText;
-  });
+	var otrio = this;
+	this.client.getPrologRequest("next_cicle", function(data) {
+		otrio.nextCicle = data.target.responseText;
+	});
 }
 
 Otrio.prototype.getComputerMode = function() {

@@ -50,14 +50,17 @@ MyInterface.prototype.processKeyboard = function(event) {
 
 	switch (String.fromCharCode(code))
 	{
-		case ("M"): 		// M key
+		case ("M"):
 			this.scene.changeMaterial();
 			break;
-		case ("V"): 		// V key
+		case ("V"):
 			this.scene.changeView();
 			break;
-		case ("Q"): 		// V key
+		case ("Q"):
 			this.scene.game.logHistory();
+			break;
+		case ("U"):
+			this.scene.game.undoMove();
 			break;
 	};	
 };

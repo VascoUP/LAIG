@@ -1,5 +1,5 @@
-function Client(){
-  console.log("Starting Otrio ...");
+function Client(message){
+  console.log(message);
 }
 
 Client.prototype.constructor = Client;

@@ -27,6 +27,8 @@ function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1,
     this.gameState = GameState.Player1;
     this.gameSequence = new GameSequence();
 
+    this.currMove = new GameMove( this.player1 );
+
 	this.material = new CGFappearance(this.scene);
 };
 
@@ -51,7 +53,7 @@ Game.prototype.setTexCoords = function(length_t, length_s){
  */
 
 Game.prototype.getCurrPlayer = function() {
-     var player;
+    var player;
     switch(this.gameState) {
         case GameState.Player1:
             player = this.player1;
@@ -67,63 +69,61 @@ Game.prototype.getCurrPlayer = function() {
 }
 
 Game.prototype.changeState = function() {
-        switch( this.gameState ) {
-            case GameState.Player1:
-                this.gameState = GameState.Player2;
-                break;
-            case GameState.Player2:
-                this.gameState = GameState.Player1;
-                break;
-            default:
-                return;
-        }
+    switch( this.gameState ) {
+        case GameState.Player1:
+            this.gameState = GameState.Player2;
+            break;
+        case GameState.Player2:
+            this.gameState = GameState.Player1;
+            break;
+        default:
+            return;
+    }
 
-        //The one that is in the state ChooseTile changes to the state Wait
-        //The other changes from the state Wait to ChoosePiece
-        this.player1.changeState();
-        this.player2.changeState();
+    //The one that is in the state ChooseTile changes to the state Wait
+    //The other changes from the state Wait to ChoosePiece
+    this.player1.changeState();
+    this.player2.changeState();
+
+    this.currMove.player = this.getCurrPlayer();
 }
 
-Game.prototype.confirmTile = function(obj, player) {
-    //Check if selected tile is the same as the one that was confirmed
-    if( obj.id == this.gameBoard.selectedTile.id ) {
-        this.gameSequence.makeMove(player, player.selectedPiece, player.selectedTile, this.gameBoard.selectedTile);
+Game.prototype.undoMove = function() {
+    this.gameSequence.undoMove(this.currMove.player);
+}
 
-        player.placedPiece();
+
+Game.prototype.pickObj = function(obj) {
+    if( this.currMove.player.state == PlayerState.TileConfirmation)
+        this.confirmTile(obj)
+    else if( this.currMove.player.state == PlayerState.ChooseTile )
+        this.chooseTile(obj);
+    else
+        if( this.currMove.player.pickPiece(obj, this.currMove) )
+            this.currMove.player.changeState();
+}
+
+Game.prototype.confirmTile = function(obj) {
+    //Check if selected tile is the same as the one that was confirmed
+    if( obj.id == this.currMove.tileDst.id ) {
+        this.gameSequence.makeMove(this.currMove);
         this.changeState();
+
     //If the tile is not the same then go back to choosing a tile
     } else
-        player.state = PlayerState.ChooseTile;
+        this.currMove.player.state = PlayerState.ChooseTile;
+
     //Either way the game board shouldn't end this function with a selected tile
     this.gameBoard.selectTile(null);
 
 }
 
-Game.prototype.chooseTile = function(tile, player) {
-    console.debug(tile);
+Game.prototype.chooseTile = function(tile) {
     this.gameBoard.selectTile(tile);
-    player.changeState();
+    this.currMove.player.changeState();
+    this.currMove.tileDst = tile;
 }
 
-Game.prototype.pickObj = function(obj) {
-    var player = this.getCurrPlayer();
-    if( player == null ) //For debug purposes if a bug comes up
-        throw new Error("Game is corrupted");
-
-    if( player.state == PlayerState.TileConfirmation) {
-        this.confirmTile(obj, player)
-    } else if( player.state == PlayerState.ChooseTile ) {
-        this.chooseTile(obj, player);
-    } else {
-        if( player.pickObj(obj) )
-            player.changeState();
-    }
-}
-
-Game.prototype.undoMove = function() {
-    var player = this.getCurrPlayer();
-    this.gameSequence.undoMove(player);
-}
 
 
 /**

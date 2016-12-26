@@ -19,3 +19,7 @@ GameMove.prototype.undoMove = function() {
 GameMove.prototype.show = function() {
     console.log("Piece: " + this.piece.id + " - From: " + this.tileSrc.id + " - To: " + this.tileDst.id);
 }
+
+GameMove.prototype.copy = function( ) {
+    return new GameMove(this.player, this.piece, this.tileSrc, this.tileDst);
+}

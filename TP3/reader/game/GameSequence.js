@@ -2,10 +2,10 @@ function GameSequence() {
     this.sequence = [];
 }
 
-GameSequence.prototype.makeMove = function(player, piece, tileSrc, tileDst) {
-    var move = new GameMove(player, piece, tileSrc, tileDst);
-    move.makeMove();
-    this.sequence.push( move );
+GameSequence.prototype.makeMove = function(move) {
+    var m = move.copy();
+    m.makeMove();
+    this.sequence.push( m );
 }
 
 GameSequence.prototype.undoMove = function(player) {
@@ -32,6 +32,7 @@ GameSequence.prototype.undoMoves = function(n) {
 }
 
 GameSequence.prototype.show = function() {
-    for( var i = 0; i <= this.sequence.length; i++ )
+    console.debug(this.sequence);
+    for( var i = 0; i < this.sequence.length; i++ )
         this.sequence[i].show();
 }

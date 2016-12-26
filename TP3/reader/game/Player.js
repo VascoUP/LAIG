@@ -5,9 +5,6 @@ function Player(scene, id, state, coords, materialBox, materialPieces) {
     this.id = id;
 
     this.pieces = new AuxiliarBoard(scene, coords, materialBox, materialPieces);
-
-    this.selectedPiece = null;
-    this.selectedTile = null;
 };
 
 
@@ -36,36 +33,31 @@ Player.prototype.changeState = function() {
     }
 }
 
-Player.prototype.choosePiece = function (piece) {
-    this.selectedPiece = piece;
-    piece.selected = true;
-    
-    this.selectedTile = this.pieces.getTilePiece(piece.id);
+
+Player.prototype.pickPiece = function(piece, move) {
+    if( this.state == PlayerState.ChoosePiece )
+        return this.choosePiece(piece, move);
+    else if( this.state == PlayerState.PieceConfirmation )
+        return this.confirmPiece(piece, move);
+}
+
+Player.prototype.choosePiece = function (piece, move) {
+    move.piece = piece;
+    move.piece.selected = true;
+    move.tileSrc = this.pieces.getTilePiece(piece.id);
+
     return true;
 }
 
-Player.prototype.confirmPiece = function (piece) {
+Player.prototype.confirmPiece = function (piece, move) {
+    move.piece.selected = false;
+
     //Second click should be on the wanted piece
     //If it's not then revert to the first state
-    if( this.selectedPiece.id != piece.id ) {
+    if( move.piece.id != piece.id ) {
         this.state = PlayerState.ChoosePiece;
-        this.selectedPiece.selected = false;
-        this.selectedPiece = null;
-        this.selectedTile = null;
         return false;
     }
-    this.selectedPiece.selected = false;
+
     return true;
-}
-
-Player.prototype.pickObj = function(piece) {
-    if( this.state == PlayerState.ChoosePiece )
-        return this.choosePiece(piece);
-    else if( this.state == PlayerState.PieceConfirmation )
-        return this.confirmPiece(piece);
-}
-
-Player.prototype.placedPiece = function() {
-    this.selectedPiece = null;
-    this.selectedTile = null;
 }

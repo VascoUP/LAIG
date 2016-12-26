@@ -17,7 +17,6 @@ function GameBoard(scene, material) {
     this.material.setTexture(new CGFtexture(this.scene, "resources/purty_wood.png"));
 
     this.init();
-    this.selectedTile = null;
 };
 
 GameBoard.prototype = Object.create(CGFnurbsObject.prototype);
@@ -67,7 +66,6 @@ GameBoard.prototype.selectTile = function(tile) {
         this.board.sV = Math.floor((tile.id - 1) / numTilesBoard);
         this.board.sU = (tile.id - 1) - (this.board.sV * numTilesBoard);
     }
-    this.selectedTile = tile;
 }
 
 

@@ -1,4 +1,5 @@
-function GameMove(piece, tileSrc, tileDst) {
+function GameMove(player, piece, tileSrc, tileDst) {
+    this.player = player;
     this.piece = piece;
     this.tileDst = tileDst;
     this.tileSrc = tileSrc;

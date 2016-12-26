@@ -87,7 +87,7 @@ Game.prototype.changeState = function() {
 Game.prototype.confirmTile = function(obj, player) {
     //Check if selected tile is the same as the one that was confirmed
     if( obj.id == this.gameBoard.selectedTile.id ) {
-        this.gameSequence.makeMove(player.selectedPiece, player.selectedTile, this.gameBoard.selectedTile);
+        this.gameSequence.makeMove(player, player.selectedPiece, player.selectedTile, this.gameBoard.selectedTile);
 
         player.placedPiece();
         this.changeState();
@@ -121,7 +121,8 @@ Game.prototype.pickObj = function(obj) {
 }
 
 Game.prototype.undoMove = function() {
-    this.gameSequence.undoMove();
+    var player = this.getCurrPlayer();
+    this.gameSequence.undoMove(player);
 }
 
 

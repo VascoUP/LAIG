@@ -17,7 +17,7 @@ void main() {
     vec2 texturePosition = (vertex.xy + 0.5) / 4;
 
     vec4 normal;
-    normal.xyz = normalize(texture2D(normaMap, texturePosition).xyz * 2.0f - 1.0f);
+    normal.xyz = normalize(texture2D(normaMap, texturePosition).xyz * 2.0 - 1.0);
     normal.a = 1.0;
     
 	gl_Position = normal * uMVMatrix * vertex;

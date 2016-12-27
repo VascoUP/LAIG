@@ -43,6 +43,10 @@ Game.prototype.update = function( dSec ){
         this.currMove.piece.animation.update(dSec);
         if( this.currMove.piece.animation.lastFrame )
             this.currMove.player.changeState();
+    } else if( this.currMove.player.state == PlayerState.PieceToTile ) {
+        this.currMove.piece.animation.update(dSec);
+        if( this.currMove.piece.animation.lastFrame )
+            this.changeState();
     }
 }
 
@@ -74,6 +78,8 @@ Game.prototype.getCurrPlayer = function() {
 }
 
 Game.prototype.changeState = function() {
+    this.currMove.moveTile();
+
     switch( this.gameState ) {
         case GameState.Player1:
             this.gameState = GameState.Player2;
@@ -115,12 +121,13 @@ Game.prototype.pickObj = function(obj) {
 Game.prototype.confirmTile = function(obj) {
     //Check if selected tile is the same as the one that was confirmed
     if( obj.id == this.currMove.tileDst.id ) {
-        this.gameSequence.makeMove(this.currMove);
+        //this.gameSequence.makeMove(this.currMove);
 
-        this.currMove.piece = null;
-        this.changeState();
+        this.currMove.player.changeState();
+        //this.changeState();
 
         //Add animation to the piece
+        this.pieceToBoard();
 
     //If the tile is not the same then go back to choosing a tile
     } else
@@ -146,25 +153,25 @@ Game.prototype.animatePiece = function () {
     newCenter[2] += 1.0;
     newCoords[2] += 1.0;
 
-    var c1 = new AnimationInfo(oldCenter, oldCoords);
-    var c2 = new AnimationInfo(newCenter, newCoords);
+    var c1 = new AnimationInfo(oldCenter, oldCoords, [1, 1, 1]);
+    var c2 = new AnimationInfo(newCenter, newCoords, [1, 1, 1]);
 
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.25);
 }
 
 Game.prototype.pieceToBoard = function () {
-    var oldCenter = this.pieces.coords.slice();
+    var oldCenter = this.currMove.player.pieces.coords.slice();
     oldCenter[2] += 1.0;
     
-    var newCenter = [0, 0, 0];
+    var newCenter = [0, 0, 0.2];
 
-    var oldCoords = this.pieces.getTileCoords(this.currMove.tileSrc.id);
+    var oldCoords = this.currMove.player.pieces.getTileCoords(this.currMove.tileSrc.id);
     oldCoords[2] += 1.0;
 
     var newCoords = this.gameBoard.getTileCoords(this.currMove.tileDst.id);
 
-    var c1 = new AnimationInfo(oldCenter, oldCoords);
-    var c2 = new AnimationInfo(newCenter, newCoords);
+    var c1 = new AnimationInfo(oldCenter, oldCoords, [1, 1, 1]);
+    var c2 = new AnimationInfo(newCenter, newCoords, [sizeTile, sizeTile, 1]);
 
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 1);
 }

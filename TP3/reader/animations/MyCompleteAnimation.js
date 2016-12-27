@@ -63,10 +63,6 @@ CompleteAnimation.prototype.calcAngles = function(i) {
     this.rotateXY = this.angleXY;
     this.rotateYZ = this.angleYZ;
     this.rotateXZ = this.angleXZ;
-
-    console.debug(this.rotateXY);
-    console.debug(this.rotateYZ);
-    console.debug(this.rotateXZ);
 }
 
 CompleteAnimation.prototype.calcInit = function() {
@@ -109,7 +105,14 @@ CompleteAnimation.prototype.calcInit = function() {
 
     this.center = this.control_points[0].center.slice();
     this.radius = this.control_points[0].radius;
-    this.dRadius = this.control_points[1].radius - this.control_points[0].radius;
+    this.scale = this.control_points[0].scale.slice();
+
+    this.dRadius = this.control_points[1].radius - this.radius;
+
+    this.dScale = [];
+    this.dScale.push(this.control_points[1].scale[0] - this.scale[0]);
+    this.dScale.push(this.control_points[1].scale[1] - this.scale[1]);
+    this.dScale.push(this.control_points[1].scale[2] - this.scale[2]);
 
     this.calcAngles(0);
 }
@@ -124,6 +127,7 @@ CompleteAnimation.prototype.update = function( dTime ) {
         this.lastFrame = true;
 
         this.center = this.control_points[this.control_points.length - 1].center.slice();
+        this.scale = this.control_points[this.control_points.length - 1].scale.slice();
         this.radius = this.control_points[this.control_points.length - 1].radius;
         this.angleXY = this.control_points[this.control_points.length - 1].angleXY;
         this.angleYZ = this.control_points[this.control_points.length - 1].angleYZ;
@@ -156,6 +160,15 @@ CompleteAnimation.prototype.update = function( dTime ) {
         this.radius = this.control_points[i].radius + (
                         this.time * this.dRadius / this.duration
                         );
+        this.scale[0] = this.control_points[i].scale[0] + (
+                        this.time * this.dScale[0] / this.duration
+                        );
+        this.scale[1] = this.control_points[i].scale[1] + (
+                        this.time * this.dScale[1] / this.duration
+                        );
+        this.scale[2] = this.control_points[i].scale[2] + (
+                        this.time * this.dScale[2] / this.duration
+                        );
         this.rotateXY = this.angleXY + (
                         this.time * this.dAngXY / this.duration
                         );
@@ -174,7 +187,7 @@ CompleteAnimation.prototype.display = function(scene, obj) {
     scene.pushMatrix();
     // Translate center
     scene.translate(this.center[0], this.center[1], this.center[2]);
-
+    
     scene.pushMatrix();
     //Apply transformations relative to the center of the animation
     if(this.rotateXZ) 
@@ -186,13 +199,16 @@ CompleteAnimation.prototype.display = function(scene, obj) {
 
     scene.translate(this.radius, 0, 0);
 
-    scene.pushMatrix();    
-    if(this.rotateXZ) 
+    scene.pushMatrix();
+
+    /*if(this.rotateXZ) 
         scene.rotate(-this.rotateXZ, 0, 1, 0);
     if(this.rotateYZ)
-        scene.rotate(-this.rotateYZ, 1, 0, 0);
+        scene.rotate(-this.rotateYZ, 1, 0, 0);*/
     if(this.rotateXY)
         scene.rotate(-this.rotateXY, 0, 0, 1);
+
+    scene.scale(this.scale[0], this.scale[1], this.scale[2]);
     obj.display();
     scene.popMatrix();
 

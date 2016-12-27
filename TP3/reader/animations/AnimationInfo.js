@@ -1,6 +1,7 @@
-function AnimationInfo ( center, objCoords ) {
+function AnimationInfo ( center, objCoords, scale ) {
     this.center = center;
     this.objCoords = objCoords;
+    this.scale = scale;
 
     this.calcInit();
 }
@@ -20,7 +21,7 @@ AnimationInfo.prototype.calcInit = function () {
         }
 
         if(this.objCoords[0] == this.center[0]) {    
-            consol.debug(3);
+            console.debug(3);
             this.angleXY = Math.PI / 2;
         }
         else {

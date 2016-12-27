@@ -1,6 +1,7 @@
 const numTilesBoard = 3;
 
 const scaleXY = 4;
+const sizeTile = scaleXY / 3; 
 
 
 /**
@@ -66,11 +67,11 @@ GameBoard.prototype.setTexCoords = function(length_t, length_s){
 }
 
 GameBoard.prototype.getTilePos = function(id) {
-    var fId = this.tiles[0].id;
+    var fId = this.tiles[0][0].id;
     var dId = id - fId;
 
-    var line = Math.floor(dId / numTilesAux);
-    var column = dId - (line * numTilesAux);
+    var line = Math.floor(dId / numTilesBoard);
+    var column = dId - (line * numTilesBoard);
 
     return [column, line];
 }
@@ -78,10 +79,10 @@ GameBoard.prototype.getTilePos = function(id) {
 GameBoard.prototype.getTileCoords = function(id) {
     var pos = this.getTilePos(id);
 
-    var x = pos[0] - 2;
-    var y = pos[1] - 2;
+    var x = pos[0] * sizeTile - sizeTile;
+    var y = pos[1] * sizeTile - sizeTile;
 
-    return [x, y];
+    return [x, y, 0.2];
 }
 
 

@@ -28,11 +28,11 @@ Player.prototype.changeState = function() {
             this.state = PlayerState.TileConfirmation;
             break;
         case PlayerState.TileConfirmation:
+            this.state = PlayerState.PieceToTile;
+            break;
+        case PlayerState.PieceToTile:
             this.state = PlayerState.Wait;
             break;
-        /*case PlayerState.PieceToTile:
-            this.state = PlayerState.Wait;
-            break;*/
         case PlayerState.Wait:
             this.state = PlayerState.ChoosePiece;
             break;
@@ -64,7 +64,7 @@ Player.prototype.confirmPiece = function (piece, move) {
         this.state = PlayerState.ChoosePiece;
         return false;
     }
-    
+
     move.removePiece();
 
     return true;

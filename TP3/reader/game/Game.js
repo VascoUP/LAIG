@@ -28,6 +28,7 @@ function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1,
     this.gameSequence = new GameSequence();
 
     this.currMove = new GameMove( this.player1 );
+	this.otrio = new Otrio();
 
 	this.material = new CGFappearance(this.scene);
 };

@@ -1,89 +1,61 @@
-function Otrio(scene){
+function Otrio(){
 
 	this.client = new Client("Starting Otrio ...");
-	this.scene = scene;
-	this.game = this.scene.game;
 	
 	this.nextCicle = null;
 	this.computerPlaying = null;
 	this.endGame = null;
 	this.playerTurn = null;
 	
-	this.getNextCicle();
-	
 }
 
 Otrio.prototype.constructor = Otrio;
 
-Otrio.prototype.getCoordinates = function(){
-	var tile = this.game.gameBoard.selectedTile;
-	
-	this.board.line = Math.floor((tile.id - 1) / numTilesBoard); //numTilesBoard = 3
-    this.board.column = (tile.id - 1) - (this.board.line * numTilesBoard);
-}
-
-Otrio.prototype.getInformation = function(){
-	this.board = this.game.gameBoard;
-	this.player = this.game.getCurrPlayer;
-	var playerLetter;
-	if(this.player.id == 1){
-		this.playerLetter = 'r';
-		this.mV = this.player.pieces;
-		this.mv2 = this.game.player2.pieces;
-	}
-	else{
-		this.playerLetter = 'b';
-		this.mV = this.player.pieces;
-		this.mv2 = this.game.player1.pieces;
-	}
-	
-	var piece = this.player.selectedPiece.type; 
-	this.pair = (this.playerLetter, piece);
-}
-
-Otrio.prototype.getNextCicle = function(){
+Otrio.prototype.getNextCicle = function(board, line, column, pair, player, mv, mv2){
 	var otrio = this;
-	this.getCoordinates();
-	this.getInformation();
-	this.client.getPrologRequest("next_cicle(" + this.board + "," + this.board.line + "," + this.board.column + "," +  this.pair + "," 
-								+ this.playerLetter + "," + this.mv + "," + this.mv2 + ")", function(data) {
+	this.client.getPrologRequest("next_cicle(" + board + "," + line + "," + column + "," +  pair + "," 
+								+ player + "," + mv + "," + mv2 + ")", function(data) {
 		otrio.nextCicle = data.target.responseText;
 		console.debug(otrio.nextCicle);
 	});
+	
+	return otrio.nextCicle;
 }
 
-Otrio.prototype.getComputerMode = function(difficulty) {
+Otrio.prototype.getComputerMode = function(difficulty, board, mV, player, mV2) {
 	var otrio = this;
-	this.getInformation();
-	this.client.getPrologRequest("e_play(" + difficulty + "," + this.board + "," + this.mV + "," + this.playerLetter
-								+ "," + this.mv2 + ")", function(data) {
+	this.client.getPrologRequest("e_play(" + difficulty + "," + board + "," + mV + "," + player
+								+ "," + mv2 + ")", function(data) {
 		otrio.computerPlaying = data.target.responseText;
 	});
+	
+	return otrio.computerPlaying;
 }
 
-Otrio.prototype.getEndGame = function() {
+Otrio.prototype.getEndGame = function(board, player) {
 	var otrio = this;
-	this.getInformation();
-	this.client.getPrologRequest("end_game(" + this.board + "," + this.playerLetter + ")", function(data) {
+	this.client.getPrologRequest("end_game(" + board + "," + player + ")", function(data) {
 		otrio.endGame = data.target.responseText;
 	});
+	
+	return otrio.endGame;
 }
 
-Otrio.prototype.getPlayerTurn = function() {
+Otrio.prototype.getPlayerTurn = function(board, player, modeGame1, modeGame2) {
 	var otrio = this;
-	//change_turn(Replay, Board, Player, NPlayer, NMv1, NMv2, ModeGame1, ModeGame2)
 	
-	this.getInformation();
+	var arrayNextCicle = this.getNextCicle();
 	
-	var nextPlayer;
-	if(this.playerLetter == 'r')
-		nextPlayer = 'b';
-	else
-		nextPlayer = 'r';
+	var replay = arrayNextCicle[4];
+	var nPlayer = arrayNextCicle[1];
+	var nMV1 = arrayNextCicle[2];
+	var nMV2 = arrayNextCicle[3];
 	
-	this.client.getPrologRequest("change_turn(" + this.replay + "," + this.board + "," + this.playerLetter + "," +
-									nextPlayer + "," + this.mV + "," + this.mV2 + "," + this.mode1 + "," +
-									this.mode2 + ")", function(data) {
+	this.client.getPrologRequest("change_turn(" + replay + "," + board + "," + player + "," +
+									nPlayer + "," + nMV1 + "," + nMV2 + "," + modeGame1 + "," +
+									modeGame2 + ")", function(data) {
 		otrio.playerTurn = data.target.responseText;
 	});
+	
+	return otrio.playerTurn;
 }

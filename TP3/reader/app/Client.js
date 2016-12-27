@@ -1,11 +1,11 @@
 function Client(message){
-  console.log(message);
+	console.log(message);
 }
 
 Client.prototype.constructor = Client;
 
 Client.prototype.getPrologRequest = function(requestString, onSuccess, onError, port){
-	var requestPort = port || 8081 ;
+	var requestPort = port || 8081;
 	var request = new XMLHttpRequest();
 	request.open('GET', 'http://localhost:'+ requestPort + '/' + requestString, true);
 

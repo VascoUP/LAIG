@@ -1,5 +1,7 @@
 const numTilesBoard = 3;
 
+const scaleXY = 4;
+
 
 /**
  *  GameBoard's constructor
@@ -109,7 +111,8 @@ GameBoard.prototype.generalDisplay = function( func ){
     
     this.scene.pushMatrix();
 
-    this.scene.scale(4, 4, 1);
+    this.scene.scale(scaleXY, scaleXY, 1);
+    this.scene.translate(0, 0, 0.2);
 
     if( func == Tile.prototype.display ) {
         this.material.setTexture( this.boardTexture );

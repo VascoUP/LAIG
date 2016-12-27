@@ -74,8 +74,6 @@ CompleteAnimation.prototype.calcInit = function() {
     var control_points_vel = [];
 
     for( var i = 0; i < this.control_points.length; i++ ) {
-        this.control_points[i].calcInit();
-
         if( i > 0 ) {
             var d = Math.sqrt( Math.pow( this.control_points[i].center[0] - this.control_points[i-1].center[0], 2) + 
                         Math.pow( this.control_points[i].center[1] - this.control_points[i-1].center[1], 2) +

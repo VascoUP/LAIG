@@ -96,8 +96,6 @@ AuxiliarBoard.prototype.generalDisplay = function( func ){
     this.scene.scale(this.scale[0], this.scale[1], this.scale[2]);
     
     this.scene.pushMatrix();
-    
-    this.scene.translate(0, 0, -0.2);
         
     if( func == Tile.prototype.display ) {
         this.scene.pushMatrix();

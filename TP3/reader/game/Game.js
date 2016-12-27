@@ -39,11 +39,11 @@ Game.prototype.logHistory = function() {
 
 //Updates the Game
 Game.prototype.update = function( dSec ){
-    /*if( this.currMove.player.state == PlayerState.PieceAnimation ) {
+    if( this.currMove.player.state == PlayerState.PieceAnimation ) {
         this.currMove.piece.animation.update(dSec);
         if( this.currMove.piece.animation.lastFrame )
             this.currMove.player.changeState();
-    }*/
+    }
 }
 
 //Sets the texture's coordinates (in this case this function does nothing)
@@ -104,8 +104,12 @@ Game.prototype.pickObj = function(obj) {
     else if( this.currMove.player.state == PlayerState.ChooseTile )
         this.chooseTile(obj);
     else
-        if( this.currMove.player.pickPiece(obj, this.currMove) )
+        if( this.currMove.player.pickPiece(obj, this.currMove) ) {
             this.currMove.player.changeState();
+
+            if( this.currMove.player.state == PlayerState.PieceAnimation )
+                this.animatePiece();
+        }
 }
 
 Game.prototype.confirmTile = function(obj) {
@@ -115,6 +119,8 @@ Game.prototype.confirmTile = function(obj) {
 
         this.currMove.piece = null;
         this.changeState();
+
+        //Add animation to the piece
 
     //If the tile is not the same then go back to choosing a tile
     } else
@@ -130,6 +136,38 @@ Game.prototype.chooseTile = function(tile) {
     this.currMove.tileDst = tile;
 }
 
+Game.prototype.animatePiece = function () {
+    var oldCenter = this.currMove.player.pieces.coords.slice();
+    var newCenter = this.currMove.player.pieces.coords.slice();
+
+    var oldCoords = this.currMove.player.pieces.getTileCoords(this.currMove.tileSrc.id);
+    var newCoords = this.currMove.player.pieces.getTileCoords(this.currMove.tileSrc.id);
+
+    newCenter[2] += 1.0;
+    newCoords[2] += 1.0;
+
+    var c1 = new AnimationInfo(oldCenter, oldCoords);
+    var c2 = new AnimationInfo(newCenter, newCoords);
+
+    this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.25);
+}
+
+Game.prototype.pieceToBoard = function () {
+    var oldCenter = this.pieces.coords.slice();
+    oldCenter[2] += 1.0;
+    
+    var newCenter = [0, 0, 0];
+
+    var oldCoords = this.pieces.getTileCoords(this.currMove.tileSrc.id);
+    oldCoords[2] += 1.0;
+
+    var newCoords = this.gameBoard.getTileCoords(this.currMove.tileDst.id);
+
+    var c1 = new AnimationInfo(oldCenter, oldCoords);
+    var c2 = new AnimationInfo(newCenter, newCoords);
+
+    this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 1);
+}
 
 
 /**
@@ -138,7 +176,7 @@ Game.prototype.chooseTile = function(tile) {
 
 Game.prototype.registerForPick = function() {
     this.scene.pushMatrix();
-    this.scene.translate(0, 0, 0.2);
+
     if( this.player1.state == PlayerState.ChoosePiece || 
         this.player1.state == PlayerState.PieceConfirmation )
         this.player1.pieces.registerForPick();
@@ -152,13 +190,14 @@ Game.prototype.registerForPick = function() {
             this.player2.state == PlayerState.ChooseTile || 
             this.player2.state == PlayerState.TileConfirmation )
         this.gameBoard.registerForPick();
+
     this.scene.popMatrix();
 }
 
 //Displays the Game with the respective shader
 Game.prototype.display = function(){
     this.scene.pushMatrix();
-    this.scene.translate(0, 0, 0.2);
+
     this.gameBoard.display();
     this.player1.pieces.display();
     this.player2.pieces.display();

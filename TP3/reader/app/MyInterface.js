@@ -40,6 +40,18 @@ MyInterface.prototype.updateLights = function(nLights, lights, lightType) {
 	}
 }
 
+MyInterface.prototype.createMenu = function(){/*
+	// Cada um vai adicionar um controlo ao menu
+	
+	this.gui.add(this.scene.game,'play').name("Play Game");
+	this.gui.add(this.scene.game,'undo').name("Undo");
+	this.gui.add(this.scene.game,'redo').name("Redo");
+	this.gui.add(this.scene.game,'quit').name("Quit");
+	this.gui.add(this.scene.game, 'mode', [ 'Human vs Human', 'Human vs Computer', 'Computer vs Computer']).listen();
+
+	this.gui.add(this.scene,'changeScene').name("Change Scene");*/
+};
+
 MyInterface.prototype.processKeyboard = function(event) {
 	
 	CGFinterface.prototype.processKeyUp.call(this, event);

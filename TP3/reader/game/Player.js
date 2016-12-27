@@ -65,11 +65,21 @@ Player.prototype.confirmPiece = function (piece, move) {
         return false;
     }
 
+    var oldCenter = this.pieces.coords.slice();
+    var newCenter = this.pieces.coords.slice();
+
     var oldCoords = this.pieces.getTileCoords(move.tileSrc.id);
-    console.debug(oldCoords);
-    var newCoords = oldCoords.slice();
+    var newCoords = this.pieces.getTileCoords(move.tileSrc.id);
+
+    newCenter[2] += 1.0;
     newCoords[2] += 1.0;
-    move.piece.animation = new LinearAnimation("mvPiece", [oldCoords, newCoords], 0.25);
+
+    var c1 = new AnimationInfo(oldCenter, oldCoords);
+    console.debug(c1);
+    var c2 = new AnimationInfo(newCenter, newCoords);
+    console.debug(c2);
+
+    move.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 1);
     move.removePiece();
 
     return true;

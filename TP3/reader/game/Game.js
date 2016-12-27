@@ -39,13 +39,11 @@ Game.prototype.logHistory = function() {
 
 //Updates the Game
 Game.prototype.update = function( dSec ){
-    if( this.currMove.player.state == PlayerState.PieceAnimation ) {
+    /*if( this.currMove.player.state == PlayerState.PieceAnimation ) {
         this.currMove.piece.animation.update(dSec);
-        if( this.currMove.piece.animation.lastFrame ) {
+        if( this.currMove.piece.animation.lastFrame )
             this.currMove.player.changeState();
-            console.debug(this.currMove.player.state);
-        }
-    }
+    }*/
 }
 
 //Sets the texture's coordinates (in this case this function does nothing)

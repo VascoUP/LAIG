@@ -101,26 +101,28 @@ Piece.prototype.generalDisplay = function( func ){
     if( func == Piece.prototype.registerForPick ) {
         //Register for pick
         this.scene.registerForPick(this.id, this);
+
+        this.obj.display();
+
     } else {
         //Display
         if( this.selected )
 	        activateShaders = true;
 
-        if( this.animation != null ) {
-            console.debug("Has animation");
-            this.animation.transform(this.scene);
-        }
+        if( activateShaders )
+            this.scene.setActiveShader(this.shader);
 
         this.material.apply();
+
+        if( this.animation != null )
+            this.animation.display(this.scene, this.obj);
+        else
+            this.obj.display();
+
+        if( activateShaders )
+            this.scene.setActiveShader(this.scene.defaultShader);
+
     }
-
-    if( activateShaders )
-        this.scene.setActiveShader(this.shader);
-
-    this.obj.display();
-
-    if( activateShaders )
-	    this.scene.setActiveShader(this.scene.defaultShader);
 
     this.scene.popMatrix();
 }

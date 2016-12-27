@@ -45,14 +45,6 @@ XMLscene.prototype.init = function (application) {
     this.material2.setSpecular(0, 0.3, 0.3, 1);    
     this.material2.setShininess(10);
 
-	this.material3 = new CGFappearance(this);
-    this.material3.setAmbient(0.1, 0.1, 0.1, 1);
-    this.material3.setDiffuse(0.6, 0.6, 0.61, 1);
-    this.material3.setSpecular(0.4, 0.4, 0.4, 1);    
-    this.material3.setShininess(1);
-    this.material3.setTextureWrap('REPEAT', 'REPEAT');
-    this.material3.setTexture(new CGFtexture(this, "resources/rough_wood.png"));
-
     this.currentCamera = 0;
 
 	var loaded = false;

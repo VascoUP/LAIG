@@ -50,6 +50,11 @@ MyInterface.prototype.createMenu = function(){/*
 	this.gui.add(this.scene.game, 'mode', [ 'Human vs Human', 'Human vs Computer', 'Computer vs Computer']).listen();
 
 	this.gui.add(this.scene,'changeScene').name("Change Scene");*/
+	
+	// Como criar um butão
+	/*var obj = { add:function(){ console.log("clicked") }};
+
+	this.gui.add(obj,'add');*/
 };
 
 MyInterface.prototype.processKeyboard = function(event) {

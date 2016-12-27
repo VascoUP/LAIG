@@ -3,8 +3,8 @@ const medium = 1;
 const large = 2;
 
 const smallCoord = 0.1;
-const mediumCoord = 0.225;
-const largeCoord = 0.35;
+const mediumCoord = 0.25;
+const largeCoord = 0.4;
 
 const selectedColor = [0.2, 0.5, 1, 1];
 
@@ -27,7 +27,9 @@ function Piece(scene, type, material) {
     this.material = material;
 
     this.selected = false;
-    pieceId++;	
+    pieceId++;
+
+    this.animation = null;
     
     //Creates the shader
 	this.shader = new CGFshader(this.scene.gl, "shaders/piece.vert", "shaders/piece.frag");
@@ -100,9 +102,15 @@ Piece.prototype.generalDisplay = function( func ){
         //Register for pick
         this.scene.registerForPick(this.id, this);
     } else {
-        //Display 
+        //Display
         if( this.selected )
 	        activateShaders = true;
+
+        if( this.animation != null ) {
+            console.debug("Has animation");
+            this.animation.transform(this.scene);
+        }
+
         this.material.apply();
     }
 

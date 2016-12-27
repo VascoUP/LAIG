@@ -14,17 +14,28 @@ function GameBoard(scene, material) {
 
     this.material = material;
     this.material.setTextureWrap('REPEAT', 'REPEAT');
-    this.material.setTexture(new CGFtexture(this.scene, "resources/purty_wood.png"));
+
+    this.boardTexture = new CGFtexture(this.scene, "resources/board_texutre.png");
+    this.generalTexture = new CGFtexture(this.scene, "resources/purty_wood.png");
+    //this.normalMap = new CGFtexture(this.scene, "resources/normal_maps/board_texutre.png");
+
+    //Creates the shader
+	//this.shader = new CGFshader(this.scene.gl, "shaders/normal_map-vertex.glsl", "shaders/normal_map-fragment.glsl");
+	//this.setValuesShader();
 
     this.init();
-};
+};	
+
+/*GameBoard.prototype.setValuesShader = function() {
+	this.shader.setUniformsValues({normalMap: this.normalMap});
+}*/
 
 GameBoard.prototype = Object.create(CGFnurbsObject.prototype);
 GameBoard.prototype.constructor = GameBoard;
 
 GameBoard.prototype.init = function() {
     this.tiles = [];
-    var x = -1, y = -1, z = 0;
+    var x = -1, y = -1, z = 0.05;
     for( var i = 0; i < numTilesBoard; i++ ) {
         var line = [];
         for( var j = 0; j < numTilesBoard; j++ ) {
@@ -50,6 +61,25 @@ GameBoard.prototype.update = function( dSec ){
 //Sets the texture's coordinates (in this case this function does nothing)
 GameBoard.prototype.setTexCoords = function(length_t, length_s){
 	
+}
+
+GameBoard.prototype.getTilePos = function(id) {
+    var fId = this.tiles[0].id;
+    var dId = id - fId;
+
+    var line = Math.floor(dId / numTilesAux);
+    var column = dId - (line * numTilesAux);
+
+    return [column, line];
+}
+
+GameBoard.prototype.getTileCoords = function(id) {
+    var pos = this.getTilePos(id);
+
+    var x = pos[0] - 2;
+    var y = pos[1] - 2;
+
+    return [x, y];
 }
 
 
@@ -82,8 +112,10 @@ GameBoard.prototype.generalDisplay = function( func ){
     this.scene.scale(4, 4, 1);
 
     if( func == Tile.prototype.display ) {
+        this.material.setTexture( this.boardTexture );
         this.material.apply();
         this.board.display();
+        this.material.setTexture( this.generalTexture );
         this.material.apply();
         this.support.display();
     }

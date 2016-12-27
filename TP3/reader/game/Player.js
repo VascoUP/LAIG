@@ -19,6 +19,9 @@ Player.prototype.changeState = function() {
             this.state = PlayerState.PieceConfirmation;
             break;
         case PlayerState.PieceConfirmation:
+            this.state = PlayerState.PieceAnimation;
+            break;
+        case PlayerState.PieceAnimation:
             this.state = PlayerState.ChooseTile;
             break;
         case PlayerState.ChooseTile:
@@ -27,6 +30,9 @@ Player.prototype.changeState = function() {
         case PlayerState.TileConfirmation:
             this.state = PlayerState.Wait;
             break;
+        /*case PlayerState.PieceToTile:
+            this.state = PlayerState.Wait;
+            break;*/
         case PlayerState.Wait:
             this.state = PlayerState.ChoosePiece;
             break;
@@ -58,6 +64,13 @@ Player.prototype.confirmPiece = function (piece, move) {
         this.state = PlayerState.ChoosePiece;
         return false;
     }
+
+    var oldCoords = this.pieces.getTileCoords(move.tileSrc.id);
+    console.debug(oldCoords);
+    var newCoords = oldCoords.slice();
+    newCoords[2] += 1.0;
+    move.piece.animation = new LinearAnimation("mvPiece", [oldCoords, newCoords], 0.25);
+    move.removePiece();
 
     return true;
 }

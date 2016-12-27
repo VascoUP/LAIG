@@ -5,9 +5,13 @@ function GameMove(player, piece, tileSrc, tileDst) {
     this.tileSrc = tileSrc;
 }
 
-GameMove.prototype.makeMove = function() {
-    if( !this.tileDst.addPiece(this.piece) )
+GameMove.prototype.moveTile = function() {
+    if( !this.tileDst.addPiece(this.piece) ) 
         throw new Error("Couldn't place piece on that position");
+    this.piece.animation = null;
+}
+
+GameMove.prototype.removePiece = function() {
     this.tileSrc.removePiece(this.piece);
 }
 

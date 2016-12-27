@@ -4,7 +4,8 @@ function GameSequence() {
 
 GameSequence.prototype.makeMove = function(move) {
     var m = move.copy();
-    m.makeMove();
+    m.moveTile();
+    m.removePiece();
     this.sequence.push( m );
 }
 

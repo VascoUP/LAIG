@@ -6,7 +6,7 @@
 
         <perspective id="x1" near="0.4" far="500" angle="10">
 
-            <from x="-5" y="-5" z="5" />
+            <from x="-5" y="-5" z="70" />
             <to x="0" y="0" z="0" />
 
         </perspective>

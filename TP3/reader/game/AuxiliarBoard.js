@@ -10,7 +10,8 @@ function AuxiliarBoard(scene, coords, materialBoard, materialPieces) {
 
     // Transformation
     this.coords = coords;
-    this.rotation = -Math.PI / 4;
+    this.rotation = 0;
+    //this.rotation = -Math.PI / 4;
     this.scale = [1, 1, 1];
 
     this.material = materialBoard;
@@ -44,6 +45,19 @@ AuxiliarBoard.prototype.update = function( dSec ){
 //Sets the texture's coordinates (in this case this function does nothing)
 AuxiliarBoard.prototype.setTexCoords = function(length_t, length_s){
 	
+}
+
+AuxiliarBoard.prototype.getTileCoords = function(id) {
+    var fId = this.tiles[0].id;
+    var dId = id - fId;
+
+    var line = Math.floor(dId / (numTilesAux / 2));
+    var column = dId - (line * numTilesAux / 2);
+
+    var x = column - 1 + this.coords[0];
+    var y = line - 0.5 + this.coords[1];
+
+    return [x, y, this.coords[2]];
 }
 
 

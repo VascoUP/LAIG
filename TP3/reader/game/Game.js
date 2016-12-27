@@ -1,16 +1,16 @@
 var GameState = {    
     Player1 : 0,
-    P1ToP2 : 1,
-    Player2 : 2,
-    P2ToP1 : 3
+    Player2 : 1,
 };
 
 var PlayerState = {
     ChoosePiece : 0,
     PieceConfirmation : 1,
-    ChooseTile : 2,
-    TileConfirmation : 3,
-    Wait : 4
+    PieceAnimation: 2,
+    ChooseTile : 3,
+    TileConfirmation : 4,
+    PieceToTile: 5,
+    Wait : 6
 };
 
 
@@ -21,8 +21,8 @@ function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1,
     this.scene = scene;
 
     this.gameBoard = new GameBoard(scene, materialBoard);
-    this.player1 = new Player(scene, 1, PlayerState.ChoosePiece, [-4, -4, 0], materialBox1, materialPieces1);
-    this.player2 = new Player(scene, 2, PlayerState.Wait, [4, 4, 0], materialBox2, materialPieces2);
+    this.player1 = new Player(scene, 1, PlayerState.ChoosePiece, [0, -5, 0], materialBox1, materialPieces1);
+    this.player2 = new Player(scene, 2, PlayerState.Wait, [0, 5, 0], materialBox2, materialPieces2);
 
     this.gameState = GameState.Player1;
     this.gameSequence = new GameSequence();
@@ -38,7 +38,13 @@ Game.prototype.logHistory = function() {
 
 //Updates the Game
 Game.prototype.update = function( dSec ){
-
+    if( this.currMove.player.state == PlayerState.PieceAnimation ) {
+        this.currMove.piece.animation.update(dSec);
+        if( this.currMove.piece.animation.lastFrame ) {
+            this.currMove.player.changeState();
+            console.debug(this.currMove.player.state);
+        }
+    }
 }
 
 //Sets the texture's coordinates (in this case this function does nothing)
@@ -107,6 +113,8 @@ Game.prototype.confirmTile = function(obj) {
     //Check if selected tile is the same as the one that was confirmed
     if( obj.id == this.currMove.tileDst.id ) {
         this.gameSequence.makeMove(this.currMove);
+
+        this.currMove.piece = null;
         this.changeState();
 
     //If the tile is not the same then go back to choosing a tile
@@ -115,7 +123,6 @@ Game.prototype.confirmTile = function(obj) {
 
     //Either way the game board shouldn't end this function with a selected tile
     this.gameBoard.selectTile(null);
-
 }
 
 Game.prototype.chooseTile = function(tile) {
@@ -156,5 +163,9 @@ Game.prototype.display = function(){
     this.gameBoard.display();
     this.player1.pieces.display();
     this.player2.pieces.display();
+    
+    if( this.currMove.piece && this.currMove.piece.animation != null )
+            this.currMove.piece.display();
+
     this.scene.popMatrix();
 }

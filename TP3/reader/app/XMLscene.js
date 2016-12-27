@@ -178,6 +178,7 @@ XMLscene.prototype.changeMaterial = function() {
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
 	//this.graph.graph.update(dSec);
+	this.game.update(dSec);
 }
 
 XMLscene.prototype.logPicking = function ()	{

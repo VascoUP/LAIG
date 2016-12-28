@@ -41,6 +41,17 @@ Game.prototype.logHistory = function() {
 Game.prototype.update = function( dSec ){
     if( !this.otrio.waitingResponse && this.otrio.responseReceived )
         this.receivedResponse();
+    else if( this.otrio.waitingResponse ) {
+        this.otrio.counter += dSec;
+        if( this.otrio.counter > MaxSeconds ) {    
+            this.responseReceived = false;
+            this.waitingResponse = false;
+            console.error("Connection Timeout");
+
+            // Try again
+            this.request();
+        }
+    }
 
     if( this.currMove.player.state == PlayerState.PieceAnimation ) {
         this.currMove.piece.animation.update(dSec);
@@ -126,7 +137,7 @@ Game.prototype.confirmTile = function(obj) {
 
     //Check if selected tile is the same as the one that was confirmed
     if( obj.id == this.currMove.tileDst.id ) {
-        this.player_move();
+        this.request();
 
     //If the tile is not the same then go back to choosing a tile
     } else {
@@ -180,7 +191,6 @@ Game.prototype.confirmTileResponse = function() {
     response = response.substring(1, response.length - 1);
     response = response.split(',');
 
-    this.otrio.responseReceived = false;
 
     for( var i = 0; i < response.length; i++ ) {
         var values = response[i].split(':');
@@ -212,13 +222,14 @@ Game.prototype.confirmTileResponse = function() {
 }
 
 Game.prototype.receivedResponse = function() {
-    console.debug("Message received");
-
     switch( this.currMove.player.state ) {
         case PlayerState.TileConfirmation:
             this.confirmTileResponse();
             break;
     }
+    
+    this.otrio.responseReceived = false;
+    this.otrio.counter = 0;
 }
 
 
@@ -226,6 +237,14 @@ Game.prototype.receivedResponse = function() {
 /**
  *  PROLOG VALIDATIONS
  */
+
+Game.prototype.request = function() {
+    switch( this.currMove.player.state ) {
+        case PlayerState.TileConfirmation:
+            this.player_move();
+            break;
+    }
+}
 
 Game.prototype.player_move = function() {
     // Get board as array and stringify it to send it to the prolog predicate

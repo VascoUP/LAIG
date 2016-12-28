@@ -1,4 +1,7 @@
+const MaxSeconds = 5;
+
 function Otrio(){
+	this.counter = 0;
 	this.responseReceived = false;
 	this.waitingResponse = false;
 	this.client = new Client("Starting Otrio ...");

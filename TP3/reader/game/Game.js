@@ -221,13 +221,61 @@ Game.prototype.confirmTileResponse = function() {
     this.gameBoard.selectTile(null);
 }
 
+Game.prototype.confirmChoosePieceResponse = function() {
+    // Received response
+    var response = this.otrio.computerPlaying;
+    response = response.substring(1, response.length - 1);
+    response = response.split(',');
+
+    for( var i = 0; i < response.length; i++ ) {
+        var values = response[i].split(':');
+	
+        switch(values[0]) {
+			case 'Line':
+				var line = values[1];
+				break;
+			case 'Column':
+				var column = values[1];
+				break;
+			case 'Piece':
+				var piece = values[1];
+				break;
+            case 'NPlayer':
+                var newPlayer = values[1];
+                break;
+            case 'Rep':
+                var replay = values[1];
+                break;
+        }
+    }
+
+    //PUT COMPUTER MODE FUNCTIONS
+}
+
+Game.prototype.confirmChangeTurnResponse = function() {
+    // Received response
+    var response = this.otrio.playerTurn;
+    response = response.substring(1, response.length - 1);
+    response = response.split(',');
+
+	var values = response[0].split(':');
+	var newPlayer = values[1];
+
+    //PUT CHANGE TURN FUNCTIONS
+}
+
 Game.prototype.receivedResponse = function() {
     switch( this.currMove.player.state ) {
         case PlayerState.TileConfirmation:
             this.confirmTileResponse();
             break;
+		case PlayerState.ChoosePiece:
+			this.confirmChoosePieceResponse();
+			break;
+		case PlayerState.ChangeTurn:
+			this.confirmChangeTurnResponse();
+			break;
     }
-    
     this.otrio.responseReceived = false;
     this.otrio.counter = 0;
 }
@@ -241,12 +289,22 @@ Game.prototype.receivedResponse = function() {
 Game.prototype.request = function() {
     switch( this.currMove.player.state ) {
         case PlayerState.TileConfirmation:
-            this.player_move();
+            this.playerMove();
             break;
+		case PlayerState.ChoosePiece:
+			if(player.Computer == true)
+				this.computerMove();
+			break;
+		case PlayerState.EndGame:
+			this.endGame();
+			break;
+		case PlayerState.ChangeTurn:
+			this.changeTurn();
+			break;
     }
 }
 
-Game.prototype.player_move = function() {
+Game.prototype.playerMove = function() {
     // Get board as array and stringify it to send it to the prolog predicate
     var board = this.gameBoard.boardToString();
 
@@ -269,8 +327,48 @@ Game.prototype.player_move = function() {
     this.otrio.getPlayerMove(board, line, column, pair, player, mv, mv2);
 }
 
+Game.prototype.computerMove = function(difficulty) {
+	// Get board as array and stringify it to send it to the prolog predicate
+    var board = this.gameBoard.boardToString();
+  
+    var player;
+    if( this.currMove.player.id == 1 )
+        player = 'r';
+    else
+        player = 'b';
 
+    var mv = this.currMove.player.pieces.piecesToString();
+    var player2 = this.currMove.player.id == 1 ? this.player2 : this.player1;
+    var mv2 = player2.pieces.piecesToString();
 
+    this.otrio.getComputerMove(difficulty, board, mv, player, mv2);
+}
+
+Game.prototype.endGame = function() {
+	// Get board as array and stringify it to send it to the prolog predicate
+    var board = this.gameBoard.boardToString();
+  
+    var player;
+    if( this.currMove.player.id == 1 )
+        player = 'r';
+    else
+        player = 'b';
+
+    this.otrio.getEndGame(board, player);
+}
+
+Game.prototype.changeTurn = function() {
+    // Get board as array and stringify it to send it to the prolog predicate
+    var board = this.gameBoard.boardToString();
+
+    var player;
+    if( this.currMove.player.id == 1 )
+        player = 'r';
+    else
+        player = 'b';
+	
+	//TO CONCLUDE
+}
 
 /**
  *  DISPLAY FUNCTIONS

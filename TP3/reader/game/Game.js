@@ -22,21 +22,84 @@ var PlayerState = {
 function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1, materialPieces2) {
     this.scene = scene;
 
-    this.gameBoard = new GameBoard(scene, materialBoard);
-    this.player1 = new Player(scene, 1, PlayerState.ChoosePiece, [0, -5, 0], materialBox1, materialPieces1);
-    this.player2 = new Player(scene, 2, PlayerState.Wait, [0, 5, 0], materialBox2, materialPieces2);
+    this.materialBoard = materialBoard;
+    this.materialBox1 = materialBox1;
+    this.materialBox2 = materialBox2;
+    this.materialPieces1 = materialPieces1;
+    this.materialPieces2 = materialPieces2;
 
-    this.gameState = GameState.Menu;
-    this.gameSequence = new GameSequence();
-
-    this.currMove = new GameMove( this.player1 );
-	this.otrio = new Otrio();
+    this.init();
 
     this.cameraAnimation = null;
 
 	this.material = new CGFappearance(this.scene);
 };
 
+Game.prototype.init = function() {
+    this.gameBoard = new GameBoard(this.scene, this.materialBoard);
+    this.player1 = new Player(this.scene, 1, PlayerState.ChoosePiece, [0, -5, 0], this.materialBox1, this.materialPieces1);
+    this.player2 = new Player(this.scene, 2, PlayerState.Wait, [0, 5, 0], this.materialBox2, this.materialPieces2);
+
+    this.gameState = GameState.Menu;
+    this.gameSequence = new GameSequence();
+
+    this.currMove = new GameMove( this.player1 );
+	this.otrio = new Otrio();
+};
+
+
+
+/**
+ *  INTERFACE
+ */
+Game.prototype.changeButtons = function() {
+    switch(this.gameState) {
+        case GameState.Menu:
+            this.menuButtons();
+            break;
+        case GameState.Player1:
+        case GameState.Player2:
+            this.gameButtons();
+            break;
+    }
+}
+
+Game.prototype.menuButtons = function() {
+    if( this.undoButton )
+        this.scene.myInterface.gui.remove(this.undoButton);
+    if( this.redoButton )
+        this.scene.myInterface.gui.remove(this.redoButton);
+    if( this.quitButton )
+        this.scene.myInterface.gui.remove(this.quitButton);
+
+    this.playButton = this.scene.myInterface.gui.add(this.scene.game,'play').name("Play Game");
+
+    var mode = { mode:function(){ console.log("clicked") }};
+    this.gameModes = this.scene.myInterface.gui.add(mode, 'mode',
+                                                    { 'Human vs Human' : 0, 'Human vs PC': 1, 'PC vs PC': 2 }
+                                                ).name("Game Mode");
+}
+
+Game.prototype.gameButtons = function() {
+    if( this.playButton )
+        this.scene.myInterface.gui.remove(this.playButton);
+    if( this.gameModes )
+        this.scene.myInterface.gui.remove(this.gameModes);
+
+
+	var undo = { undo:function(){ console.log("clicked") }};
+	var redo = { redo:function(){ console.log("clicked") }};
+
+    this.undoButton = this.scene.myInterface.gui.add(undo,'undo').name("Undo");
+    this.redoButton = this.scene.myInterface.gui.add(redo,'redo').name("Redo");
+    this.quitButton = this.scene.myInterface.gui.add(this.scene.game,'quit').name("Quit");
+}
+
+
+
+/**
+ *  MISC
+ */
 Game.prototype.logHistory = function() {
     this.gameSequence.show();
 }
@@ -81,21 +144,25 @@ Game.prototype.update = function( dSec ){
             this.changeState();
         }
     }
-}
+};
 
 //Sets the texture's coordinates (in this case this function does nothing)
 Game.prototype.setTexCoords = function(length_t, length_s){
-}
+};
 
 
 
 /**
  *  GAME MECHANICS
  */
-
 Game.prototype.play = function () {
     this.changeState();
-}
+};
+
+Game.prototype.quit = function () {
+    this.init();
+    this.changeButtons();
+};
 
 Game.prototype.getCurrPlayer = function() {
     var player;
@@ -111,12 +178,13 @@ Game.prototype.getCurrPlayer = function() {
             break;
     }
     return player;
-}
+};
 
 Game.prototype.changeState = function() {
     switch( this.gameState ) {
         case GameState.Menu:
             this.gameState = GameState.Player1;
+            this.changeButtons();
             break;
         case GameState.Player1:
             this.gameState = GameState.Player2;
@@ -138,15 +206,16 @@ Game.prototype.changeState = function() {
             break;
         case GameState.EndGame:
             this.gameState = GameState.Menu;
+            this.changeButtons();
             break;
         default:
             return;
     }
-}
+};
 
 Game.prototype.undoMove = function() {
     this.gameSequence.undoMove(this.currMove.player);
-}
+};
 
 Game.prototype.pickObj = function(obj) {
     if( this.currMove.player.state == PlayerState.TileConfirmation)
@@ -160,7 +229,7 @@ Game.prototype.pickObj = function(obj) {
             if( this.currMove.player.state == PlayerState.PieceAnimation )
                 this.animatePiece();
         }
-}
+};
 
 Game.prototype.confirmTile = function(obj) {
     if( this.otrio.waitingResponse || this.otrio.receivedResponse )
@@ -175,13 +244,13 @@ Game.prototype.confirmTile = function(obj) {
         this.currMove.player.state = PlayerState.ChooseTile;
         this.gameBoard.selectTile(null);
     }
-}
+};
 
 Game.prototype.chooseTile = function(tile) {
     this.gameBoard.selectTile(tile);
     this.currMove.player.changeState();
     this.currMove.tileDst = tile;
-}
+};
 
 Game.prototype.animatePiece = function () {
     var oldCenter = this.currMove.player.pieces.coords.slice();
@@ -197,7 +266,7 @@ Game.prototype.animatePiece = function () {
     var c2 = new AnimationInfo(newCenter, newCoords, [1, 1, 1]);
 
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.25);
-}
+};
 
 Game.prototype.pieceToBoard = function () {
     var oldCenter = this.currMove.player.pieces.coords.slice();
@@ -214,7 +283,7 @@ Game.prototype.pieceToBoard = function () {
     var c2 = new AnimationInfo(newCenter, newCoords, [sizeTile, sizeTile, 1]);
 
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.75);
-}
+};
 
 Game.prototype.confirmTileResponse = function() {
     // Received response
@@ -247,7 +316,7 @@ Game.prototype.confirmTileResponse = function() {
 
     //Either way the game board shouldn't end this function with a selected tile
     this.gameBoard.selectTile(null);
-}
+};
 
 Game.prototype.confirmChoosePieceResponse = function() {
     // Received response
@@ -278,7 +347,7 @@ Game.prototype.confirmChoosePieceResponse = function() {
     }
 
     //PUT COMPUTER MODE FUNCTIONS
-}
+};
 
 Game.prototype.confirmChangeTurnResponse = function() {
     // Received response
@@ -290,7 +359,7 @@ Game.prototype.confirmChangeTurnResponse = function() {
 	var newPlayer = values[1];
 
     //PUT CHANGE TURN FUNCTIONS
-}
+};
 
 Game.prototype.receivedResponse = function() {
     switch( this.currMove.player.state ) {
@@ -306,14 +375,13 @@ Game.prototype.receivedResponse = function() {
     }
     this.otrio.responseReceived = false;
     this.otrio.counter = 0;
-}
+};
 
 
 
 /**
  *  PROLOG VALIDATIONS
  */
-
 Game.prototype.request = function() {
     switch( this.currMove.player.state ) {
         case PlayerState.TileConfirmation:
@@ -330,7 +398,7 @@ Game.prototype.request = function() {
 			this.changeTurn();
 			break;
     }
-}
+};
 
 Game.prototype.playerMove = function() {
     // Get board as array and stringify it to send it to the prolog predicate
@@ -353,7 +421,7 @@ Game.prototype.playerMove = function() {
     var mv2 = player2.pieces.piecesToString();
 
     this.otrio.getPlayerMove(board, line, column, pair, player, mv, mv2);
-}
+};
 
 Game.prototype.computerMove = function(difficulty) {
 	// Get board as array and stringify it to send it to the prolog predicate
@@ -370,7 +438,7 @@ Game.prototype.computerMove = function(difficulty) {
     var mv2 = player2.pieces.piecesToString();
 
     this.otrio.getComputerMove(difficulty, board, mv, player, mv2);
-}
+};
 
 Game.prototype.endGame = function() {
 	// Get board as array and stringify it to send it to the prolog predicate
@@ -383,7 +451,7 @@ Game.prototype.endGame = function() {
         player = 'b';
 
     this.otrio.getEndGame(board, player);
-}
+};
 
 Game.prototype.changeTurn = function() {
     // Get board as array and stringify it to send it to the prolog predicate
@@ -396,12 +464,13 @@ Game.prototype.changeTurn = function() {
         player = 'b';
 	
 	//TO CONCLUDE
-}
+};
+
+
 
 /**
  *  DISPLAY FUNCTIONS
  */
-
 Game.prototype.registerForPick = function() {
     if( this.gameState == GameState.EndGame || this.gameState == GameState.Menu )
         return ;
@@ -424,7 +493,7 @@ Game.prototype.registerForPick = function() {
         this.gameBoard.registerForPick();
 
     this.scene.popMatrix();
-}
+};
 
 //Displays the Game with the respective shader
 Game.prototype.display = function(){
@@ -439,4 +508,4 @@ Game.prototype.display = function(){
             this.currMove.piece.display();
 
     this.scene.popMatrix();
-}
+};

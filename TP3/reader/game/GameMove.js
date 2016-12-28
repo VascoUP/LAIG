@@ -15,9 +15,17 @@ GameMove.prototype.removePiece = function() {
     this.tileSrc.removePiece(this.piece);
 }
 
-GameMove.prototype.undoMove = function() {
-    this.tileSrc.addPiece(this.piece);
+GameMove.prototype.revertTile = function() {
     this.tileDst.removePiece(this.piece);
+}
+
+GameMove.prototype.revertPiece = function() {
+    this.tileSrc.addPiece(this.piece);
+}
+
+GameMove.prototype.undoMove = function() {
+    this.revertPiece();
+    this.revertTile();
 }
 
 GameMove.prototype.show = function() {

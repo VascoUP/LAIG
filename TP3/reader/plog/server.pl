@@ -108,8 +108,9 @@ parse_input(handshake, handshake).
 parse_input(quit, goodbye).
 
 % Player's turn
-parse_input(next_cicle(Board, Line, Column, Pair, Player, Mv, Mv2), [BoardC, PlayerC, MvC, Mv2C, Replay]) :-
-	next_cicle(Board, Line, Column, Pair, BoardC, Player, PlayerC, Mv, Mv2, MvC, Mv2C, Replay).
+parse_input(next_cicle(Board, Line, Column, Pair, Player, Mv, Mv2), 
+			['NPlayer' : PlayerC, 'Rep' : Replay]) :-
+	next_cicle(Board, Line, Column, Pair, _, Player, PlayerC, Mv, Mv2, _, _, Replay).
 
 % Computer's turn
 parse_input(e_play(Difficulty, Board, Mv, Player, Mv2), [Line, Column, Pair, BoardC, PlayerC, MvC, Mv2C, Replay]) :-

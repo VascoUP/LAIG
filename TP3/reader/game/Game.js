@@ -39,6 +39,9 @@ Game.prototype.logHistory = function() {
 
 //Updates the Game
 Game.prototype.update = function( dSec ){
+    if( !this.otrio.waitingResponse && this.otrio.responseReceived )
+        this.receivedResponse();
+
     if( this.currMove.player.state == PlayerState.PieceAnimation ) {
         this.currMove.piece.animation.update(dSec);
         if( this.currMove.piece.animation.lastFrame )
@@ -103,10 +106,9 @@ Game.prototype.undoMove = function() {
     this.gameSequence.undoMove(this.currMove.player);
 }
 
-
 Game.prototype.pickObj = function(obj) {
     if( this.currMove.player.state == PlayerState.TileConfirmation)
-        this.confirmTile(obj)
+        this.confirmTile(obj);
     else if( this.currMove.player.state == PlayerState.ChooseTile )
         this.chooseTile(obj);
     else
@@ -119,22 +121,18 @@ Game.prototype.pickObj = function(obj) {
 }
 
 Game.prototype.confirmTile = function(obj) {
+    if( this.otrio.waitingResponse || this.otrio.receivedResponse )
+        return ;
+
     //Check if selected tile is the same as the one that was confirmed
     if( obj.id == this.currMove.tileDst.id ) {
-        //this.gameSequence.makeMove(this.currMove);
-
-        this.currMove.player.changeState();
-        //this.changeState();
-
-        //Add animation to the piece
-        this.pieceToBoard();
+        this.player_move();
 
     //If the tile is not the same then go back to choosing a tile
-    } else
+    } else {
         this.currMove.player.state = PlayerState.ChooseTile;
-
-    //Either way the game board shouldn't end this function with a selected tile
-    this.gameBoard.selectTile(null);
+        this.gameBoard.selectTile(null);
+    }
 }
 
 Game.prototype.chooseTile = function(tile) {
@@ -173,8 +171,86 @@ Game.prototype.pieceToBoard = function () {
     var c1 = new AnimationInfo(oldCenter, oldCoords, [1, 1, 1]);
     var c2 = new AnimationInfo(newCenter, newCoords, [sizeTile, sizeTile, 1]);
 
-    this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 1);
+    this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.75);
 }
+
+Game.prototype.confirmTileResponse = function() {
+    // Received response
+    var response = this.otrio.playerMove;
+    response = response.substring(1, response.length - 1);
+    response = response.split(',');
+
+    this.otrio.responseReceived = false;
+
+    for( var i = 0; i < response.length; i++ ) {
+        var values = response[i].split(':');
+
+        switch(values[0]) {
+            case 'NPlayer':
+                var newPlayer = values[1];
+                break;
+            case 'Rep':
+                var replay = values[1];
+                break;
+        }
+    }
+
+    console.debug(newPlayer + " - " + this.currMove.player.getColor());
+    console.debug(replay + " - " + "true");
+
+    if( newPlayer == this.currMove.player.getColor() || replay == "true" )
+        this.currMove.player.state = PlayerState.ChooseTile;
+    else {
+        this.currMove.player.changeState();
+
+        //Add animation to the piece
+        this.pieceToBoard();
+    }
+
+    //Either way the game board shouldn't end this function with a selected tile
+    this.gameBoard.selectTile(null);
+}
+
+Game.prototype.receivedResponse = function() {
+    console.debug("Message received");
+
+    switch( this.currMove.player.state ) {
+        case PlayerState.TileConfirmation:
+            this.confirmTileResponse();
+            break;
+    }
+}
+
+
+
+/**
+ *  PROLOG VALIDATIONS
+ */
+
+Game.prototype.player_move = function() {
+    // Get board as array and stringify it to send it to the prolog predicate
+    var board = this.gameBoard.boardToString();
+
+    var position = this.gameBoard.getTilePos(this.currMove.tileDst.id);
+    var line = position[1];
+    var column = position[0];
+
+    var pair = this.currMove.piece.pieceToString();
+
+    var player;
+    if( this.currMove.player.id == 1 )
+        player = 'r';
+    else
+        player = 'b';
+
+    var mv = this.currMove.player.pieces.piecesToString();
+    var player2 = this.currMove.player.id == 1 ? this.player2 : this.player1;
+    var mv2 = player2.pieces.piecesToString();
+
+    this.otrio.getPlayerMove(board, line, column, pair, player, mv, mv2);
+}
+
+
 
 
 /**

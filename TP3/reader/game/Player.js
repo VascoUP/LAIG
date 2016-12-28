@@ -7,6 +7,9 @@ function Player(scene, id, state, coords, materialBox, materialPieces) {
     this.pieces = new AuxiliarBoard(scene, coords, materialBox, materialPieces);
 };
 
+Player.prototype.getColor = function() {
+    return this.id == 1 ? 'r' : 'b';
+}
 
 
 /**

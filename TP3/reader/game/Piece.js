@@ -67,6 +67,31 @@ Piece.prototype.getCoord = function() {
     }
 }
 
+Piece.prototype.pieceToString = function() {
+    var t;
+    switch( this.type ) {
+        case small:
+            t = 's';
+            break;
+        case medium:
+            t = 'm';
+            break;
+        case large:
+            t = 'l';
+            break;
+        default:
+            throw new Error("Unkown type for piece");
+    }
+
+    var p;
+    if( this.id <= 18 )
+        p = 'r';
+    else
+        p = 'b';
+
+    return "(" + t + "," + p + ")";
+}
+
 
 
 /**

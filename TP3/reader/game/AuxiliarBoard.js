@@ -81,6 +81,19 @@ AuxiliarBoard.prototype.removePiece = function(piece) {
     return false;
 }
 
+AuxiliarBoard.prototype.piecesToString = function() {
+    var array = [0, 0, 0];
+    for( var i = 0; i < numTilesAux; i++ ) {
+        var tileCount = this.tiles[i].countPieces();
+        array[0] += tileCount[0];   // s
+        array[1] += tileCount[1];   // m
+        array[2] += tileCount[2];   // l
+    }
+
+    var str = '[(' + array[0] + ',s),(' + array[1] + ',m),(' + array[2] + ',l)]';
+    return str;
+}
+
 
 
 /**

@@ -20,18 +20,9 @@ function GameBoard(scene, material) {
 
     this.boardTexture = new CGFtexture(this.scene, "resources/board_texutre.png");
     this.generalTexture = new CGFtexture(this.scene, "resources/purty_wood.png");
-    //this.normalMap = new CGFtexture(this.scene, "resources/normal_maps/board_texutre.png");
-
-    //Creates the shader
-	//this.shader = new CGFshader(this.scene.gl, "shaders/normal_map-vertex.glsl", "shaders/normal_map-fragment.glsl");
-	//this.setValuesShader();
 
     this.init();
 };	
-
-/*GameBoard.prototype.setValuesShader = function() {
-	this.shader.setUniformsValues({normalMap: this.normalMap});
-}*/
 
 GameBoard.prototype = Object.create(CGFnurbsObject.prototype);
 GameBoard.prototype.constructor = GameBoard;
@@ -53,17 +44,14 @@ GameBoard.prototype.init = function() {
 
 //Sets the shader values
 GameBoard.prototype.setValuesShader = function(){
-
 }
 
 //Updates the GameBoard
 GameBoard.prototype.update = function( dSec ){
-
 }
 
 //Sets the texture's coordinates (in this case this function does nothing)
 GameBoard.prototype.setTexCoords = function(length_t, length_s){
-	
 }
 
 GameBoard.prototype.getTilePos = function(id) {
@@ -101,6 +89,27 @@ GameBoard.prototype.selectTile = function(tile) {
     }
 }
 
+GameBoard.prototype.boardToString = function() {
+    var str = '[';
+    for( var i = 0; i < numTilesBoard; i++ ) {
+        var line = '[';
+        for( var j = 0; j < numTilesBoard; j++ ) {
+            var tile = this.tiles[i][j].tileToString();
+            if( j != 0 )
+                line += ',';
+            line += tile;
+        }
+        line += ']';
+
+        if( i != 0 )
+            str += ',';
+        str += line;
+    }
+
+    str += ']';
+    
+    return str;
+}
 
 
 /**

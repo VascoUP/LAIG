@@ -71,6 +71,41 @@ Tile.prototype.removePiece = function(piece) {
     return false;
 }
 
+Tile.prototype.tileToString = function() {
+    var array = ['e', 'e', 'e'];
+    for( var i = 0; i < this.pieces.length; i++ ) {
+        var index;
+        if( this.pieces[i].type == small)
+            index = 0;
+        else if( this.pieces[i].type == medium )
+            index = 1;
+        else
+            index = 2;
+
+        var str = this.pieces[i].pieceToString();
+        array[index] = str;
+    }
+
+    var str = '[' + array[0] + ',' + array[1] + ',' + array[2] + ']';
+    return str;
+}
+
+Tile.prototype.countPieces = function () {
+    var array = [0, 0, 0];
+    for( var i = 0; i < this.pieces.length; i++ ) {
+        var index;
+        if( this.pieces[i].type == small)
+            index = 0;
+        else if( this.pieces[i].type == medium )
+            index = 1;
+        else
+            index = 2;
+
+        array[index] = 1;
+    }
+    return array;
+}
+
 
 
 /**

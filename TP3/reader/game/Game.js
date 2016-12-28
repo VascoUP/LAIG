@@ -91,6 +91,10 @@ Game.prototype.setTexCoords = function(length_t, length_s){
  *  GAME MECHANICS
  */
 
+Game.prototype.play = function () {
+    this.changeState();
+}
+
 Game.prototype.getCurrPlayer = function() {
     var player;
     switch(this.gameState) {
@@ -116,9 +120,17 @@ Game.prototype.changeState = function() {
             break;
         case GameState.Player1:
             this.gameState = GameState.Player2;
+
+            this.player1.changeState();
+            this.player2.changeState();
+
             break;
         case GameState.Player2:
             this.gameState = GameState.Player1;
+
+            this.player1.changeState();
+            this.player2.changeState();
+
             break;
         case GameState.EndGame:
             this.gameState = GameState.Menu;
@@ -126,11 +138,6 @@ Game.prototype.changeState = function() {
         default:
             return;
     }
-
-    //The one that is in the state ChooseTile changes to the state Wait
-    //The other changes from the state Wait to ChoosePiece
-    this.player1.changeState();
-    this.player2.changeState();
 
     this.currMove.player = this.getCurrPlayer();
 }

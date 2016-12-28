@@ -1,6 +1,8 @@
-var GameState = {    
-    Player1 : 0,
-    Player2 : 1,
+var GameState = {
+    Menu : 0,
+    Player1 : 1,
+    Player2 : 2,
+    EndGame : 3
 };
 
 var PlayerState = {
@@ -24,11 +26,13 @@ function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1,
     this.player1 = new Player(scene, 1, PlayerState.ChoosePiece, [0, -5, 0], materialBox1, materialPieces1);
     this.player2 = new Player(scene, 2, PlayerState.Wait, [0, 5, 0], materialBox2, materialPieces2);
 
-    this.gameState = GameState.Player1;
+    this.gameState = GameState.Menu;
     this.gameSequence = new GameSequence();
 
     this.currMove = new GameMove( this.player1 );
 	this.otrio = new Otrio();
+
+    this.cameraAnimation = null;
 
 	this.material = new CGFappearance(this.scene);
 };
@@ -43,9 +47,13 @@ Game.prototype.update = function( dSec ){
         this.receivedResponse();
     else if( this.otrio.waitingResponse ) {
         this.otrio.counter += dSec;
+
         if( this.otrio.counter > MaxSeconds ) {    
+            this.otrio.counter = 0;
+
             this.responseReceived = false;
             this.waitingResponse = false;
+
             console.error("Connection Timeout");
 
             // Try again
@@ -53,7 +61,16 @@ Game.prototype.update = function( dSec ){
         }
     }
 
-    if( this.currMove.player.state == PlayerState.PieceAnimation ) {
+    if( this.gameState == GameState.Menu || this.gameState == GameState.EndGame ) {
+        
+        if( this.cameraAnimation != null ) {
+            this.cameraAnimation.update(dSec);
+            if( this.cameraAnimation.lastFrame )
+                this.cameraAnimation.setRotate([0, 0, 1], Math.PI * 2, 8);
+        } 
+
+    }
+    else if( this.currMove.player.state == PlayerState.PieceAnimation ) {
         this.currMove.piece.animation.update(dSec);
         if( this.currMove.piece.animation.lastFrame )
             this.currMove.player.changeState();
@@ -66,7 +83,6 @@ Game.prototype.update = function( dSec ){
 
 //Sets the texture's coordinates (in this case this function does nothing)
 Game.prototype.setTexCoords = function(length_t, length_s){
-	
 }
 
 
@@ -95,11 +111,17 @@ Game.prototype.changeState = function() {
     this.currMove.moveTile();
 
     switch( this.gameState ) {
+        case GameState.Menu:
+            this.gameState = GameState.Player1;
+            break;
         case GameState.Player1:
             this.gameState = GameState.Player2;
             break;
         case GameState.Player2:
             this.gameState = GameState.Player1;
+            break;
+        case GameState.EndGame:
+            this.gameState = GameState.Menu;
             break;
         default:
             return;
@@ -204,9 +226,6 @@ Game.prototype.confirmTileResponse = function() {
                 break;
         }
     }
-
-    console.debug(newPlayer + " - " + this.currMove.player.getColor());
-    console.debug(replay + " - " + "true");
 
     if( newPlayer == this.currMove.player.getColor() || replay == "true" )
         this.currMove.player.state = PlayerState.ChooseTile;
@@ -375,7 +394,11 @@ Game.prototype.changeTurn = function() {
  */
 
 Game.prototype.registerForPick = function() {
+    if( this.gameState == GameState.EndGame || this.gameState == GameState.Menu )
+        return ;
+
     this.scene.pushMatrix();
+    this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 
     if( this.player1.state == PlayerState.ChoosePiece || 
         this.player1.state == PlayerState.PieceConfirmation )
@@ -397,6 +420,7 @@ Game.prototype.registerForPick = function() {
 //Displays the Game with the respective shader
 Game.prototype.display = function(){
     this.scene.pushMatrix();
+    this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 
     this.gameBoard.display();
     this.player1.pieces.display();

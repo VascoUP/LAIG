@@ -23,14 +23,14 @@ serialInclude(['../lib/CGF.js',
                 'primitives/MyPatch.js', 'primitives/MyPlane.js', 'primitives/MyBoard.js',
                 'primitives/MyGameBoard.js', 'primitives/MyBox.js', 'primitives/MyTable.js',
 
-                'animations/MyAnimation.js', 'animations/MyCompleteAnimation.js', 'animations/AnimationInfo.js',
+                'animations/MyAnimation.js', 'animations/MyCompleteAnimation.js', 
+                'animations/AnimationInfo.js', 'animations/CameraAnimate.js',
                 
                 'game/Game.js', 'game/GameBoard.js', 'game/AuxiliarBoard.js', 
                 'game/Tile.js', 'game/Piece.js', 'game/Player.js', 
                 'game/GameMove.js', 'game/GameSequence.js',
 
-main=function()
-{
+main=function() {
 	// Standard application, scene and interface setup
     var app = new CGFapplication(document.body);
     var myInterface = new MyInterface();

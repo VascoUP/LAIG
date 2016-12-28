@@ -45,9 +45,11 @@ XMLscene.prototype.init = function (application) {
     this.material2.setSpecular(0, 0.3, 0.3, 1);    
     this.material2.setShininess(10);
 
+	this.anim = new ContCircularAnimation(this, [0, 0, 0], 0, 0, Math.PI / 4);
+
     this.currentCamera = 0;
 
-	var loaded = false;
+	this.loaded = false;
 	
 	this.game = new Game(this, this.material, this.material2, this.material1, this.material1, this.material2);
 
@@ -56,7 +58,6 @@ XMLscene.prototype.init = function (application) {
 };
 
 XMLscene.prototype.initLights = function () {
-
 	this.lights[0].setPosition(2, 3, 3, 1);
     this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
     this.lights[0].update();
@@ -75,9 +76,8 @@ XMLscene.prototype.setDefaultAppearance = function () {
 
 // Handler called when the graph is finally loaded. 
 // As loading is asynchronous, this may be called already after the application has started the run loop
-XMLscene.prototype.onGraphLoaded = function () 
-{
-	loaded = true;
+XMLscene.prototype.onGraphLoaded = function () {
+	this.loaded = true;
 	//Set axis length with the correspondent values
 	this.axis = new CGFaxis(this, this.graph.axis_length);
 	this.currentCamera = this.graph.default_view;
@@ -96,6 +96,62 @@ XMLscene.prototype.onGraphLoaded = function ()
 
     for(var i = 0; i < this.graph.nLights; i++)
     	this.lights[i].setVisible(true);
+
+	this.game.cameraAnimation = new CameraAnimate(this.camera);
+	this.game.cameraAnimation.setRotate([0, 1, 0], Math.PI * 2, 8);
+};
+
+XMLscene.prototype.logPicking = function ()	{
+	if (this.pickMode == false) {
+		if (this.pickResults != null && this.pickResults.length > 0) {
+			for (var i=0; i< this.pickResults.length; i++) {
+				var obj = this.pickResults[i][0]; // o objeto seleccionado
+				if (obj) {
+					var customId = this.pickResults[i][1]; // o ID do objeto seleccionado
+					this.game.pickObj(obj);
+				}
+			}
+			this.pickResults.splice(0,this.pickResults.length);
+		}
+	}
+};
+
+
+
+//Changes the cameras
+XMLscene.prototype.changeView = function() {
+	for(var i = 0; i < this.graph.views.length; i++) {
+		if( this.graph.views[i].id == this.currentCamera ) {
+			var indice;
+			if( i == (this.graph.views.length-1) ) {
+				indice = 0;
+				this.currentCamera = this.graph.views[0].id;
+			}
+			
+			else {
+				indice = i + 1;
+				this.currentCamera = this.graph.views[i+1].id;
+			}
+			
+			this.camera = new CGFcamera(this.graph.views[indice].angle, this.graph.views[indice].near, this.graph.views[indice].far, this.graph.views[indice].from , this.graph.views[indice].to);
+			this.myInterface.setActiveCamera(this.camera);
+			break;
+		}
+	}
+}
+
+//Changes the materials
+XMLscene.prototype.changeMaterial = function() {
+	this.graph.graph.changeMaterials();
+};
+
+
+
+XMLscene.prototype.update = function( dTime ) {
+	var dSec = dTime * Math.pow(10, -14);
+	//this.graph.graph.update(dSec);
+	this.game.update(dSec);
+	this.anim.update(dSec);
 };
 
 XMLscene.prototype.display = function () {
@@ -123,6 +179,7 @@ XMLscene.prototype.display = function () {
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it		
 	this.clearPickRegistration();
+
 	if (this.pickMode == false) {
 		if (this.graph.loadedOk) {
 			for(var i = 0; i < this.graph.nLights; i++)
@@ -136,52 +193,3 @@ XMLscene.prototype.display = function () {
 
 	this.logPicking();
 };
-
-//Changes the cameras
-XMLscene.prototype.changeView = function() {
-	for(var i = 0; i < this.graph.views.length; i++) {
-		if( this.graph.views[i].id == this.currentCamera ) {
-			var indice;
-			if( i == (this.graph.views.length-1) ) {
-				indice = 0;
-				this.currentCamera = this.graph.views[0].id;
-			}
-			
-			else {
-				indice = i + 1;
-				this.currentCamera = this.graph.views[i+1].id;
-			}
-			
-			this.camera = new CGFcamera(this.graph.views[indice].angle, this.graph.views[indice].near, this.graph.views[indice].far, this.graph.views[indice].from , this.graph.views[indice].to);
-			this.myInterface.setActiveCamera(this.camera);
-			break;
-		}
-	}
-}
-
-//Changes the materials
-XMLscene.prototype.changeMaterial = function() {
-	this.graph.graph.changeMaterials();
-}
-
-
-XMLscene.prototype.update = function( dTime ) {
-	var dSec = dTime * Math.pow(10, -14);
-	//this.graph.graph.update(dSec);
-	this.game.update(dSec);
-}
-
-XMLscene.prototype.logPicking = function ()	{
-	if (this.pickMode == false) {
-		if (this.pickResults != null && this.pickResults.length > 0) {
-			for (var i=0; i< this.pickResults.length; i++) {
-				var obj = this.pickResults[i][0]; // o objeto seleccionado
-				if (obj) {
-					var customId = this.pickResults[i][1]; // o ID do objeto seleccionado
-					this.game.pickObj(obj);
-				}
-			}
-			this.pickResults.splice(0,this.pickResults.length);
-		}
-	}
-}

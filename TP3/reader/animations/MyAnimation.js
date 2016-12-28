@@ -199,3 +199,60 @@ CircularAnimation.prototype.update = function( dTime ) {
 
     this.rotate = this.rotate_angle < 0 ? ang - Math.PI / 2 : ang + Math.PI / 2;
 }
+
+
+
+/*
+    - CONTINUOUS CIRCULAR ANIMATION -
+*/
+
+var ContCircularAnimation = function( id, center, radius, init_angle, rotate_angle /* per second */ ) {
+    Animation.apply(this, arguments);
+    
+    this.lastFrame = false;
+    this.center = center;
+    this.radius = radius;
+    this.init_angle = init_angle;
+    this.rotate_angle = rotate_angle;
+    this.time = 0;
+
+    this.calcInit();
+};
+
+ContCircularAnimation.prototype = Object.create(Animation.prototype);
+ContCircularAnimation.prototype.constructor = ContCircularAnimation;
+
+//Calculations about the circular animation
+ContCircularAnimation.prototype.calcInit = function() {
+    this.position = this.center.slice();
+
+    //X coord
+    this.position[0] += this.radius * Math.sin(this.init_angle);
+    //Z coord
+    this.position[2] += this.radius * Math.cos(this.init_angle);
+
+    this.rotate = this.init_angle + Math.PI / 2;
+}
+
+//Updates the circular animatipon
+ContCircularAnimation.prototype.update = function( dTime ) {
+    if( this.lastFrame )
+        return;
+
+    var ang;
+    var rotate_ang = this.rotate_angle < 0 ? Math.PI : -Math.PI;
+    this.position = this.center.slice();
+
+    
+    // Given the time, calculate the next point in the trajectory
+    this.time += dTime;
+
+    ang = this.init_angle + this.time * this.rotate_angle;
+    
+    //X coord
+    this.position[0] += this.radius * Math.sin(ang);
+    //Z coord
+    this.position[2] += this.radius * Math.cos(ang);
+
+    this.rotate = this.rotate_angle < 0 ? ang - Math.PI / 2 : ang + Math.PI / 2;
+}

@@ -18,10 +18,6 @@ Otrio.prototype.getPlayerMove = function(board, line, column, pair, player, mv, 
 		otrio.playerMove = data.target.response;
 		otrio.waitingResponse = false;
 		otrio.responseReceived = true;
-
-		console.debug(data);
-		console.debug(otrio.waitingResponse);
-		console.debug(otrio.responseReceived);
 	});
 }
 

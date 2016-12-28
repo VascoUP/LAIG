@@ -19,7 +19,8 @@ MyInterface.prototype.init = function(application) {
 };
 
 MyInterface.prototype.createMenu = function(){
-	var play = { play:function(){ console.log("clicked") }};
+	var interface = this;
+	var play = { play:playGame() }};
 	var mode = { mode:function(){ console.log("clicked") }}
 	var undo = { undo:function(){ console.log("clicked") }};
 	var redo = { redo:function(){ console.log("clicked") }}

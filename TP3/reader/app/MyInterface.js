@@ -19,14 +19,13 @@ MyInterface.prototype.init = function(application) {
 };
 
 MyInterface.prototype.createMenu = function(){
-	var play = { play:function(){ console.log("clicked") }};
-	var mode = { mode:function(){ console.log("clicked") }}
+	var mode = { mode:function(){ console.log("clicked") }};
 	var undo = { undo:function(){ console.log("clicked") }};
-	var redo = { redo:function(){ console.log("clicked") }}
-	var quit = { quit:function(){ console.log("clicked") }}
-	var changeScene = { changeScene:function(){ console.log("clicked") }}
+	var redo = { redo:function(){ console.log("clicked") }};
+	var quit = { quit:function(){ console.log("clicked") }};
+	var changeScene = { changeScene:function(){ console.log("clicked") }};
 	
-	this.gui.add(play,'play').name("Play Game");
+	this.gui.add(this.scene.game,'play').name("Play Game");
 	this.gui.add(mode, 'mode', { 'Human vs Human' : 0, 'Human vs PC': 1, 'PC vs PC': 2 }).name("Game Mode");
 	this.gui.add(undo,'undo').name("Undo");
 	this.gui.add(redo,'redo').name("Redo");

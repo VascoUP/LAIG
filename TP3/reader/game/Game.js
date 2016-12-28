@@ -76,8 +76,10 @@ Game.prototype.update = function( dSec ){
             this.currMove.player.changeState();
     } else if( this.currMove.player.state == PlayerState.PieceToTile ) {
         this.currMove.piece.animation.update(dSec);
-        if( this.currMove.piece.animation.lastFrame )
+        if( this.currMove.piece.animation.lastFrame ) {
+            this.currMove.moveTile();
             this.changeState();
+        }
     }
 }
 
@@ -112,8 +114,6 @@ Game.prototype.getCurrPlayer = function() {
 }
 
 Game.prototype.changeState = function() {
-    this.currMove.moveTile();
-
     switch( this.gameState ) {
         case GameState.Menu:
             this.gameState = GameState.Player1;
@@ -124,12 +124,16 @@ Game.prototype.changeState = function() {
             this.player1.changeState();
             this.player2.changeState();
 
+            this.currMove.player = this.getCurrPlayer();
+
             break;
         case GameState.Player2:
             this.gameState = GameState.Player1;
 
             this.player1.changeState();
             this.player2.changeState();
+
+            this.currMove.player = this.getCurrPlayer();
 
             break;
         case GameState.EndGame:
@@ -138,8 +142,6 @@ Game.prototype.changeState = function() {
         default:
             return;
     }
-
-    this.currMove.player = this.getCurrPlayer();
 }
 
 Game.prototype.undoMove = function() {

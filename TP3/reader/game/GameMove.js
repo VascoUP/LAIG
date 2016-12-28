@@ -26,6 +26,7 @@ GameMove.prototype.revertPiece = function() {
 GameMove.prototype.undoMove = function() {
     this.revertPiece();
     this.revertTile();
+    console.debug("Move Undo");
 }
 
 GameMove.prototype.show = function() {

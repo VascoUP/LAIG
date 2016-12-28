@@ -90,7 +90,7 @@ Game.prototype.gameButtons = function() {
 	var undo = { undo:function(){ console.log("clicked") }};
 	var redo = { redo:function(){ console.log("clicked") }};
 
-    this.undoButton = this.scene.myInterface.gui.add(undo,'undo').name("Undo");
+    this.undoButton = this.scene.myInterface.gui.add(this.scene.game,'undoMove').name("Undo");
     this.redoButton = this.scene.myInterface.gui.add(redo,'redo').name("Redo");
     this.quitButton = this.scene.myInterface.gui.add(this.scene.game,'quit').name("Quit");
 }
@@ -141,6 +141,7 @@ Game.prototype.update = function( dSec ){
         this.currMove.piece.animation.update(dSec);
         if( this.currMove.piece.animation.lastFrame ) {
             this.currMove.moveTile();
+            this.gameSequence.addMove(this.currMove);
             this.changeState();
         }
     }
@@ -214,6 +215,7 @@ Game.prototype.changeState = function() {
 };
 
 Game.prototype.undoMove = function() {
+    console.debug("undo");
     this.gameSequence.undoMove(this.currMove.player);
 };
 

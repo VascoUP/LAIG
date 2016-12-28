@@ -2,10 +2,8 @@ function GameSequence() {
     this.sequence = [];
 }
 
-GameSequence.prototype.makeMove = function(move) {
+GameSequence.prototype.addMove = function(move) {
     var m = move.copy();
-    m.moveTile();
-    m.removePiece();
     this.sequence.push( m );
 }
 
@@ -26,7 +24,7 @@ GameSequence.prototype.undoMoves = function(n) {
     for( var i = 0; i < n; i++ ) {
         if( this.sequence.length == 0 )
             return ;
-
+        console.debug("Sequence Undo");
         this.sequence[this.sequence.length - 1].undoMove();
         this.sequence.pop();
     }

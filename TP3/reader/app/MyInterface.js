@@ -18,30 +18,6 @@ MyInterface.prototype.init = function(application) {
 	return true;
 };
 
-//Updates and creates the lights' interface
-MyInterface.prototype.updateLights = function(nLights, lights, lightType) {
-	var omniLights = this.gui.addFolder( 'Omni Lights' );
-	var spotLights = this.gui.addFolder( 'Spot Lights' );
-	
-	var countOmni = 0, countSpot = 0;
-	
-	for(var i = 0; i < nLights; i++){
-		//Creates the "omni" lights
-		if(lightType[i+1] == 'omni'){
-			countOmni++;
-			var omni = omniLights.addFolder( 'Omni ' + countOmni);
-			omni.add(lights[i], 'enabled');
-		}
-		
-		//Creates the "spot" lights
-		else{
-			countSpot++;
-			var spot = spotLights.addFolder( 'Spot ' + countSpot);
-			spot.add(lights[i], 'enabled');
-		}
-	}
-}
-
 MyInterface.prototype.createMenu = function(){
 	var play = { play:function(){ console.log("clicked") }};
 	var mode = { mode:function(){ console.log("clicked") }}

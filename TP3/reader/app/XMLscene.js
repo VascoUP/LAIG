@@ -96,8 +96,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 
     for(var i = 0; i < this.graph.nLights; i++)
     	this.lights[i].setVisible(true);
-	
-	this.myInterface.updateLights(this.graph.nLights, this.lights, this.graph.lightType);
 };
 
 XMLscene.prototype.display = function () {

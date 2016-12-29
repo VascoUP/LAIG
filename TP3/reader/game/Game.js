@@ -225,6 +225,7 @@ Game.prototype.changeState = function() {
             this.gameState = GameState.CameraToP1;
             break;
         case GameState.Player1:
+			this.endGame();
             this.gameState = GameState.CameraToP2;
 
             this.player1.changeState();
@@ -237,6 +238,7 @@ Game.prototype.changeState = function() {
             this.gameState = GameState.Player2;
             break;
         case GameState.Player2:
+			this.endGame();
             this.gameState = GameState.CameraToP1;
 
             this.player1.changeState();
@@ -474,6 +476,10 @@ Game.prototype.endGame = function() {
         player = 'b';
 
     this.otrio.getEndGame(board, player);
+	if(this.otrio.responseReceived){
+		this.gameState = GameState.EndGame;
+		this.changeState();
+	}
 };
 
 Game.prototype.changeTurn = function() {

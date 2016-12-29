@@ -70,8 +70,6 @@ GameBoard.prototype.getTilePos = function(id) {
     var line = Math.floor(dId / numTilesBoard);
     var column = dId - (line * numTilesBoard);
 
-    console.debug(column + " - " + line + " fID: " + fId + " dId: " + dId);
-
     return [column, line];
 }
 

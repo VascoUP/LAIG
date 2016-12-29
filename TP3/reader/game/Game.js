@@ -307,14 +307,14 @@ Game.prototype.undoMove = function() {
         this.currMove.revertPiece();
         this.currMove.revertTile();
     } else {
-        this.nUndos++;
-        if( this.nUndos > MAX_UNDOS )
-            this.gameSequence.undoMove(this.currMove.player);
+        if( this.nUndos >= MAX_UNDOS )
+            return ;
+        if( this.gameSequence.undoMove(this.currMove.player) )
+            this.nUndos++;
     }
 };
 
 Game.prototype.pickObj = function(obj) {
-    console.debug(this.currMove.player.id);
     if( this.currMove.player.state == PlayerState.TileConfirmation )
         this.confirmTile(obj);
     else if( this.currMove.player.state == PlayerState.ChooseTile )
@@ -434,7 +434,7 @@ Game.prototype.gameCamera = function() {
         this.cameraAnimation.setRotate([0, 0, 1], Math.PI * 2, 8);
 }
 
-Game.prototype.animateCamera = function () {
+Game.prototype.animateCamera = function() {
     if( this.cameraAnimation == null )
         return ;
 
@@ -451,6 +451,13 @@ Game.prototype.animateCamera = function () {
 };
 
 
+
+/**
+ *  SCORE MESSAGES
+ */
+Game.prototype.incrementScore = function() {
+
+}
 
 /**
  *  PROLOG VALIDATIONS

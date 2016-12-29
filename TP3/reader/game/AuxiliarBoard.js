@@ -55,8 +55,6 @@ AuxiliarBoard.prototype.getTileCoords = function(id) {
     var x = column - 1 + this.coords[0];
     var z = line - 0.5 + this.coords[2];
 
-    console.debug(column + " - " + line + " fID: " + fId + " dId: " + dId);
-
     return [x, this.coords[1], z];
 }
 

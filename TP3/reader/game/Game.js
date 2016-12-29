@@ -56,6 +56,7 @@ Game.prototype.init = function() {
  *  INTERFACE
  */
 Game.prototype.changeButtons = function() {
+	console.debug(this.gameState);
     switch(this.gameState) {
         case GameState.Menu:
             this.menuButtons();
@@ -81,6 +82,8 @@ Game.prototype.menuButtons = function() {
     this.gameModes = this.scene.myInterface.gui.add(mode, 'mode',
                                                     { 'Human vs Human' : 0, 'Human vs PC': 1, 'PC vs PC': 2 }
                                                 ).name("Game Mode");
+	var difficulty = { difficulty:function(){ console.log("clicked") }};
+    this.gameDifficulty = this.scene.myInterface.gui.add(difficulty, 'difficulty', {'Easy': 0, 'Hard' : 1}).name("Game Difficulty");
 };
 
 Game.prototype.gameButtons = function() {

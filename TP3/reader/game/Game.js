@@ -95,10 +95,11 @@ Game.prototype.menuButtons = function() {
 Game.prototype.gameButtons = function() {
     if( this.playButton )
         this.scene.myInterface.gui.remove(this.playButton);
-    if( this.gameModes )
-        this.scene.myInterface.gui.remove(this.gameModes);
-
-
+    if( this.modePlayer1 && this.modePlayer2 ){
+		this.scene.myInterface.gui.remove(this.modePlayer1);
+		this.scene.myInterface.gui.remove(this.modePlayer2);
+	}
+        
 	var undo = { undo:function(){ console.log("clicked") }};
 	var redo = { redo:function(){ console.log("clicked") }};
 

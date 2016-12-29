@@ -85,11 +85,10 @@ Game.prototype.menuButtons = function() {
         this.scene.myInterface.gui.remove(this.quitButton);
 
     this.playButton = this.scene.myInterface.gui.add(this.scene.game,'play').name("Play Game");
-
-    var player = { player:function(){ console.log("clicked") }};
-    this.modePlayer1 = this.scene.myInterface.gui.add(player, 'player',
+	
+    this.modePlayer1 = this.scene.myInterface.gui.add(this.scene.game, 'playerMode',
 													{ 'Player' : 0, 'Easy': 1, 'Hard': 2 }).name("Player 1 Mode");
-	this.modePlayer2 = this.scene.myInterface.gui.add(player, 'player',
+	this.modePlayer2 = this.scene.myInterface.gui.add(this.scene.game, 'playerMode',
                                                     { 'Player' : 0, 'Easy': 1, 'Hard': 2 }).name("Player 2 Mode");
 };
 
@@ -197,6 +196,20 @@ Game.prototype.quit = function () {
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 };
+
+Game.prototype.playerMode = function(playerMode){
+	switch(playerMode){
+		case PlayerMode.Player:
+			//Player Mode
+			break;
+		case PlayerMode.Easy:
+			//easy computer
+			break;
+		case PlayerMode.Hard:
+			//hard computer
+			break;
+	}
+}
 
 Game.prototype.getCurrPlayer = function() {
     var player;

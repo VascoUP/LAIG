@@ -1,3 +1,20 @@
+var PlayerState = {
+    ChoosePiece : 0,
+    PieceConfirmation : 1,
+    PieceAnimation: 2,
+    ChooseTile : 3,
+    TileConfirmation : 4,
+    PieceToTile : 5,
+    EndGame : 6, 
+    ChangeTurn : 7, 
+    Wait : 8
+};
+
+var PlayerMode = {
+	Player: 0,	
+	Easy: 1,
+	Hard: 2,
+};
 
 function Player(scene, id, playerMode, state, coords, materialBox, materialPieces) {
     this.scene = scene;
@@ -35,6 +52,12 @@ Player.prototype.changeState = function() {
             this.state = PlayerState.PieceToTile;
             break;
         case PlayerState.PieceToTile:
+            this.state = PlayerState.EndGame;
+            break;
+        case PlayerState.EndGame:
+            this.state = PlayerState.Wait;
+            break;
+        case PlayerState.ChangeTurn:
             this.state = PlayerState.Wait;
             break;
         case PlayerState.Wait:
@@ -42,7 +65,6 @@ Player.prototype.changeState = function() {
             break;
     }
 }
-
 
 Player.prototype.pickPiece = function(piece, move) {
     if( this.state == PlayerState.ChoosePiece )

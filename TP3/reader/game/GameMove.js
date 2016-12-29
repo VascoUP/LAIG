@@ -12,15 +12,21 @@ GameMove.prototype.moveTile = function() {
 }
 
 GameMove.prototype.removePiece = function() {
-    this.tileSrc.removePiece(this.piece);
+    if( this.tileSrc )
+        this.tileSrc.removePiece(this.piece);
+    this.piece.animation = null;
 }
 
 GameMove.prototype.revertTile = function() {
-    this.tileDst.removePiece(this.piece);
+    if( this.tileDst )
+        this.tileDst.removePiece(this.piece);
+    this.piece.animation = null;
 }
 
 GameMove.prototype.revertPiece = function() {
-    this.tileSrc.addPiece(this.piece);
+    if( this.tileSrc )
+        this.tileSrc.addPiece(this.piece);
+    this.piece.animation = null;
 }
 
 GameMove.prototype.undoMove = function() {

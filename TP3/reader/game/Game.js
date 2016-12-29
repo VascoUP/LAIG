@@ -7,6 +7,8 @@ var GameState = {
     EndGame : 5
 };
 
+const MAX_UNDOS = 1;
+
 /**
  *  Game's constructor
  */
@@ -37,6 +39,8 @@ Game.prototype.init = function() {
     this.gameSequence = new GameSequence();
 
     this.currMove = new GameMove( this.player1 );
+
+    this.nUndos = 0;
 };
 
 
@@ -144,17 +148,19 @@ Game.prototype.updateCamera = function (dSec) {
 };
 
 Game.prototype.updateAnimations = function(dSec) {
-    if( this.currMove.player.state == PlayerState.PieceAnimation ) {
+    if( this.currMove.piece && this.currMove.piece.animation ) {
         this.currMove.piece.animation.update(dSec);
-        if( this.currMove.piece.animation.lastFrame )
-            this.changePlayerState();
-    } else if( this.currMove.player.state == PlayerState.PieceToTile ) {
-        this.currMove.piece.animation.update(dSec);
-        if( this.currMove.piece.animation.lastFrame ) {
-            this.currMove.moveTile();
-            this.gameSequence.addMove(this.currMove);
 
-            this.changePlayerState();
+        if( this.currMove.piece.animation.lastFrame ) {
+            if( this.currMove.player.state == PlayerState.PieceAnimation ) 
+                this.changePlayerState();
+
+            else if( this.currMove.player.state == PlayerState.PieceToTile ) {
+                    this.currMove.moveTile();
+                    this.gameSequence.addMove(this.currMove);
+
+                    this.changePlayerState();
+            }
         }
     }
 };
@@ -250,6 +256,7 @@ Game.prototype.changeState = function() {
             this.player2.changeState();
 
             this.currMove.player = this.getCurrPlayer();
+            this.nUndos = 0;
 
             break;
         case GameState.CameraToP2:
@@ -264,6 +271,7 @@ Game.prototype.changeState = function() {
             this.player2.changeState();
 
             this.currMove.player = this.getCurrPlayer();
+            this.nUndos = 0;
 
             break;
         case GameState.CameraToP1:
@@ -289,12 +297,24 @@ Game.prototype.nextMove = function() {
 }
 
 Game.prototype.undoMove = function() {
-    if( this.currMove.player.state >= EndGame )
+    if( this.currMove.player.state > PlayerState.PieceToTile ) {
+        // At this point the player can't undo anything
         return ;
-    this.gameSequence.undoMove(this.currMove.player);
+    } else if( this.currMove.player.state > PlayerState.PieceConfirmation ) {
+        // Undo the current move (deselect piece)
+        this.currMove.player.state = PlayerState.ChoosePiece;
+        this.gameBoard.selectTile(null);
+        this.currMove.revertPiece();
+        this.currMove.revertTile();
+    } else {
+        this.nUndos++;
+        if( this.nUndos > MAX_UNDOS )
+            this.gameSequence.undoMove(this.currMove.player);
+    }
 };
 
 Game.prototype.pickObj = function(obj) {
+    console.debug(this.currMove.player.id);
     if( this.currMove.player.state == PlayerState.TileConfirmation )
         this.confirmTile(obj);
     else if( this.currMove.player.state == PlayerState.ChooseTile )
@@ -638,19 +658,21 @@ Game.prototype.endGameResponse = function() {
     // Received response
     var response = this.otrio.endGame;
     if( response == 'true' ) {
-        this.end();
 
         if( this.currMove.player.id == 1 ) {
             var element = document.getElementById("Player1Score");
+            var score = parseInt(document.getElementById("Player1Score").innerHTML);
         } else {
             var element = document.getElementById("Player2Score");
+            var score = parseInt(document.getElementById("Player2Score").innerHTML);
         }
 
-        var score = parseInt(document.getElementById("Player1Score").innerHTML);
         element.innerHTML = (score+1) + "";
 
         var statusElem = document.getElementById("StatusMessage");
         statusElem.innerHTML = "PLAYER " + this.currMove.player.id + " WON";
+        
+        this.end();
     }
     else 
         this.changeState();

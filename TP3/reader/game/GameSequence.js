@@ -10,7 +10,8 @@ GameSequence.prototype.addMove = function(move) {
 GameSequence.prototype.undoMove = function(player) {
     if( this.sequence.length == 0 )
         return ;
-
+    console.debug(player);
+    console.debug(this.sequence);
     var n = -1;
     for( var i = 0; i < this.sequence.length; i++ ) {
         if( this.sequence[this.sequence.length - i - 1].player.id == player.id )

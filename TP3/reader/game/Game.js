@@ -99,8 +99,7 @@ Game.prototype.gameButtons = function() {
 		this.scene.myInterface.gui.remove(this.modePlayer1);
 		this.scene.myInterface.gui.remove(this.modePlayer2);
 	}
-        
-	var undo = { undo:function(){ console.log("clicked") }};
+	
 	var redo = { redo:function(){ console.log("clicked") }};
 
     this.undoButton = this.scene.myInterface.gui.add(this.scene.game,'undoMove').name("Undo");

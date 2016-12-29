@@ -24,11 +24,11 @@ AuxiliarBoard.prototype.constructor = AuxiliarBoard;
 
 AuxiliarBoard.prototype.init = function(material) {
     this.tiles = [];
-    var x = -1, y = -0.5, z = 0.05;
+    var x = -1, y = 0.15, z = -0.5;
     for( var i = 0; i < numTilesAux; i++ ) {
         if( i == numTilesAux / 2 ) {
             x = -1;
-            y += 1;
+            z += 1;
         }
         var tile = new RoundTile(this.scene, [x, y, z], material);
         tile.fill();
@@ -39,12 +39,10 @@ AuxiliarBoard.prototype.init = function(material) {
 
 //Updates the AuxiliarBoard
 AuxiliarBoard.prototype.update = function( dSec ){
-
 }
 
 //Sets the texture's coordinates (in this case this function does nothing)
 AuxiliarBoard.prototype.setTexCoords = function(length_t, length_s){
-	
 }
 
 AuxiliarBoard.prototype.getTileCoords = function(id) {
@@ -55,9 +53,9 @@ AuxiliarBoard.prototype.getTileCoords = function(id) {
     var column = dId - (line * numTilesAux / 2);
 
     var x = column - 1 + this.coords[0];
-    var y = line - 0.5 + this.coords[1];
+    var z = line - 0.5 + this.coords[2];
 
-    return [x, y, this.coords[2]];
+    return [x, this.coords[1], z];
 }
 
 
@@ -107,14 +105,14 @@ AuxiliarBoard.prototype.generalDisplay = function( func ){
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
     this.scene.rotate(this.rotation, 0, 0, 1);
     this.scene.scale(this.scale[0], this.scale[1], this.scale[2]);
-    
+        
     this.scene.pushMatrix();
         
     if( func == Tile.prototype.display ) {
         this.scene.pushMatrix();
 
         this.material.apply();
-        this.scene.scale(4, 3, 0.5);
+        this.scene.scale(4, 0.5, 3);
         this.box.display();
 
         this.scene.popMatrix();

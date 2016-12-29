@@ -19,6 +19,7 @@ function Piece(scene, type, material) {
     if (this.constructor === Piece) {
       throw new Error("Can't instantiate abstract class!");
     }
+
     CGFobject.call(this,scene);
     this.type = type;
     this.obj = null;
@@ -46,12 +47,10 @@ Piece.prototype.setValuesShader = function(){
 
 //Updates the Piece
 Piece.prototype.update = function(dSec){
-
 }
 
 //Sets the texture's coordinates (in this case this function does nothing)
 Piece.prototype.setTexCoords = function(length_t, length_s){
-
 }
 
 Piece.prototype.getCoord = function() {
@@ -121,7 +120,6 @@ Piece.prototype.generalDisplay = function( func ){
     var activateShaders = false;
 
     this.scene.pushMatrix();
-    //this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
 
     if( func == Piece.prototype.registerForPick ) {
         //Register for pick

@@ -87,7 +87,7 @@ XMLscene.prototype.onGraphLoaded = function () {
 
 		if( v.id == this.currentCamera ) {
 			this.camera = new CGFcamera(v.angle, v.near, v.far, v.from , v.to);
-			this.myInterface.setActiveCamera(this.camera);
+			//this.myInterface.setActiveCamera(this.camera);
 		}
 	}
 
@@ -134,7 +134,7 @@ XMLscene.prototype.changeView = function() {
 			}
 			
 			this.camera = new CGFcamera(this.graph.views[indice].angle, this.graph.views[indice].near, this.graph.views[indice].far, this.graph.views[indice].from , this.graph.views[indice].to);
-			this.myInterface.setActiveCamera(this.camera);
+			//this.myInterface.setActiveCamera(this.camera);
 			break;
 		}
 	}

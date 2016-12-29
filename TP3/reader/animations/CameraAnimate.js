@@ -2,9 +2,9 @@ function CameraAnimate(camera) {
     this.camera = camera;
 
     this.position = camera.position;
-    this.dPosition = [0, 0, 0];
+    this.dPosition = [0, 0, 0, 0];
     this.target = camera.target;
-    this.dTarget = [0, 0, 0];
+    this.dTarget = [0, 0, 0, 0];
 
     this.dRotate = 0;    
     this.axis = [0, 0, 0];
@@ -25,13 +25,13 @@ CameraAnimate.prototype.setTranslate = function(nextPosition, nextTarget, durati
     this.translate = true;
     this.lastFrame = false;
 
-    this.dPosition[0] = nextPosition[0] - this.position[0] / duration;
-    this.dPosition[1] = nextPosition[1] - this.position[1] / duration;
-    this.dPosition[2] = nextPosition[2] - this.position[2] / duration;
+    this.dPosition[0] = (nextPosition[0] - this.position[0]) / duration;
+    this.dPosition[1] = (nextPosition[1] - this.position[1]) / duration;
+    this.dPosition[2] = (nextPosition[2] - this.position[2]) / duration;
 
-    this.dTarget[0] = nextTarget[0] - this.target[0] / duration;
-    this.dTarget[1] = nextTarget[1] - this.target[1] / duration;
-    this.dTarget[2] = nextTarget[2] - this.target[2] / duration;
+    this.dTarget[0] = (nextTarget[0] - this.target[0]) / duration;
+    this.dTarget[1] = (nextTarget[1] - this.target[1]) / duration;
+    this.dTarget[2] = (nextTarget[2] - this.target[2]) / duration;
 
     this.duration = duration;
 };
@@ -56,18 +56,24 @@ CameraAnimate.prototype.update = function( dSec ) {
     if( this.time >= this.duration ) {
         this.lastFrame = true;
 
-        this.dPosition = [0, 0, 0];
-        this.dSec = [0, 0, 0];
+        this.dPosition = [0, 0, 0, 0];
+        this.dSec = [0, 0, 0, 0];
         this.rotate = 0;
 
         return ;
     }
 
     if( this.translate ) {
-        this.position += this.dPosition * dSec;
+        this.position[0] += this.dPosition[0] * dSec;
+        this.position[1] += this.dPosition[1] * dSec;
+        this.position[2] += this.dPosition[2] * dSec;
         this.camera.setPosition(this.position);
-        this.target += this.dTarget * dSec;
+
+        this.target[0] += this.dTarget[0] * dSec;
+        this.target[1] += this.dTarget[1] * dSec;
+        this.target[2] += this.dTarget[2] * dSec;
         this.camera.setTarget(this.target);
+        
     } else if( this.dRotate != 0 ) {
         var tmp = this.target[1];
         this.target[1] = this.position[1];

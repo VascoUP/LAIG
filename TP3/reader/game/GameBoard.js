@@ -1,7 +1,7 @@
 const numTilesBoard = 3;
 
-const scaleXY = 4;
-const sizeTile = scaleXY / 3; 
+const scaleXZ = 4;
+const sizeTile = scaleXZ / 3; 
 
 
 /**
@@ -29,14 +29,14 @@ GameBoard.prototype.constructor = GameBoard;
 
 GameBoard.prototype.init = function() {
     this.tiles = [];
-    var x = -1, y = -1, z = 0.05;
+    var x = -1, y = 0.05, z = 1;
     for( var i = 0; i < numTilesBoard; i++ ) {
         var line = [];
         for( var j = 0; j < numTilesBoard; j++ ) {
             line.push( new RoundTile(this.scene, [x, y, z]) );
             x++;
         }
-        y++;
+        z--;
         x = -1;
         this.tiles.push( line );
     }
@@ -68,9 +68,9 @@ GameBoard.prototype.getTileCoords = function(id) {
     var pos = this.getTilePos(id);
 
     var x = pos[0] * sizeTile - sizeTile;
-    var y = pos[1] * sizeTile - sizeTile;
+    var z = sizeTile - pos[1] * sizeTile;
 
-    return [x, y, 0.2];
+    return [x, 0.2, z];
 }
 
 
@@ -121,20 +121,25 @@ GameBoard.prototype.generalDisplay = function( func ){
     
     this.scene.pushMatrix();
 
-    this.scene.scale(scaleXY, scaleXY, 1);
-    this.scene.translate(0, 0, 0.2);
+    this.scene.scale(scaleXZ, 1, scaleXZ);
+    this.scene.translate(0, 0.2, 0);
 
     if( func == Tile.prototype.display ) {
+        this.scene.pushMatrix();
+
+        this.scene.rotate(-Math.PI / 2, 1, 0, 0);
         this.material.setTexture( this.boardTexture );
         this.material.apply();
         this.board.display();
         this.material.setTexture( this.generalTexture );
         this.material.apply();
         this.support.display();
+
+        this.scene.popMatrix();
     }
 
     this.scene.pushMatrix();
-    this.scene.scale(1/3, 1/3, 1);
+    this.scene.scale(1/3, 1, 1/3);
     for( var i = 0; i < numTilesBoard; i++ )
         for( var j = 0; j < numTilesBoard; j++ )
             func.call(this.tiles[i][j]);

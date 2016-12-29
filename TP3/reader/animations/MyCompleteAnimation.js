@@ -115,6 +115,10 @@ CompleteAnimation.prototype.calcInit = function() {
     this.dScale.push(this.control_points[1].scale[2] - this.scale[2]);
 
     this.calcAngles(0);
+
+    console.debug("dAngXZ: " + this.dAngXZ);
+    console.debug("dAngYZ: " + this.dAngYZ);
+    console.debug("dAngXY: " + this.dAngXY);
 }
 
 CompleteAnimation.prototype.update = function( dTime ) {
@@ -148,7 +152,12 @@ CompleteAnimation.prototype.update = function( dTime ) {
         if( this.currControlPoint != i ) {
             //Only needs to update rotate when it changlees control_points
             this.currControlPoint = i;
+
             this.dRadius = this.control_points[i+1].radius - this.control_points[i].radius;
+            this.dScale[0] = this.control_points[i+1].scale[0] - this.control_points[i].scale[0];
+            this.dScale[1] = this.control_points[i+1].scale[1] - this.control_points[i].scale[1];
+            this.dScale[2] = this.control_points[i+1].scale[2] - this.control_points[i].scale[2];
+
             this.calcAngles(i);
         }
 
@@ -157,27 +166,14 @@ CompleteAnimation.prototype.update = function( dTime ) {
         this.center[1] = this.control_points[i].center[1] + this.vel_dir[i][2] * t;
         this.center[2] = this.control_points[i].center[2] + this.vel_dir[i][3] * t;
 
-        this.radius = this.control_points[i].radius + (
-                        this.time * this.dRadius / this.duration
-                        );
-        this.scale[0] = this.control_points[i].scale[0] + (
-                        this.time * this.dScale[0] / this.duration
-                        );
-        this.scale[1] = this.control_points[i].scale[1] + (
-                        this.time * this.dScale[1] / this.duration
-                        );
-        this.scale[2] = this.control_points[i].scale[2] + (
-                        this.time * this.dScale[2] / this.duration
-                        );
-        this.rotateXY = this.angleXY + (
-                        this.time * this.dAngXY / this.duration
-                        );
-        this.rotateYZ = this.angleYZ + (
-                        this.time * this.dAngYZ / this.duration
-                        );
-        this.rotateXZ = this.angleXZ + (
-                        this.time * this.dAngXZ / this.duration
-                        );
+        this.radius = this.control_points[i].radius + this.dRadius * this.time / this.vel_dir[i][0];
+        this.scale[0] = this.control_points[i].scale[0] + this.dScale[0] * this.time / this.vel_dir[i][0];
+        this.scale[1] = this.control_points[i].scale[1] + this.dScale[1] * this.time / this.vel_dir[i][0];
+        this.scale[2] = this.control_points[i].scale[2] + this.dScale[2] * this.time / this.vel_dir[i][0];
+
+        this.rotateXY = this.angleXY + this.time * this.dAngXY / this.vel_dir[i][0];
+        this.rotateYZ = this.angleYZ + this.time * this.dAngYZ / this.vel_dir[i][0];
+        this.rotateXZ = this.angleXZ + this.time * this.dAngXZ / this.vel_dir[i][0];
 
         return ;
     }
@@ -201,12 +197,14 @@ CompleteAnimation.prototype.display = function(scene, obj) {
 
     scene.pushMatrix();
 
-    /*if(this.rotateXZ) 
-        scene.rotate(-this.rotateXZ, 0, 1, 0);
-    if(this.rotateYZ)
-        scene.rotate(-this.rotateYZ, 1, 0, 0);*/
     if(this.rotateXY)
         scene.rotate(-this.rotateXY, 0, 0, 1);
+    if(this.rotateYZ)
+        scene.rotate(-this.rotateYZ, 1, 0, 0);
+    if(this.rotateXZ) 
+        scene.rotate(-this.rotateXZ, 0, 1, 0);
+    scene.rotate(Math.PI / 2, 1, 0, 0);
+    
 
     scene.scale(this.scale[0], this.scale[1], this.scale[2]);
     obj.display();

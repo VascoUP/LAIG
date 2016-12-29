@@ -27,12 +27,10 @@ Tile.prototype.constructor = Tile;
 
 //Updates the Tile
 Tile.prototype.update = function(dSec){
-
 }
 
 //Sets the texture's coordinates (in this case this function does nothing)
 Tile.prototype.setTexCoords = function(length_t, length_s){
-
 }
 
 
@@ -139,6 +137,7 @@ RoundTile.prototype.fill = function() {
 Tile.prototype.generalDisplay = function( func ){
     this.scene.pushMatrix();
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);
+    this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 
     if( func == Tile.prototype.registerTileForPick ) {
         this.scene.registerForPick(this.id, this);

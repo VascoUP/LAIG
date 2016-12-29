@@ -115,10 +115,6 @@ CompleteAnimation.prototype.calcInit = function() {
     this.dScale.push(this.control_points[1].scale[2] - this.scale[2]);
 
     this.calcAngles(0);
-
-    console.debug("dAngXZ: " + this.dAngXZ);
-    console.debug("dAngYZ: " + this.dAngYZ);
-    console.debug("dAngXY: " + this.dAngXY);
 }
 
 CompleteAnimation.prototype.update = function( dTime ) {

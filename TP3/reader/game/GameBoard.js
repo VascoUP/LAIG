@@ -54,6 +54,10 @@ GameBoard.prototype.update = function( dSec ){
 GameBoard.prototype.setTexCoords = function(length_t, length_s){
 }
 
+GameBoard.prototype.getPosTile = function(line, column) {
+    return this.tiles[line][column];
+}
+
 GameBoard.prototype.getTilePos = function(id) {
     var fId = this.tiles[0][0].id;
     var dId = id - fId;

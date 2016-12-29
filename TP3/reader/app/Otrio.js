@@ -26,7 +26,7 @@ Otrio.prototype.getComputerMove = function(difficulty, board, mV, player, mV2) {
 	this.waitingResponse = true;
 
 	this.client.getPrologRequest("e_play(" + difficulty + "," + board + "," + mV + "," + player
-								+ "," + mv2 + ")", function(data) {
+								+ "," + mV2 + ")", function(data) {
 		otrio.computerPlaying = data.target.response;
 		otrio.waitingResponse = false;
 		otrio.responseReceived = true;

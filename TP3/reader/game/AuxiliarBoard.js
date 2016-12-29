@@ -92,6 +92,15 @@ AuxiliarBoard.prototype.piecesToString = function() {
     return str;
 }
 
+AuxiliarBoard.prototype.getPieceType = function(typePiece) {
+    var piece;
+    for( var i = 0; i < numTilesAux; i++ ) {
+        if( (piece = this.tiles[i].getPieceType(typePiece)) )
+            return piece;
+    }
+    return null;
+}
+
 
 
 /**

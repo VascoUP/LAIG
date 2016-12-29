@@ -59,6 +59,17 @@ Player.prototype.choosePiece = function (piece, move) {
     return true;
 }
 
+Player.prototype.computerChoosePiece = function (typePiece, move) {
+    var piece = this.pieces.getPieceType(typePiece);
+    if( !piece )
+        return false;
+
+    move.piece = piece;
+    move.tileSrc = this.pieces.getTilePiece(piece.id);
+
+    return true;
+}
+
 Player.prototype.confirmPiece = function (piece, move) {
     move.piece.selected = false;
 

@@ -166,7 +166,7 @@ Game.prototype.updateAnimations = function(dSec) {
     if( this.currMove.player.state == PlayerState.PieceAnimation ) {
         this.currMove.piece.animation.update(dSec);
         if( this.currMove.piece.animation.lastFrame )
-            this.currMove.player.changeState();
+            this.changePlayerState();
     } else if( this.currMove.player.state == PlayerState.PieceToTile ) {
         this.currMove.piece.animation.update(dSec);
         if( this.currMove.piece.animation.lastFrame ) {
@@ -219,6 +219,28 @@ Game.prototype.getCurrPlayer = function() {
     return player;
 };
 
+Game.prototype.changePlayerState = function() {
+    this.currMove.player.changeState();
+
+    if( this.currMove.player.playerMode == PlayerMode.Player )
+        return ;
+
+    switch(this.currMove.player.state) {
+        case PlayerState.ChoosePiece:
+            this.request();
+            break;
+        case PlayerState.ChooseTile:
+            // Choose given tile
+            this.chooseTile(this.currMove.tileDst);
+            // Confirmed tile
+            this.currMove.player.changeState();
+
+            //Add animation to the piece
+            this.pieceToBoard();
+            break;
+    }
+};
+
 Game.prototype.changeState = function() {
     switch( this.gameState ) {
         case GameState.Menu:
@@ -236,6 +258,8 @@ Game.prototype.changeState = function() {
             break;
         case GameState.CameraToP2:
             this.gameState = GameState.Player2;
+            this.nextMove();
+
             break;
         case GameState.Player2:
 			this.endGame();
@@ -249,6 +273,8 @@ Game.prototype.changeState = function() {
             break;
         case GameState.CameraToP1:
             this.gameState = GameState.Player1;
+            this.nextMove();
+
             break;
         case GameState.EndGame:
             this.gameState = GameState.Menu;
@@ -257,6 +283,15 @@ Game.prototype.changeState = function() {
             return;
     }
 };
+
+Game.prototype.nextMove = function() {
+    // Wait for input if player mode is player
+    if( this.currMove.player.playerMode == PlayerMode.Player )
+        return ;
+
+    // If it's computer then request a play to the prolog program
+    this.request();
+}
 
 Game.prototype.undoMove = function() {
     this.gameSequence.undoMove(this.currMove.player);
@@ -269,7 +304,7 @@ Game.prototype.pickObj = function(obj) {
         this.chooseTile(obj);
     else
         if( this.currMove.player.pickPiece(obj, this.currMove) ) {
-            this.currMove.player.changeState();
+            this.changePlayerState();
 
             if( this.currMove.player.state == PlayerState.PieceAnimation )
                 this.animatePiece();
@@ -317,7 +352,7 @@ Game.prototype.animatePiece = function () {
     var c1 = new AnimationInfo(oldCenter, oldCoords, [1, 1, 1]);
     var c2 = new AnimationInfo(newCenter, newCoords, [1, 1, 1]);
 
-    this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.25);
+    this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.2);
 };
 
 Game.prototype.pieceToBoard = function () {
@@ -336,7 +371,7 @@ Game.prototype.pieceToBoard = function () {
     var c2 = new AnimationInfo(middleCenter, middleCoords, [sizeTile, sizeTile, 1]);
     var c3 = new AnimationInfo(newCenter, newCoords, [sizeTile, sizeTile, 1]);
 
-    this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2, c3], 2);
+    this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2, c3], 1);
 };
 
 Game.prototype.animateToPlayer = function() {
@@ -350,7 +385,7 @@ Game.prototype.animateToPlayer = function() {
         nPosition[1] += nTarget[1] - this.cameraAnimation.target[1];
         nPosition[2] += nTarget[2] - this.cameraAnimation.target[2];
 
-        this.cameraAnimation.setTranslate(nPosition, nTarget, 0.4);
+        this.cameraAnimation.setTranslate(nPosition, nTarget, 0.3);
 
         this.cameraFirstAnimation = false;
 
@@ -361,7 +396,7 @@ Game.prototype.animateToPlayer = function() {
         var desiredAngle = this.currMove.player.id == this.player1.id ? -Math.PI / 2 : Math.PI / 2;
         var rotateAngle = this.cameraAnimation.position[0] < 0 ? angle + desiredAngle : angle - desiredAngle;
 
-        this.cameraAnimation.setRotate([0, 0, 1], rotateAngle, 0.3);
+        this.cameraAnimation.setRotate([0, 0, 1], rotateAngle, 0.2);
     } else {
         // End
         this.changeState();
@@ -381,7 +416,7 @@ Game.prototype.gameCamera = function() {
         nPosition[1] += nTarget[1] - this.cameraAnimation.target[1];
         nPosition[2] += nTarget[2] - this.cameraAnimation.target[2];
 
-        this.cameraAnimation.setTranslate(nPosition, nTarget, 2);    
+        this.cameraAnimation.setTranslate(nPosition, nTarget, 0.25);    
     } else
         this.cameraAnimation.setRotate([0, 0, 1], Math.PI * 2, 8);
 }
@@ -407,13 +442,16 @@ Game.prototype.animateCamera = function () {
 /**
  *  PROLOG VALIDATIONS
  */
+    /**
+     *  MAKE REQUESTS
+     */
 Game.prototype.request = function() {
     switch( this.currMove.player.state ) {
         case PlayerState.TileConfirmation:
             this.playerMove();
             break;
 		case PlayerState.ChoosePiece:
-			if(player.Computer == true)
+			if(this.currMove.player.playerMode != PlayerMode.Player)
 				this.computerMove();
 			break;
 		case PlayerState.EndGame:
@@ -448,10 +486,17 @@ Game.prototype.playerMove = function() {
     this.otrio.getPlayerMove(board, line, column, pair, player, mv, mv2);
 };
 
-Game.prototype.computerMove = function(difficulty) {
+Game.prototype.computerMove = function() {
 	// Get board as array and stringify it to send it to the prolog predicate
     var board = this.gameBoard.boardToString();
-  
+
+    var difficulty;
+    // Assume that player mode is not Player
+    if( this.currMove.player.playerMode == PlayerMode.Easy )
+        difficulty = 'easy';
+    else
+        difficulty = 'hard';
+
     var player;
     if( this.currMove.player.id == 1 )
         player = 'r';
@@ -495,6 +540,26 @@ Game.prototype.changeTurn = function() {
 	//TO CONCLUDE
 };
 
+    /**
+     *  RECEIVE RESPONSES
+     */
+Game.prototype.receivedResponse = function() {
+    switch( this.currMove.player.state ) {
+        case PlayerState.TileConfirmation:
+            this.confirmTileResponse();
+            break;
+		case PlayerState.ChoosePiece:
+            // Only happens when the player is a computer
+			this.confirmChoosePieceResponse();
+			break;
+		case PlayerState.ChangeTurn:
+			this.confirmChangeTurnResponse();
+			break;
+    }
+    this.otrio.responseReceived = false;
+    this.otrio.counter = 0;
+};
+
 Game.prototype.confirmTileResponse = function() {
     // Received response
     var response = this.otrio.playerMove;
@@ -518,7 +583,7 @@ Game.prototype.confirmTileResponse = function() {
     if( newPlayer == this.currMove.player.getColor() || replay == "true" )
         this.currMove.player.state = PlayerState.ChooseTile;
     else {
-        this.currMove.player.changeState();
+        this.changePlayerState();
 
         //Add animation to the piece
         this.pieceToBoard();
@@ -546,6 +611,12 @@ Game.prototype.confirmChoosePieceResponse = function() {
 				break;
 			case 'Piece':
 				var piece = values[1];
+                if( piece == 's' )
+                    piece = small;
+                else if( piece == 'm' )
+                    piece = medium;
+                else
+                    piece = large;
 				break;
             case 'NPlayer':
                 var newPlayer = values[1];
@@ -556,7 +627,18 @@ Game.prototype.confirmChoosePieceResponse = function() {
         }
     }
 
-    //PUT COMPUTER MODE FUNCTIONS
+    // Select piece
+    this.currMove.player.computerChoosePiece(piece, this.currMove);
+    this.currMove.player.changeState();
+
+    // And confirm it
+    this.currMove.player.confirmPiece(this.currMove.piece, this.currMove);
+    this.currMove.player.changeState();
+    // Let the animation run
+    this.animatePiece();
+
+    // Store the destination tile
+    this.currMove.tileDst = this.gameBoard.getPosTile(line, column);
 };
 
 Game.prototype.confirmChangeTurnResponse = function() {
@@ -571,29 +653,15 @@ Game.prototype.confirmChangeTurnResponse = function() {
     //PUT CHANGE TURN FUNCTIONS
 };
 
-Game.prototype.receivedResponse = function() {
-    switch( this.currMove.player.state ) {
-        case PlayerState.TileConfirmation:
-            this.confirmTileResponse();
-            break;
-		case PlayerState.ChoosePiece:
-			this.confirmChoosePieceResponse();
-			break;
-		case PlayerState.ChangeTurn:
-			this.confirmChangeTurnResponse();
-			break;
-    }
-    this.otrio.responseReceived = false;
-    this.otrio.counter = 0;
-};
-
 
 
 /**
  *  DISPLAY FUNCTIONS
  */
 Game.prototype.registerForPick = function() {
-    if( this.gameState == GameState.EndGame || this.gameState == GameState.Menu )
+    if( this.gameState == GameState.EndGame || this.gameState == GameState.Menu ||
+        // If it's a computer playing then don't register anything for pick
+        this.currMove.player.playerMode != PlayerMode.Player )
         return ;
 
     this.scene.pushMatrix();

@@ -113,7 +113,8 @@ parse_input(next_cicle(Board, Line, Column, Pair, Player, Mv, Mv2),
 	next_cicle(Board, Line, Column, Pair, _, Player, PlayerC, Mv, Mv2, _, _, Replay).
 
 % Computer's turn
-parse_input(e_play(Difficulty, Board, Mv, Player, Mv2), ['Line' : Line, 'Column' : Column, 'Piece' : PieceType, 'NPlayer' : PlayerC, 'Rep' : Replay]) :-
+parse_input(e_play(Difficulty, Board, Mv, Player, Mv2), 
+			['Line' : Line, 'Column' : Column, 'Piece' : PieceType, 'NPlayer' : PlayerC, 'Rep' : Replay]) :-
 	e_play(Difficulty, Board, Mv, Player, Mv2, Line, Column, (PieceType, _)), 
 	next_cicle(Board, Line, Column, (PieceType, _), _, Player, PlayerC, Mv, Mv2, _, _, Replay).
 

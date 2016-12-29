@@ -104,6 +104,14 @@ Tile.prototype.countPieces = function () {
     return array;
 }
 
+Tile.prototype.getPieceType = function(typePiece) {
+    for( var i = 0; i < this.pieces.length; i++ ) {
+        if( this.pieces[i].type == typePiece )
+            return this.pieces[i];
+    }
+    return null;
+}
+
 
 
 /**

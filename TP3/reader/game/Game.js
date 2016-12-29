@@ -64,8 +64,11 @@ Game.prototype.changeButtons = function() {
 	console.debug(this.gameState);
     switch(this.gameState) {
         case GameState.Menu:
+        case GameState.EndGame:
             this.menuButtons();
             break;
+        case GameState.CameraToP2:
+        case GameState.CameraToP1:
         case GameState.Player1:
         case GameState.Player2:
             this.gameButtons();
@@ -185,6 +188,7 @@ Game.prototype.updateAnimations = function(dSec) {
  */
 Game.prototype.play = function () {
     this.changeState();
+    this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 };
 
@@ -210,7 +214,6 @@ Game.prototype.changeState = function() {
     switch( this.gameState ) {
         case GameState.Menu:
             this.gameState = GameState.CameraToP1;
-            this.changeButtons();
             break;
         case GameState.Player1:
             this.gameState = GameState.CameraToP2;
@@ -238,7 +241,6 @@ Game.prototype.changeState = function() {
             break;
         case GameState.EndGame:
             this.gameState = GameState.Menu;
-            this.changeButtons();
             break;
         default:
             return;

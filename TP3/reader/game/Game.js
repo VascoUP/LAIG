@@ -645,8 +645,12 @@ Game.prototype.endGameResponse = function() {
         } else {
             var element = document.getElementById("Player2Score");
         }
-        var score = parseInt(document.getElementById("Player1Score").innerHTML)
+
+        var score = parseInt(document.getElementById("Player1Score").innerHTML);
         element.innerHTML = (score+1) + "";
+
+        var statusElem = document.getElementById("StatusMessage");
+        statusElem.innerHTML = "PLAYER " + this.currMove.player.id + " WON";
     }
     else 
         this.changeState();

@@ -52,16 +52,13 @@ CameraAnimate.prototype.update = function( dSec ) {
         return;
     
     // Given the time, calculate the next point in the trajectory
-    this.time += dSec;
-    if( this.time >= this.duration ) {
-        this.lastFrame = true;
-
-        this.dPosition = [0, 0, 0, 0];
-        this.dSec = [0, 0, 0, 0];
-        this.rotate = 0;
-
-        return ;
+    var tmp = this.time + dSec;
+    if( tmp >= this.duration ) {
+        dSec = this.duration - this.time;
+        this.time = this.duration;
     }
+    else
+        this.time = tmp;
 
     if( this.translate ) {
         this.position[0] += this.dPosition[0] * dSec;
@@ -82,5 +79,15 @@ CameraAnimate.prototype.update = function( dSec ) {
         this.camera.orbit(this.axis, this.dRotate * dSec);
 
         this.target[1] = tmp;
+    }
+
+    if( this.time >= this.duration ) {
+        this.lastFrame = true;
+
+        this.dPosition = [0, 0, 0, 0];
+        this.dSec = [0, 0, 0, 0];
+        this.rotate = 0;
+
+        return ;
     }
 }

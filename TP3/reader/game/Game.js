@@ -456,7 +456,20 @@ Game.prototype.animateCamera = function() {
  *  SCORE MESSAGES
  */
 Game.prototype.incrementScore = function() {
+    if( this.currMove.player.id == 1 ) {
+        var element = document.getElementById("Player1Score");
+        var score = parseInt(document.getElementById("Player1Score").innerHTML);
+    } else {
+        var element = document.getElementById("Player2Score");
+        var score = parseInt(document.getElementById("Player2Score").innerHTML);
+    }
 
+    element.innerHTML = (score+1) + "";
+}
+
+Game.prototype.changeMessage = function(message) {
+    var statusElem = document.getElementById("StatusMessage");
+    statusElem.innerHTML = message;
 }
 
 /**
@@ -665,20 +678,8 @@ Game.prototype.endGameResponse = function() {
     // Received response
     var response = this.otrio.endGame;
     if( response == 'true' ) {
-
-        if( this.currMove.player.id == 1 ) {
-            var element = document.getElementById("Player1Score");
-            var score = parseInt(document.getElementById("Player1Score").innerHTML);
-        } else {
-            var element = document.getElementById("Player2Score");
-            var score = parseInt(document.getElementById("Player2Score").innerHTML);
-        }
-
-        element.innerHTML = (score+1) + "";
-
-        var statusElem = document.getElementById("StatusMessage");
-        statusElem.innerHTML = "PLAYER " + this.currMove.player.id + " WON";
-        
+        this.incrementScore();
+        this.changeMessage("PLAYER " + this.currMove.player.id + " WON");
         this.end();
     }
     else 

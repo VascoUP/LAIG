@@ -224,7 +224,6 @@ Game.prototype.getCurrPlayer = function() {
 };
 
 Game.prototype.changeState = function() {
-	console.debug(this.gameState);
     switch( this.gameState ) {
         case GameState.Menu:
             this.gameState = GameState.CameraToP1;
@@ -262,7 +261,6 @@ Game.prototype.changeState = function() {
 };
 
 Game.prototype.undoMove = function() {
-    console.debug("undo");
     this.gameSequence.undoMove(this.currMove.player);
 };
 
@@ -344,7 +342,6 @@ Game.prototype.pieceToBoard = function () {
 };
 
 Game.prototype.animateToPlayer = function() {
-    console.debug(this.cameraFirstAnimation);
     if( this.cameraFirstAnimation ) {
         // Translate
         // Get new coords
@@ -361,8 +358,6 @@ Game.prototype.animateToPlayer = function() {
 
     } else if( this.cameraAnimation.translate ) {
         // Rotate
-        console.debug(this.cameraAnimation.camera);
-
         var angle = Math.atan((this.cameraAnimation.position[2] - this.cameraAnimation.target[2]) / 
                                 (this.cameraAnimation.position[0] - this.cameraAnimation.target[0]));
         var desiredAngle = this.currMove.player.id == this.player1.id ? -Math.PI / 2 : Math.PI / 2;

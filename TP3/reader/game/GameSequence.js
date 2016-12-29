@@ -24,7 +24,6 @@ GameSequence.prototype.undoMoves = function(n) {
     for( var i = 0; i < n; i++ ) {
         if( this.sequence.length == 0 )
             return ;
-        console.debug("Sequence Undo");
         this.sequence[this.sequence.length - 1].undoMove();
         this.sequence.pop();
     }

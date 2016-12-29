@@ -49,7 +49,6 @@ main=function() {
 	var filename=getUrlVars()['file'] || "Chess.dsx";
 	this.scenes = ["Chess.dsx", "scene2.dsx"];
 	this.indexScene = 0;
-	console.debug(this.indexScene);
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors
@@ -67,8 +66,6 @@ newScene = function(){
         this.indexScene = 1;
 	else
 		this.indexScene = 0;
-	
-	console.debug(this.indexScene);
 	
     var newGraph = new MySceneGraph(this.scenes[this.indexScene], this.myScene);
 }

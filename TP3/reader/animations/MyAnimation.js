@@ -25,10 +25,8 @@ Animation.prototype.transform = function(scene) {
 var LinearAnimation = function ( id, control_points, duration ) {
     Animation.apply(this, arguments);
 
-    if( control_points.length < 1 ) {
-        console.Error("Invalid number of control_points");
+    if( control_points.length < 1 )
         return ;
-    }
 
     this.lastFrame = false;  
     this.control_points = control_points;

@@ -637,8 +637,17 @@ Game.prototype.computerMoveResponse = function() {
 Game.prototype.endGameResponse = function() {
     // Received response
     var response = this.otrio.endGame;
-    if( response == 'true' )
+    if( response == 'true' ) {
         this.end();
+
+        if( this.currMove.player.id == 1 ) {
+            var element = document.getElementById("Player1Score");
+        } else {
+            var element = document.getElementById("Player2Score");
+        }
+        var score = parseInt(document.getElementById("Player1Score").innerHTML)
+        element.innerHTML = (score+1) + "";
+    }
     else 
         this.changeState();
 };

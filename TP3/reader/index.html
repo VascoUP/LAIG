@@ -3,21 +3,20 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Otrio</title>
-
-<style>
-body, html {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-}
-canvas {
-    width: 100%;
-    height: 100%;
-}
-</style>
+    <link rel="stylesheet" href="style/Style.css">
 </head>
 <body>
+<div id="score">
+    <div class="InBlock PlayerScore" id="player1">
+        <h1 id="Player1Score">0</h1>
+    </div>
+    <div class="InBlock FixedWidth">
+        <h2 id="StatusMessage"></h2>
+    </div>
+    <div class="InBlock PlayerScore" id="player2">
+        <h1 id="Player2Score">0</h1>
+    </div>
+</div>
 
 <script src="app/main.js"></script>
 

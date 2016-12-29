@@ -31,8 +31,7 @@ MyInterface.prototype.createMenu = function(){
 	this.gui.add(this.scene.game,'quit').name("Quit");
 	this.gui.add(fgfg,'fgfg').name("fgfg");
 	this.gui.remove();*/
-	var changeScene = { changeScene:function(){ console.log("clicked") }};
-	this.gui.add(changeScene, 'changeScene', { 'Scene 1': 1, 'Scene 2': 2 }).name("Change Scene");
+	this.gui.add(this.scene, 'changeScene').name("Change Scene");
 
 	this.scene.game.changeButtons();
 };

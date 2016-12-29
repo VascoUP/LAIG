@@ -193,3 +193,7 @@ XMLscene.prototype.display = function () {
 
 	this.logPicking();
 };
+
+XMLscene.prototype.changeScene = function(){
+	newScene();
+}

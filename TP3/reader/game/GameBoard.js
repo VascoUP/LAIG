@@ -9,6 +9,11 @@ const sizeTile = scaleXZ / 3;
  */
 function GameBoard(scene, material) {
     CGFobject.call(this,scene);
+
+    // Don't take this out of here
+    pieceId = 1;
+    tileId = 1;
+    
     this.board = new MyBoard(scene, 3, 3, null, -1, -1, 
                                 [0.9, 0.9, 0.9, 1], 
                                 [0.5, 0.5, 0.5, 1], 
@@ -65,6 +70,8 @@ GameBoard.prototype.getTilePos = function(id) {
     var line = Math.floor(dId / numTilesBoard);
     var column = dId - (line * numTilesBoard);
 
+    console.debug(column + " - " + line + " fID: " + fId + " dId: " + dId);
+
     return [column, line];
 }
 
@@ -88,8 +95,9 @@ GameBoard.prototype.selectTile = function(tile) {
         this.board.sV = -1;
         this.board.sU = -1;
     } else {
-        this.board.sV = Math.floor((tile.id - 1) / numTilesBoard);
-        this.board.sU = (tile.id - 1) - (this.board.sV * numTilesBoard);
+        var pos = this.getTilePos(tile.id);
+        this.board.sV = pos[1];
+        this.board.sU = pos[0];
     }
 }
 

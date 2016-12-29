@@ -16,7 +16,6 @@ GameSequence.prototype.undoMove = function(player) {
         if( this.sequence[this.sequence.length - i - 1].player.id == player.id )
             n = i+1;
     }
-
     this.undoMoves(n);
 }
 

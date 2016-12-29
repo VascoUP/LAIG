@@ -8,6 +8,8 @@ const largeCoord = 0.4;
 
 const selectedColor = [0.2, 0.5, 1, 1];
 
+const NUM_PIECES = 36;
+
 //  Used to identify the pieces (autoincremented in the constructor)
 var pieceId = 1;
 

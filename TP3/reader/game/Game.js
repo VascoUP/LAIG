@@ -80,11 +80,8 @@ Game.prototype.gameButtons = function() {
 		this.scene.myInterface.gui.remove(this.modePlayer1);
 		this.scene.myInterface.gui.remove(this.modePlayer2);
 	}
-	
-	var redo = { redo:function(){ console.log("clicked") }};
 
     this.undoButton = this.scene.myInterface.gui.add(this.scene.game,'undoMove').name("Undo");
-    this.redoButton = this.scene.myInterface.gui.add(redo,'redo').name("Redo");
     this.quitButton = this.scene.myInterface.gui.add(this.scene.game,'quit').name("Quit");
 };
 
@@ -155,6 +152,7 @@ Game.prototype.updateAnimations = function(dSec) {
         this.currMove.piece.animation.update(dSec);
         if( this.currMove.piece.animation.lastFrame ) {
             this.currMove.moveTile();
+            this.gameSequence.addMove(this.currMove);
 
             this.changePlayerState();
         }
@@ -291,11 +289,13 @@ Game.prototype.nextMove = function() {
 }
 
 Game.prototype.undoMove = function() {
+    if( this.currMove.player.state >= EndGame )
+        return ;
     this.gameSequence.undoMove(this.currMove.player);
 };
 
 Game.prototype.pickObj = function(obj) {
-    if( this.currMove.player.state == PlayerState.TileConfirmation)
+    if( this.currMove.player.state == PlayerState.TileConfirmation )
         this.confirmTile(obj);
     else if( this.currMove.player.state == PlayerState.ChooseTile )
         this.chooseTile(obj);
@@ -637,7 +637,6 @@ Game.prototype.computerMoveResponse = function() {
 Game.prototype.endGameResponse = function() {
     // Received response
     var response = this.otrio.endGame;
-    console.debug(response);
     if( response == 'true' )
         this.end();
     else 
@@ -666,23 +665,18 @@ Game.prototype.registerForPick = function() {
         // If it's a computer playing then don't register anything for pick
         this.currMove.player.playerMode != PlayerMode.Player )
         return ;
-
+        
     this.scene.pushMatrix();
-    //this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 
-    if( this.player1.state == PlayerState.ChoosePiece || 
-        this.player1.state == PlayerState.PieceConfirmation )
-        this.player1.pieces.registerForPick();
+    if( this.currMove.player.state == PlayerState.ChoosePiece || 
+        this.currMove.player.state == PlayerState.PieceConfirmation ) {
+        this.currMove.player.pieces.registerForPick();
+    }
 
-    else if( this.player2.state == PlayerState.ChoosePiece || 
-             this.player2.state == PlayerState.PieceConfirmation )
-        this.player2.pieces.registerForPick();
-
-    else if( this.player1.state == PlayerState.ChooseTile || 
-            this.player1.state == PlayerState.TileConfirmation || 
-            this.player2.state == PlayerState.ChooseTile || 
-            this.player2.state == PlayerState.TileConfirmation )
+    else if( this.currMove.player.state == PlayerState.ChooseTile || 
+            this.currMove.player.state == PlayerState.TileConfirmation ) {
         this.gameBoard.registerForPick();
+    }
 
     this.scene.popMatrix();
 };

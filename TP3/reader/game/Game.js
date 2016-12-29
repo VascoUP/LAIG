@@ -17,6 +17,11 @@ var PlayerState = {
     Wait : 6
 };
 
+var PlayerMode = {
+	Player: 0,	
+	Easy: 1,
+	Hard: 2,
+};
 
 /**
  *  Game's constructor
@@ -78,12 +83,11 @@ Game.prototype.menuButtons = function() {
 
     this.playButton = this.scene.myInterface.gui.add(this.scene.game,'play').name("Play Game");
 
-    var mode = { mode:function(){ console.log("clicked") }};
-    this.gameModes = this.scene.myInterface.gui.add(mode, 'mode',
-                                                    { 'Human vs Human' : 0, 'Human vs PC': 1, 'PC vs PC': 2 }
-                                                ).name("Game Mode");
-	var difficulty = { difficulty:function(){ console.log("clicked") }};
-    this.gameDifficulty = this.scene.myInterface.gui.add(difficulty, 'difficulty', {'Easy': 0, 'Hard' : 1}).name("Game Difficulty");
+    var player = { player:function(){ console.log("clicked") }};
+    this.modePlayer1 = this.scene.myInterface.gui.add(player, 'player',
+													{ 'Player' : 0, 'Easy': 1, 'Hard': 2 }).name("Player 1 Mode");
+	this.modePlayer2 = this.scene.myInterface.gui.add(player, 'player',
+                                                    { 'Player' : 0, 'Easy': 1, 'Hard': 2 }).name("Player 2 Mode");
 };
 
 Game.prototype.gameButtons = function() {
@@ -202,6 +206,7 @@ Game.prototype.getCurrPlayer = function() {
 };
 
 Game.prototype.changeState = function() {
+	console.debug(this.gameState);
     switch( this.gameState ) {
         case GameState.Menu:
             this.gameState = GameState.CameraToP1;

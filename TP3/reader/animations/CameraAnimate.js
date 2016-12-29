@@ -2,10 +2,13 @@ function CameraAnimate(camera) {
     this.camera = camera;
 
     this.position = camera.position;
+    this.nPosition = camera.position.slice();
     this.dPosition = [0, 0, 0, 0];
     this.target = camera.target;
+    this.nTarget = camera.target.slice();
     this.dTarget = [0, 0, 0, 0];
 
+    this.rotate = 0;
     this.dRotate = 0;    
     this.axis = [0, 0, 0];
 
@@ -33,6 +36,9 @@ CameraAnimate.prototype.setTranslate = function(nextPosition, nextTarget, durati
     this.dTarget[1] = (nextTarget[1] - this.target[1]) / duration;
     this.dTarget[2] = (nextTarget[2] - this.target[2]) / duration;
 
+    this.nPosition = nextPosition.slice();
+    this.nTarget = nextTarget.slice();
+
     this.duration = duration;
 };
 
@@ -43,6 +49,7 @@ CameraAnimate.prototype.setRotate = function(axis, rotate_angle, duration) {
 
     this.axis = axis;
     this.dRotate = rotate_angle / duration;
+
     this.duration = duration;
 };
 
@@ -52,13 +59,37 @@ CameraAnimate.prototype.update = function( dSec ) {
         return;
     
     // Given the time, calculate the next point in the trajectory
-    var tmp = this.time + dSec;
-    if( tmp >= this.duration ) {
-        dSec = this.duration - this.time;
-        this.time = this.duration;
+    this.time += dSec;
+    if( this.time >= this.duration ) {
+        this.lastFrame = true;
+
+        this.dPosition = [0, 0, 0, 0];
+        this.dTarget = [0, 0, 0, 0];
+
+        if( this.translate ) {
+            this.position[0] = this.nPosition[0];
+            this.position[1] = this.nPosition[1];
+            this.position[2] = this.nPosition[2];
+            this.camera.setPosition(this.position);
+
+            this.target[0] = this.nTarget[0];
+            this.target[1] = this.nTarget[1];
+            this.target[2] = this.nTarget[2];
+            this.camera.setTarget(this.target);
+        } else if( this.dRotate != 0 ) {
+            var tmp = this.target[1];
+            this.target[1] = this.position[1];
+            this.camera.setTarget(this.target);
+
+            this.camera.orbit(this.axis, this.dRotate * (this.duration - this.time + dSec));
+
+            this.target[1] = tmp;
+        }
+
+        this.rotate = 0;
+
+        return ;
     }
-    else
-        this.time = tmp;
 
     if( this.translate ) {
         this.position[0] += this.dPosition[0] * dSec;
@@ -79,15 +110,5 @@ CameraAnimate.prototype.update = function( dSec ) {
         this.camera.orbit(this.axis, this.dRotate * dSec);
 
         this.target[1] = tmp;
-    }
-
-    if( this.time >= this.duration ) {
-        this.lastFrame = true;
-
-        this.dPosition = [0, 0, 0, 0];
-        this.dSec = [0, 0, 0, 0];
-        this.rotate = 0;
-
-        return ;
     }
 }

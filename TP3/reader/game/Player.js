@@ -1,8 +1,9 @@
 
-function Player(scene, id, state, coords, materialBox, materialPieces) {
+function Player(scene, id, playerMode, state, coords, materialBox, materialPieces) {
     this.scene = scene;
     this.state = state;
     this.id = id;
+    this.playerMode = playerMode;
 
     this.pieces = new AuxiliarBoard(scene, coords, materialBox, materialPieces);
 };

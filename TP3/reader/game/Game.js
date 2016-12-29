@@ -45,8 +45,8 @@ function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1,
 
 Game.prototype.init = function() {
     this.gameBoard = new GameBoard(this.scene, this.materialBoard);
-    this.player1 = new Player(this.scene, 1, PlayerState.ChoosePiece, [0, 0, -5], this.materialBox1, this.materialPieces1);
-    this.player2 = new Player(this.scene, 2, PlayerState.Wait, [0, 0, 5], this.materialBox2, this.materialPieces2);
+    this.player1 = new Player(this.scene, 1, PlayerMode.Player, PlayerState.ChoosePiece, [0, 0, -5], this.materialBox1, this.materialPieces1);
+    this.player2 = new Player(this.scene, 2, PlayerMode.Player, PlayerState.Wait, [0, 0, 5], this.materialBox2, this.materialPieces2);
 
     this.gameState = GameState.Menu;
     this.gameSequence = new GameSequence();
@@ -61,7 +61,6 @@ Game.prototype.init = function() {
  *  INTERFACE
  */
 Game.prototype.changeButtons = function() {
-	console.debug(this.gameState);
     switch(this.gameState) {
         case GameState.Menu:
         case GameState.EndGame:
@@ -86,10 +85,8 @@ Game.prototype.menuButtons = function() {
 
     this.playButton = this.scene.myInterface.gui.add(this.scene.game,'play').name("Play Game");
 	
-    this.modePlayer1 = this.scene.myInterface.gui.add(this.scene.game, 'playerMode',
-													{ 'Player' : 0, 'Easy': 1, 'Hard': 2 }).name("Player 1 Mode");
-	this.modePlayer2 = this.scene.myInterface.gui.add(this.scene.game, 'playerMode',
-                                                    { 'Player' : 0, 'Easy': 1, 'Hard': 2 }).name("Player 2 Mode");
+    this.modePlayer1 = this.scene.myInterface.gui.add(this.scene.game.player1, 'playerMode', PlayerMode).name("Player 1 Mode");
+	this.modePlayer2 = this.scene.myInterface.gui.add(this.scene.game.player2, 'playerMode', PlayerMode).name("Player 2 Mode");
 };
 
 Game.prototype.gameButtons = function() {
@@ -371,6 +368,22 @@ Game.prototype.animateToPlayer = function() {
     }
 };
 
+Game.prototype.gameCamera = function() {
+    if( this.cameraAnimation.target[0].toFixed(5) != 0 || 
+        this.cameraAnimation.target[1].toFixed(5) != 0.2 ||
+        this.cameraAnimation.target[2].toFixed(5) != 0 ) {
+
+        var nTarget = [0, 0.2, 0];
+        var nPosition = this.cameraAnimation.position.slice();
+        nPosition[0] += nTarget[0] - this.cameraAnimation.target[0];
+        nPosition[1] += nTarget[1] - this.cameraAnimation.target[1];
+        nPosition[2] += nTarget[2] - this.cameraAnimation.target[2];
+
+        this.cameraAnimation.setTranslate(nPosition, nTarget, 2);    
+    } else
+        this.cameraAnimation.setRotate([0, 0, 1], Math.PI * 2, 8);
+}
+
 Game.prototype.animateCamera = function () {
     if( this.cameraAnimation == null )
         return ;
@@ -378,7 +391,7 @@ Game.prototype.animateCamera = function () {
     switch( this.gameState ) {
         case GameState.Menu:
         case GameState.EndGame:
-            this.cameraAnimation.setRotate([0, 0, 1], Math.PI * 2, 8);
+            this.gameCamera();
             break;
         case GameState.CameraToP1:
         case GameState.CameraToP2:

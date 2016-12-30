@@ -111,7 +111,20 @@ Game.prototype.update = function( dSec ){
     this.checkRequests(dSec);
     this.updateCamera(dSec);
     this.updateAnimations(dSec);
+	this.changeTime(dSec);
 };
+
+Game.prototype.changeTime = function(dScec){
+	var timePlay = 30;
+	
+	while(true){
+		timePlay -= dSec;
+		if(timePlay == 0){
+			//Mudar Player
+			break;
+		}
+	}
+}
 
 Game.prototype.checkRequests = function (dSec) {
     if( !this.otrio.waitingResponse && this.otrio.responseReceived )
@@ -126,7 +139,7 @@ Game.prototype.checkRequests = function (dSec) {
             this.waitingResponse = false;
 
             console.error("Connection Timeout");
-
+			
             // Try again
             this.request();
         }

@@ -32,9 +32,7 @@ function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1,
 	this.material = new CGFappearance(this.scene);
 };
 
-/**
-*	Initiates the game
-*/
+//Initiates the game
 Game.prototype.init = function() {
     this.gameBoard = new GameBoard(this.scene, this.materialBoard);
     this.player1 = new Player(this.scene, 1, PlayerMode.Player, PlayerState.ChoosePiece, [0, 0, -5], this.materialBox1, this.materialPieces1);
@@ -52,9 +50,7 @@ Game.prototype.init = function() {
  *  INTERFACE
  */
  
-/**
-*	Changes the game's buttons
-*/
+//Changes the game's buttons
 Game.prototype.changeButtons = function() {
     switch(this.gameState) {
         case GameState.Menu:
@@ -70,9 +66,7 @@ Game.prototype.changeButtons = function() {
     }
 };
 
-/**
-*	Creates the main menu's buttons
-*/
+//Creates the main menu's buttons
 Game.prototype.menuButtons = function() {
     if( this.undoButton )
         this.scene.myInterface.gui.remove(this.undoButton);
@@ -87,9 +81,7 @@ Game.prototype.menuButtons = function() {
 	this.modePlayer2 = this.scene.myInterface.gui.add(this.scene.game.player2, 'playerMode', PlayerMode).name("Player 2 Mode");
 };
 
-/**
-*	Creates the game's buttons
-*/
+//Creates the game's buttons
 Game.prototype.gameButtons = function() {
     if( this.playButton )
         this.scene.myInterface.gui.remove(this.playButton);
@@ -108,16 +100,12 @@ Game.prototype.gameButtons = function() {
  *  MISC
  */
  
-/**
-*	Creates the game's history
-*/
+//Creates the game's history
 Game.prototype.logHistory = function() {
     this.gameSequence.show();
 };
 
-/**
-*	Sets the texture's coordinates (in this case this function does nothing)
-*/
+//Sets the texture's coordinates (in this case this function does nothing)
 Game.prototype.setTexCoords = function(length_t, length_s){
 };
 
@@ -125,9 +113,7 @@ Game.prototype.setTexCoords = function(length_t, length_s){
  *  UPDATE
  */
 
-/**
-*	Updates the game
-*/
+//Updates the game
 Game.prototype.update = function( dSec ){
     this.checkRequests(dSec);
     this.updateCamera(dSec);
@@ -135,9 +121,7 @@ Game.prototype.update = function( dSec ){
 	//this.changeTime(dSec);
 };
 
-/**
-*	Verifies the player turn time
-*/
+//Verifies the player turn time
 Game.prototype.changeTime = function(dSec){
 	var timePlay = 30;
 	changeMessage(timePlay);
@@ -152,9 +136,7 @@ Game.prototype.changeTime = function(dSec){
 	}
 }
 
-/**
-*	Checks the prolog requests
-*/
+//Checks the prolog requests
 Game.prototype.checkRequests = function (dSec) {
     if( !this.otrio.waitingResponse && this.otrio.responseReceived )
         this.receivedResponse();
@@ -175,9 +157,7 @@ Game.prototype.checkRequests = function (dSec) {
     }
 };
 
-/**
-*	Updates the camera
-*/
+//Updates the camera
 Game.prototype.updateCamera = function (dSec) {
     if( (   this.gameState == GameState.Menu || 
             this.gameState == GameState.EndGame || 
@@ -192,9 +172,7 @@ Game.prototype.updateCamera = function (dSec) {
     }
 };
 
-/**
-*	Updates the animations
-*/
+//Updates the animations
 Game.prototype.updateAnimations = function(dSec) {
     if( this.currMove.piece && this.currMove.piece.animation ) {
         this.currMove.piece.animation.update(dSec);
@@ -219,36 +197,28 @@ Game.prototype.updateAnimations = function(dSec) {
  *  GAME MECHANICS
  */
  
-/**
-*	Play game
-*/
+//Play game
 Game.prototype.play = function () {
     this.changeState();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 };
 
-/**
-*	Quit game
-*/
+//Quit game
 Game.prototype.quit = function () {
     this.init();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 };
 
-/**
-*	End game
-*/
+//End game
 Game.prototype.end = function () {
     this.init();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 }
 
-/**
-*	Gets the current player
-*/
+//Gets the current player
 Game.prototype.getCurrPlayer = function() {
     var player;
 
@@ -260,9 +230,7 @@ Game.prototype.getCurrPlayer = function() {
     return player;
 };
 
-/**
-*	Changes the player's state
-*/
+//Changes the player's state
 Game.prototype.changePlayerState = function() {
     this.currMove.player.changeState();
 
@@ -294,9 +262,7 @@ Game.prototype.changePlayerState = function() {
     }
 };
 
-/**
-*	Changes the game's state
-*/
+//Changes the game's state
 Game.prototype.changeState = function() {
     switch( this.gameState ) {
         case GameState.Menu:
@@ -340,9 +306,7 @@ Game.prototype.changeState = function() {
     }
 };
 
-/**
-*	Player's next move
-*/
+//Player's next move
 Game.prototype.nextMove = function() {
     // Wait for input if player mode is player
     if( this.currMove.player.playerMode == PlayerMode.Player )
@@ -352,9 +316,7 @@ Game.prototype.nextMove = function() {
     this.request();
 }
 
-/**
-*	Undo the piece movement
-*/
+//Undo the piece movement
 Game.prototype.undoMove = function() {
     if( this.currMove.player.state > PlayerState.PieceToTile ) {
         // At this point the player can't undo anything
@@ -373,9 +335,7 @@ Game.prototype.undoMove = function() {
     }
 };
 
-/**
-*	Picks the object
-*/
+//Picks the object
 Game.prototype.pickObj = function(obj) {
     if( this.currMove.player.state == PlayerState.TileConfirmation )
         this.confirmTile(obj);
@@ -386,9 +346,7 @@ Game.prototype.pickObj = function(obj) {
             this.changePlayerState();
 };
 
-/**
-*	Confirm the tile selected
-*/
+//Confirms the tile selected
 Game.prototype.confirmTile = function(obj) {
     if( this.otrio.waitingResponse || this.otrio.receivedResponse )
         return ;
@@ -404,24 +362,18 @@ Game.prototype.confirmTile = function(obj) {
     }
 };
 
-/**
-*	Chooses the tile to be selected
-*/
+//Chooses the tile to be selected
 Game.prototype.chooseTile = function(tile) {
     this.gameBoard.selectTile(tile);
     this.currMove.player.changeState();
     this.currMove.tileDst = tile;
 };
 
-
-
 /**
  *  ANIMATIONS
  */
  
-/**
-*	Animates the piece selected
-*/
+//Animates the piece selected
 Game.prototype.animatePiece = function () {
     var oldCenter = this.currMove.player.pieces.coords.slice();
     oldCenter[1] += 0.15;
@@ -440,9 +392,7 @@ Game.prototype.animatePiece = function () {
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.2);
 };
 
-/**
-*	Puts the piece on the board
-*/
+//Puts the piece on the board
 Game.prototype.pieceToBoard = function () {
     var oldCenter = this.currMove.player.pieces.coords.slice();
     oldCenter[1] += 1;
@@ -462,9 +412,7 @@ Game.prototype.pieceToBoard = function () {
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2, c3], 1);
 };
 
-/**
-*	Player's camera animation
-*/
+//Player's camera animation
 Game.prototype.animateToPlayer = function() {
     if( this.cameraFirstAnimation ) {
         // Translate
@@ -496,9 +444,7 @@ Game.prototype.animateToPlayer = function() {
     }
 };
 
-/**
-*	Game's camera
-*/
+//Game's camera
 Game.prototype.gameCamera = function() {
     if( this.cameraAnimation.target[0].toFixed(5) != 0 || 
         this.cameraAnimation.target[1].toFixed(5) != 0.2 ||
@@ -515,9 +461,7 @@ Game.prototype.gameCamera = function() {
         this.cameraAnimation.setRotate([0, 0, 1], Math.PI * 2, 8);
 }
 
-/**
-*	Animates the game's camera
-*/
+//Animates the game's camera
 Game.prototype.animateCamera = function() {
     if( this.cameraAnimation == null )
         return ;
@@ -540,9 +484,7 @@ Game.prototype.animateCamera = function() {
  *  SCORE MESSAGES
  */
 
-/**
-*	Increments the player's score
-*/
+//Increments the player's score
 Game.prototype.incrementScore = function() {
     if( this.currMove.player.id == 1 ) {
         var element = document.getElementById("Player1Score");
@@ -555,9 +497,7 @@ Game.prototype.incrementScore = function() {
     element.innerHTML = (score+1) + "";
 }
 
-/**
-*	Chnages the message with the score or the player's time
-*/
+//Changes the message with the score or the player's time
 Game.prototype.changeMessage = function(message) {
     var statusElem = document.getElementById("StatusMessage");
     statusElem.innerHTML = message;

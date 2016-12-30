@@ -12,9 +12,7 @@ function Otrio(){
 
 Otrio.prototype.constructor = Otrio;
 
-/**
-* 	Gets the player's movements
-*/
+//Gets the player's movements
 Otrio.prototype.getPlayerMove = function(board, line, column, pair, player, mv, mv2){
 	var otrio = this;
 	this.waitingResponse = true;
@@ -28,9 +26,7 @@ Otrio.prototype.getPlayerMove = function(board, line, column, pair, player, mv, 
 	});
 }
 
-/**
-*	Gets the computer's movements
-*/
+//Gets the computer's movements
 Otrio.prototype.getComputerMove = function(difficulty, board, mV, player, mV2) {
 	var otrio = this;
 	this.waitingResponse = true;
@@ -44,9 +40,7 @@ Otrio.prototype.getComputerMove = function(difficulty, board, mV, player, mV2) {
 	});
 }
 
-/**
-*	Gets the end game
-*/
+//Gets the end game
 Otrio.prototype.getEndGame = function(board, player) {
 	var otrio = this;
 	this.waitingResponse = true;
@@ -59,9 +53,7 @@ Otrio.prototype.getEndGame = function(board, player) {
 	});
 }
 
-/**
-*	Gets the change turn
-*/
+//Gets the change turn
 Otrio.prototype.getChangeTurn = function(replay, board, player, nPlayer, nMV1, nMV2, modeGame1, modeGame2) {
 	var otrio = this;
 	this.waitingResponse = true;

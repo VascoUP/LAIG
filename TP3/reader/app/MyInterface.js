@@ -9,9 +9,7 @@ function MyInterface() {
 MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
 
-/**
-*	Initiates the interface
-*/
+//Initiates the interface
 MyInterface.prototype.init = function(application) {
 	// call CGFinterface init
 	CGFinterface.prototype.init.call(this, application);
@@ -24,9 +22,7 @@ MyInterface.prototype.init = function(application) {
 	return true;
 };
 
-/**
-*	Function that creates the game's main menu
-*/
+//Function that creates the game's main menu
 MyInterface.prototype.createMenu = function(){
 	//Adds the change scene button
 	this.gui.add(this.scene, 'changeScene').name("Change Scene");
@@ -35,9 +31,7 @@ MyInterface.prototype.createMenu = function(){
 	this.scene.game.changeButtons();
 };
 
-/**
-* 	Processes the keyboard events
-*/
+//Processes the keyboard events
 MyInterface.prototype.processKeyboard = function(event) {
 	
 	CGFinterface.prototype.processKeyUp.call(this, event);

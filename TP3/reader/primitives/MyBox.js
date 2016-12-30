@@ -10,6 +10,7 @@ function MyBox(scene) {
 MyBox.prototype = Object.create(CGFobject.prototype);
 MyBox.prototype.constructor=MyBox;
 
+//Displays the box created
 MyBox.prototype.display = function() {
     this.scene.pushMatrix();
     this.scene.rotate(-Math.PI / 2, 1, 0, 0);

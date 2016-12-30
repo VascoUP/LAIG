@@ -24,6 +24,7 @@ function MySphere(scene, radius, slices, stacks) {
  MySphere.prototype = Object.create(CGFobject.prototype);
  MySphere.prototype.constructor = MySphere;
 
+ //Initiates the sphere's buffers
  MySphere.prototype.initBuffers = function() {
 
  	var xCoord = 0;
@@ -132,6 +133,7 @@ function MySphere(scene, radius, slices, stacks) {
  	this.initGLBuffers();
  }
 
+ //Sets the texture's coordinates
 MySphere.prototype.setTexCoords = function (length_s, length_t) {
     this.minS = 0;
 	this.maxS = Math.pow(length_t, -1) * (this.radius * Math.PI * 2);

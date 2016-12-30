@@ -14,6 +14,7 @@ function MyRectangle(scene, x1, y1, x2, y2) {
 MyRectangle.prototype = Object.create(CGFobject.prototype);
 MyRectangle.prototype.constructor=MyRectangle;
 
+//Initiates the rectangle's buffers
 MyRectangle.prototype.initBuffers = function (x1, y1, x2, y2) {
 	this.vertices = [
         x1, y1, 0, 	//A - 0
@@ -47,6 +48,7 @@ MyRectangle.prototype.initBuffers = function (x1, y1, x2, y2) {
 	this.initGLBuffers();
 }
 
+//Sets the texture's coordinates
 MyRectangle.prototype.setTexCoords = function (length_s, length_t) {
     this.minS = 0;
 	this.maxS = Math.pow(length_t, -1) * Math.abs(this.vertices[4] - this.vertices[0]);

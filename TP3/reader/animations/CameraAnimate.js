@@ -64,9 +64,7 @@ CameraAnimate.prototype.setRotate = function(axis, rotate_angle, duration) {
     this.duration = duration;
 };
 
-/**
-*	Updates the circular animation
-*/
+//Updates the circular animation
 CameraAnimate.prototype.update = function( dSec ) {
     if( this.lastFrame )
         return;

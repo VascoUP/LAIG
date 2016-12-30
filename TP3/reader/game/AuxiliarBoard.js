@@ -21,9 +21,7 @@ function AuxiliarBoard(scene, coords, materialBoard, materialPieces) {
 AuxiliarBoard.prototype = Object.create(CGFnurbsObject.prototype);
 AuxiliarBoard.prototype.constructor = AuxiliarBoard;
 
-/**
-*	Initiates the auxiliar board
-*/
+//Initiates the auxiliar board
 AuxiliarBoard.prototype.init = function(material) {
     this.tiles = [];
     var x = -1, y = 0.15, z = -0.5;
@@ -39,21 +37,15 @@ AuxiliarBoard.prototype.init = function(material) {
     }
 }
 
-/**
-*	Updates the AuxiliarBoard
-*/
+//Updates the AuxiliarBoard
 AuxiliarBoard.prototype.update = function( dSec ){
 }
 
-/**
-*	Sets the texture's coordinates (in this case this function does nothing)
-*/
+//Sets the texture's coordinates (in this case this function does nothing)
 AuxiliarBoard.prototype.setTexCoords = function(length_t, length_s){
 }
 
-/**
-*	Gets the tiles' coordinates
-*/
+//Gets the tiles' coordinates
 AuxiliarBoard.prototype.getTileCoords = function(id) {
     var fId = this.tiles[0].id;
     var dId = id - fId;
@@ -73,9 +65,7 @@ AuxiliarBoard.prototype.getTileCoords = function(id) {
  * GAME MECHANICS
  */
 
-/**
-*	Gets the tile's pieces
-*/
+//Gets the tile's pieces
 AuxiliarBoard.prototype.getTilePiece = function(id) {
     var piece;
     for( var i = 0; i < numTilesAux; i++ )
@@ -84,9 +74,7 @@ AuxiliarBoard.prototype.getTilePiece = function(id) {
     return null;
 }
 
-/**
-*	Removes the pieces from auxiliar board
-*/
+//Removes the pieces from auxiliar board
 AuxiliarBoard.prototype.removePiece = function(piece) {
     for( var i = 0; i < numTilesAux; i++ )
         if(this.tiles[i].removePiece(piece))
@@ -94,9 +82,7 @@ AuxiliarBoard.prototype.removePiece = function(piece) {
     return false;
 }
 
-/**
-*	Converts a piece into string (small piece - s, medium piece - m, larg piece - l)
-*/
+//Converts a piece into string (small piece - s, medium piece - m, larg piece - l)
 AuxiliarBoard.prototype.piecesToString = function() {
     var array = [0, 0, 0];
     for( var i = 0; i < numTilesAux; i++ ) {
@@ -110,9 +96,7 @@ AuxiliarBoard.prototype.piecesToString = function() {
     return str;
 }
 
-/**
-*	Gets the piece's type
-*/
+//Gets the piece's type
 AuxiliarBoard.prototype.getPieceType = function(typePiece) {
     var piece;
     for( var i = 0; i < numTilesAux; i++ ) {
@@ -126,9 +110,7 @@ AuxiliarBoard.prototype.getPieceType = function(typePiece) {
  *  DISPLAY FUNCTIONS
  */
 
-/**
-*	Used so that, when we change something, we don't have to change it in both functions
-*/
+//Used so that, when we change something, we don't have to change it in both functions
 AuxiliarBoard.prototype.generalDisplay = function( func ){   
     this.scene.pushMatrix();
 
@@ -156,16 +138,12 @@ AuxiliarBoard.prototype.generalDisplay = function( func ){
     this.scene.popMatrix();
 }
 
-/**
-*	Register for pick function
-*/
+//Register for pick function
 AuxiliarBoard.prototype.registerForPick = function(){
     this.generalDisplay( Tile.prototype.registerForPick );
 }
 
-/**
-*	Displays the auxiliar board
-*/
+//Displays the auxiliar board
 AuxiliarBoard.prototype.display = function(){
     this.generalDisplay( Tile.prototype.display );
 }

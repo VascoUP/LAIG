@@ -168,6 +168,7 @@ Tile.prototype.generalDisplay = function( func ){
     this.scene.popMatrix();
 }
 
+//Register for pick function
 Tile.prototype.registerTileForPick = function(){
     this.generalDisplay( Tile.prototype.registerTileForPick );
 }

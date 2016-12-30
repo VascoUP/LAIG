@@ -13,6 +13,7 @@ function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
 MyTriangle.prototype = Object.create(CGFobject.prototype);
 MyTriangle.prototype.constructor=MyTriangle;
 
+//Initiates the triangle's buffers
 MyTriangle.prototype.initBuffers = function (x1, y1, z1, x2, y2, z2, x3, y3, z3) {
 	this.vertices = [
         x1, y1, z1, //A - 0
@@ -48,6 +49,7 @@ MyTriangle.prototype.initBuffers = function (x1, y1, z1, x2, y2, z2, x3, y3, z3)
 	this.initGLBuffers();
 };
 
+//Sets the texture's coordinates
 MyTriangle.prototype.setTexCoords = function (length_s, length_t) {
 
     var a = Math.sqrt( Math.pow(this.vertices[0] - this.vertices[6], 2) +

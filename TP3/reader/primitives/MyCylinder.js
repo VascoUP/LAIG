@@ -19,6 +19,7 @@
  MyCylinder.prototype = Object.create(CGFobject.prototype);
  MyCylinder.prototype.constructor = MyCylinder;
 
+ //Initiates the cylinder's buffers
  MyCylinder.prototype.initBuffers = function() {
 	var r = this.base;
 	var dR = ( this.top - this.base ) / this.stacks;
@@ -153,6 +154,7 @@
 	this.initGLBuffers();
 };
 
+//Sets the texture's coordinates
 MyCylinder.prototype.setTexCoords = function (length_s, length_t) {
 	this.minS = 0;
 	this.maxS = Math.pow(length_t, -1) * (((this.top + this.base) / 2) * Math.PI * 2);

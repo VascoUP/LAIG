@@ -60,9 +60,7 @@ main=function() {
 
 ]);
 
-/**
-*	Global function to be used to change the scene
-*/
+//Global function to be used to change the scene
 newScene = function(){
     if(this.indexScene == 0)
         this.indexScene = 1;

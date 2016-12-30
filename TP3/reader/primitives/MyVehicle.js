@@ -48,6 +48,7 @@ function MyVehicle(scene) {
 MyVehicle.prototype = Object.create(CGFobject.prototype);
 MyVehicle.prototype.constructor=MyVehicle;
 
+//Displays the vehicle
 MyVehicle.prototype.display = function() {
 
     this.scene.pushMatrix();

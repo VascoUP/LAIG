@@ -1,7 +1,7 @@
-var h = 0.4;
-var topH = 0.05;
-var legH = h - topH;
-var legD = 0.1;
+var h = 0.4; 			//Table's height
+var topH = 0.05;		//Table top's height
+var legH = h - topH;	//Table legs' height
+var legD = 0.1;			//Leg's diameter
 
 /**
 	MyTable's constructor
@@ -31,6 +31,7 @@ MyTable.prototype.constructor=MyTable;
     this.shader.setUniformsValues({sizeT: this.topSizeT});
 }*/
 
+//Displays the table's top
 MyTable.prototype.displayTop = function() { 
     /*
     this.scene.pushMatrix();
@@ -94,6 +95,7 @@ MyTable.prototype.displayTop = function() {
     this.scene.popMatrix();
 }
 
+//Displays the table's legs
 MyTable.prototype.displayLeg = function() { 
     this.scene.pushMatrix();
     this.scene.translate(0, 0, -legH / 2);
@@ -133,6 +135,7 @@ MyTable.prototype.displayLeg = function() {
     this.scene.popMatrix();
 }
 
+//Displays the table
 MyTable.prototype.display = function() {
     this.scene.pushMatrix();
     this.displayTop();

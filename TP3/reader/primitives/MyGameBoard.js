@@ -28,6 +28,7 @@ function MyGameBoard(scene) {
 MyGameBoard.prototype = Object.create(CGFobject.prototype);
 MyGameBoard.prototype.constructor=MyGameBoard;
 
+//Displays the corner of game's board
 MyGameBoard.prototype.displayCorner = function() {
     this.scene.pushMatrix();
     this.scene.scale(0.25, 0.25, 0.1);
@@ -38,6 +39,7 @@ MyGameBoard.prototype.displayCorner = function() {
     this.scene.popMatrix();
 }
 
+//Displays the side of game's board
 MyGameBoard.prototype.displaySide = function() {    
     this.scene.pushMatrix();
     this.scene.scale(0.25, 1, 0.1);
@@ -51,6 +53,7 @@ MyGameBoard.prototype.displaySide = function() {
     this.scene.popMatrix();
 }
 
+//Displays the game's board
 MyGameBoard.prototype.display = function() {    
     this.scene.pushMatrix();
 

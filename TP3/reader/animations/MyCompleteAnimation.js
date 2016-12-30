@@ -22,9 +22,7 @@ var CompleteAnimation = function ( id, control_points, duration ) {
 CompleteAnimation.prototype = Object.create(Animation.prototype);
 CompleteAnimation.prototype.constructor = CompleteAnimation;
 
-/**
-*	Calculates the animation's angles using the index of the corresponding control point to be used
-*/
+//Calculates the animation's angles using the index of the corresponding control point to be used
 CompleteAnimation.prototype.calcAngles = function(i) {
     this.angleXY = this.control_points[i].angleXY;
     this.angleYZ = this.control_points[i].angleYZ;
@@ -68,9 +66,7 @@ CompleteAnimation.prototype.calcAngles = function(i) {
     this.rotateXZ = this.angleXZ;
 }
 
-/**
-*	Calculates the initial values
-*/
+//Calculates the initial values
 CompleteAnimation.prototype.calcInit = function() {
     var distance = 0;
     var control_points_vel = [];
@@ -123,9 +119,7 @@ CompleteAnimation.prototype.calcInit = function() {
     this.calcAngles(0);
 }
 
-/**
-*	Updates the animation
-*/
+//Updates the animation
 CompleteAnimation.prototype.update = function( dTime ) {
     if( this.lastFrame )
         return;
@@ -184,9 +178,7 @@ CompleteAnimation.prototype.update = function( dTime ) {
     }
 }
 
-/**
-*	Makes the animation's display
-*/
+//Makes the animation's display
 CompleteAnimation.prototype.display = function(scene, obj) {
     scene.pushMatrix();
     // Translate center

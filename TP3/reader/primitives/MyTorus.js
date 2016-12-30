@@ -17,6 +17,7 @@ function MyTorus(scene, inner, outer, slices, loops) {
 MyTorus.prototype = Object.create(CGFobject.prototype);
 MyTorus.prototype.constructor = MyTorus;
 
+//Initiates the torus' buffers
 MyTorus.prototype.initBuffers = function () {
 	this.vertices = [];
 	this.normals = [];
@@ -83,6 +84,7 @@ MyTorus.prototype.initBuffers = function () {
 	this.initGLBuffers();
 };
 
+//Sets the textures coordinates
  MyTorus.prototype.setTexCoords = function (length_s, length_t) {
     this.minS = 0;
 	this.maxS = Math.pow(length_t, -1) * (this.outer * Math.PI * 2);

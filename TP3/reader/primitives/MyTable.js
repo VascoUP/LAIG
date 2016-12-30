@@ -14,33 +14,33 @@ function MyTable(scene, length_s, length_t) {
     this.topSizeS = 1 / Math.floor(this.length_s);
     this.topSizeT = 1 / Math.floor(this.length_s);
 
-    this.square = new MyPlane(scene, 1, 1, 50, 50);
-	//this.normalMap = new CGFtexture(this.scene, "resources/normal_maps/rough_wood.png");
+    this.square = new MyPlane(scene, 1, 1, 20, 20);
+	this.normalMap = new CGFtexture(this.scene, "resources/normal_maps/rough_wood.png");
 
     //Creates the shader
-	//this.shader = new CGFshader(this.scene.gl, "shaders/normal_map-vertex.glsl", "shaders/normal_map-fragment.glsl");
-	//this.setValuesShader();
+	this.shader = new CGFshader(this.scene.gl, "shaders/phong_normal_map-vertex.glsl", "shaders/phong_normal_map-fragment.glsl");
+	this.setValuesShader();
 };
 
 MyTable.prototype = Object.create(CGFobject.prototype);
 MyTable.prototype.constructor=MyTable;
 
-/*MyTable.prototype.setValuesShader = function() {
+MyTable.prototype.setValuesShader = function() {
 	this.shader.setUniformsValues({normalMap: this.normalMap});
-    this.shader.setUniformsValues({sizeS: this.topSizeS});
-    this.shader.setUniformsValues({sizeT: this.topSizeT});
-}*/
+    /*this.shader.setUniformsValues({sizeS: this.topSizeS});
+    this.shader.setUniformsValues({sizeT: this.topSizeT});*/
+}
 
 //Displays the table's top
 MyTable.prototype.displayTop = function() { 
-    /*
+    
     this.scene.pushMatrix();
     this.scene.setActiveShader(this.shader);
     this.scene.translate(0, 0, topH / 2);  
     this.square.display();
     this.scene.setActiveShader(this.scene.defaultShader);
     this.scene.popMatrix();
-    */
+    /*
     for( var i = 0; i < 1.0; i += this.topSizeS ) {
         for( var j = 0; j < 1.0; j += this.topSizeT ) {
             this.scene.pushMatrix();
@@ -50,7 +50,7 @@ MyTable.prototype.displayTop = function() {
             this.scene.popMatrix();
         }
     }
-        
+    
     for( var i = 0; i < 1.0; i += this.topSizeS ) {
         for( var j = 0; j < 1.0; j += this.topSizeT ) {
             this.scene.pushMatrix();
@@ -93,6 +93,7 @@ MyTable.prototype.displayTop = function() {
     this.scene.rotate(-Math.PI / 2, 0, 1, 0);
     this.square.display();
     this.scene.popMatrix();
+    */
 }
 
 //Displays the table's legs
@@ -138,15 +139,18 @@ MyTable.prototype.displayLeg = function() {
 //Displays the table
 MyTable.prototype.display = function() {
     this.scene.pushMatrix();
+    //this.scene.rotate(-Math.PI / 2, 0, 0, 1);
+    this.scene.pushMatrix();
     this.displayTop();
-    this.scene.translate(0.35, 0.35, (-legH / 2) - (topH / 2));
+    /*this.scene.translate(0.35, 0.35, (-legH / 2) - (topH / 2));
     this.displayLeg();
     this.scene.translate(-0.7, 0, 0);
     this.displayLeg();
     this.scene.translate(0, -0.7, 0);
     this.displayLeg();
     this.scene.translate(0.7, 0, 0);
-    this.displayLeg();
+    this.displayLeg();*/
+    this.scene.popMatrix();
     this.scene.popMatrix();
 }
 

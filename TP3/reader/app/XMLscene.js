@@ -46,13 +46,16 @@ XMLscene.prototype.init = function (application) {
     this.material2.setSpecular(0, 0.3, 0.3, 1);    
     this.material2.setShininess(10);
 
-	this.anim = new ContCircularAnimation(this, [0, 0, 0], 0, 0, Math.PI / 4);
-
     this.currentCamera = 0;
 
 	this.loaded = false;
 	
 	this.game = new Game(this, this.material, this.material2, this.material1, this.material1, this.material2);
+
+	this.shader = new CGFshader(this.gl, "../lib/CGF/shaders/Phong/multiple_light-phong-vertex.glsl",
+										"../lib/CGF/shaders/Phong/multiple_light-phong-fragment.glsl");
+	this.defaultShader = this.shader;
+	this.setActiveShader(this.defaultShader);
 
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);
@@ -90,7 +93,7 @@ XMLscene.prototype.onGraphLoaded = function () {
 
 		if( v.id == this.currentCamera ) {
 			this.camera = new CGFcamera(v.angle, v.near, v.far, v.from , v.to);
-			//this.myInterface.setActiveCamera(this.camera);
+			this.myInterface.setActiveCamera(this.camera);
 		}
 	}
 
@@ -152,7 +155,6 @@ XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
 	//this.graph.graph.update(dSec);
 	this.game.update(dSec);
-	this.anim.update(dSec);
 };
 
 //Displays the scene
@@ -180,10 +182,11 @@ XMLscene.prototype.display = function () {
 	this.clearPickRegistration();
 
 	if (this.pickMode == false) {
+		
 		if (this.graph.loadedOk) {
 			for(var i = 0; i < this.graph.nLights; i++)
 				this.lights[i].update();
-			//this.graph.graph.drawScene();
+			this.graph.graph.drawScene();
 			this.game.display();
 		}
 	}

@@ -27,14 +27,20 @@ struct lightProperties {
 
 uniform lightProperties uLight[NUMBER_OF_LIGHTS];
 
+uniform sampler2D normalMap;
+
 varying vec2 vTextureCoord;
 
+varying vec4 vPosition;
 varying vec3 vNormal;
 varying vec3 vLightDir[NUMBER_OF_LIGHTS];
 varying vec3 vEyeVec;
 
 void main() {
-    vec4 vertex = uMVMatrix * vec4(aVertexPosition, 1.0);
+
+    vPosition = vec4(aVertexPosition, 1.0);
+
+    vec4 vertex = uMVMatrix * vPosition;
 
     vNormal = vec3(uNMatrix * vec4(aVertexNormal, 1.0));
 

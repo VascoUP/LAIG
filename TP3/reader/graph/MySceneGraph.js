@@ -1338,6 +1338,28 @@ MySceneGraph.prototype.parsePrimitives = function(primitives) {
 			case 'vehicle':
 				this.primitives[id] = new MyVehicle(this.scene);
 				break;
+				
+			case 'table':
+				if(prim_elems.children[0].attributes.length < 2)
+					return "Primitives -> Table -> Wrong number of attributes";
+				
+				var table = prim_elems.children[0];
+				
+				var length_s = this.reader.getInteger(table, 'length_s');
+				var length_t = this.reader.getInteger(table, 'length_t');
+				
+				if( length_s == undefined || length_t == undefined )
+					return "Primitives -> Table -> Missing required information";
+				
+				if( length_s < 0 || length_t < 0)
+					console.warn("Primitives -> Table -> The values must be a positive number");
+				
+				this.primitives[id] = new MyTable(this.scene, length_s, length_t);
+				break;
+			
+			case 'box':
+				this.primitive[id] = new MyBox(this.scene);
+				break;
 		}
 	}
 };

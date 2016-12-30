@@ -1,21 +1,21 @@
-const small = 0;
-const medium = 1;
-const large = 2;
+const small = 0; 	//Small piece
+const medium = 1;	//Medium piece
+const large = 2;	//Large piece
 
-const smallCoord = 0.1;
-const mediumCoord = 0.25;
-const largeCoord = 0.4;
+const smallCoord = 0.1;		//Small piece's coordinates 
+const mediumCoord = 0.25;	//Medium piece's coordinates
+const largeCoord = 0.4;		//Large piece's coordinates
 
-const selectedColor = [0.2, 0.5, 1, 1];
+const selectedColor = [0.2, 0.5, 1, 1]; //Colors to selected pieces
 
-const NUM_PIECES = 36;
+const NUM_PIECES = 36;	//Piece's number
 
 //  Used to identify the pieces (autoincremented in the constructor)
 var pieceId = 1;
 
 
 /**
- *  PIECE - ABSTRACT CLASS
+ *  Piece - ABSTRACT CLASS
  */
 function Piece(scene, type, material) {    
     if (this.constructor === Piece) {
@@ -55,6 +55,7 @@ Piece.prototype.update = function(dSec){
 Piece.prototype.setTexCoords = function(length_t, length_s){
 }
 
+//Gets the piece coordinates
 Piece.prototype.getCoord = function() {
     switch( this.type ) {
         case small:
@@ -68,6 +69,7 @@ Piece.prototype.getCoord = function() {
     }
 }
 
+//Converts a piece into a string
 Piece.prototype.pieceToString = function() {
     var t;
     switch( this.type ) {
@@ -96,9 +98,8 @@ Piece.prototype.pieceToString = function() {
 
 
 /**
- *  ROUND PIECE - CHILD CLASS OF PIECE
+ *  Round Piece - CHILD CLASS OF PIECE
  */
-
 function RoundPiece(scene) {
     Piece.apply(this, arguments);
     this.init();
@@ -107,17 +108,17 @@ function RoundPiece(scene) {
 RoundPiece.prototype = Object.create(Piece.prototype);
 RoundPiece.prototype.constructor = RoundPiece;
 
+//Initiates a round piece
 RoundPiece.prototype.init = function() {
     var coord = this.getCoord();
     this.obj = new MyTorus( this.scene, 0.05, coord, 40, 40 );
 }
 
-
-
 /**
  *  DISPLAY FUNCTIONS
  */
 
+//Displays the pieces
 Piece.prototype.generalDisplay = function( func ){
     var activateShaders = false;
 
@@ -152,6 +153,7 @@ Piece.prototype.generalDisplay = function( func ){
     this.scene.popMatrix();
 }
 
+//Register for pick function
 Piece.prototype.registerForPick = function(){
     this.generalDisplay( Piece.prototype.registerForPick );
 }

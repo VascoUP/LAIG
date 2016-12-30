@@ -1,3 +1,4 @@
+//Different player's states
 var PlayerState = {
     ChoosePiece : 0,
     PieceConfirmation : 1,
@@ -10,12 +11,16 @@ var PlayerState = {
     Wait : 8
 };
 
+//Different player's modes
 var PlayerMode = {
 	Player: 0,	
 	Easy: 1,
 	Hard: 2,
 };
 
+/**
+*	Player's constructor
+*/
 function Player(scene, id, playerMode, state, coords, materialBox, materialPieces) {
     this.scene = scene;
     this.state = state;
@@ -25,15 +30,16 @@ function Player(scene, id, playerMode, state, coords, materialBox, materialPiece
     this.pieces = new AuxiliarBoard(scene, coords, materialBox, materialPieces);
 };
 
+//Gets the player's color
 Player.prototype.getColor = function() {
     return this.id == 1 ? 'r' : 'b';
 }
-
 
 /**
  *  GAME MECHANICS
  */
 
+ //Changes the player's state
 Player.prototype.changeState = function() {
     switch( this.state ) {
         case PlayerState.ChoosePiece:
@@ -66,6 +72,7 @@ Player.prototype.changeState = function() {
     }
 }
 
+//Function that allows to pick a piece
 Player.prototype.pickPiece = function(piece, move) {
     if( this.state == PlayerState.ChoosePiece )
         return this.choosePiece(piece, move);
@@ -73,6 +80,7 @@ Player.prototype.pickPiece = function(piece, move) {
         return this.confirmPiece(piece, move);
 }
 
+//Function that allows the player to choose a piece
 Player.prototype.choosePiece = function (piece, move) {
     move.piece = piece;
     move.piece.selected = true;
@@ -81,6 +89,7 @@ Player.prototype.choosePiece = function (piece, move) {
     return true;
 }
 
+//Function that allows the computer to choose a piece
 Player.prototype.computerChoosePiece = function (typePiece, move) {
     var piece = this.pieces.getPieceType(typePiece);
     if( !piece )
@@ -92,6 +101,7 @@ Player.prototype.computerChoosePiece = function (typePiece, move) {
     return true;
 }
 
+//Confirms the piece selected
 Player.prototype.confirmPiece = function (piece, move) {
     move.piece.selected = false;
 

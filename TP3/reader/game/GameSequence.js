@@ -1,12 +1,17 @@
+/**
+*	Game sequence's constructor
+*/
 function GameSequence() {
     this.sequence = [];
 }
 
+//Add a movement to the game's sequence
 GameSequence.prototype.addMove = function(move) {
     var m = move.copy();
     this.sequence.push( m );
 }
 
+//Undo the movement and updates the game's sequence
 GameSequence.prototype.undoMove = function(player) {
     if( this.sequence.length == 0 )
         return false;
@@ -22,6 +27,7 @@ GameSequence.prototype.undoMove = function(player) {
     return n > 0;
 }
 
+//Undo movements and updates the game's sequence
 GameSequence.prototype.undoMoves = function(n) {
     for( var i = 0; i < n; i++ ) {
         if( this.sequence.length == 0 )
@@ -31,6 +37,7 @@ GameSequence.prototype.undoMoves = function(n) {
     }
 }
 
+//Shows the game's sequence
 GameSequence.prototype.show = function() {
     console.debug(this.sequence);
     for( var i = 0; i < this.sequence.length; i++ )

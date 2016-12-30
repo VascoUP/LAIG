@@ -3,7 +3,7 @@
 var tileId = 1;
 
 /**
- *  TILE - ABSTRACT CLASS
+ *  Tile - ABSTRACT CLASS
  */
 function Tile(scene, coords, material) {    
     if (this.constructor === Tile) {
@@ -38,6 +38,8 @@ Tile.prototype.setTexCoords = function(length_t, length_s){
 /**
  * GAME MECHANICS
  */
+
+//Verifies if a tile has a piece already
 Tile.prototype.hasPiece = function(type) {
     for( var i = 0; i < this.pieces.length; i++ ) {
         if( this.pieces[i].type == type )
@@ -46,6 +48,7 @@ Tile.prototype.hasPiece = function(type) {
     return false;
 }
 
+//Gets the piece placed on the tile
 Tile.prototype.getTilePiece = function(id) {
     for( var i = 0; i < this.pieces.length; i++ )
         if( this.pieces[i].id == id ) //If id equals this pieces id return the piece
@@ -53,6 +56,7 @@ Tile.prototype.getTilePiece = function(id) {
     return false; //Else return null
 }
 
+//Adds a piece to a tile
 Tile.prototype.addPiece = function(piece) {
     if( this.hasPiece(piece.type) )
         return false;
@@ -60,6 +64,7 @@ Tile.prototype.addPiece = function(piece) {
     return true;
 }
 
+//Remove piece placed on a tile
 Tile.prototype.removePiece = function(piece) {
     var index = this.pieces.indexOf(piece);
     if( index > -1 ) {
@@ -69,6 +74,7 @@ Tile.prototype.removePiece = function(piece) {
     return false;
 }
 
+//Converts a tile into a string
 Tile.prototype.tileToString = function() {
     var array = ['e', 'e', 'e'];
     for( var i = 0; i < this.pieces.length; i++ ) {
@@ -88,6 +94,7 @@ Tile.prototype.tileToString = function() {
     return str;
 }
 
+//Counts the tile's pieces
 Tile.prototype.countPieces = function () {
     var array = [0, 0, 0];
     for( var i = 0; i < this.pieces.length; i++ ) {
@@ -104,6 +111,7 @@ Tile.prototype.countPieces = function () {
     return array;
 }
 
+//Gets the piece's type
 Tile.prototype.getPieceType = function(typePiece) {
     for( var i = 0; i < this.pieces.length; i++ ) {
         if( this.pieces[i].type == typePiece )
@@ -115,9 +123,8 @@ Tile.prototype.getPieceType = function(typePiece) {
 
 
 /**
- *  ROUND TILE - CHILD CLASS OF TILE
+ *  Round Tile - CHILD CLASS OF TILE
  */
-
 function RoundTile(scene) {
     Tile.apply(this, arguments);
 }
@@ -125,11 +132,13 @@ function RoundTile(scene) {
 RoundTile.prototype = Object.create(Tile.prototype);
 RoundTile.prototype.constructor = RoundTile;
 
+//Initiates a pice and placed on tile
 RoundTile.prototype.initPiece = function(type) {
     if( !this.hasPiece(type) )
         this.pieces.push( new RoundPiece(this.scene, type, this.material) );
 }
 
+//Fills the tile
 RoundTile.prototype.fill = function() {
     this.initPiece(small);
     this.initPiece(medium);
@@ -142,6 +151,7 @@ RoundTile.prototype.fill = function() {
  *  DISPLAY FUNCTIONS
  */
 
+//Displays the tiles
 Tile.prototype.generalDisplay = function( func ){
     this.scene.pushMatrix();
     this.scene.translate(this.coords[0], this.coords[1], this.coords[2]);

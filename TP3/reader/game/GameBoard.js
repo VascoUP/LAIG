@@ -1,7 +1,7 @@
-const numTilesBoard = 3;
+const numTilesBoard = 3;  //Tiles' number
 
-const scaleXZ = 4;
-const sizeTile = scaleXZ / 3; 
+const scaleXZ = 4;	//Scale value to use on board
+const sizeTile = scaleXZ / 3;  //Tiles' size
 
 
 /**
@@ -32,6 +32,7 @@ function GameBoard(scene, material) {
 GameBoard.prototype = Object.create(CGFnurbsObject.prototype);
 GameBoard.prototype.constructor = GameBoard;
 
+//Initiates the board
 GameBoard.prototype.init = function() {
     this.tiles = [];
     var x = -1, y = 0.05, z = 1;
@@ -59,10 +60,12 @@ GameBoard.prototype.update = function( dSec ){
 GameBoard.prototype.setTexCoords = function(length_t, length_s){
 }
 
+//Gets the tiles' position
 GameBoard.prototype.getPosTile = function(line, column) {
     return this.tiles[line][column];
 }
 
+//Gets the position of a tile with the respective id
 GameBoard.prototype.getTilePos = function(id) {
     var fId = this.tiles[0][0].id;
     var dId = id - fId;
@@ -73,6 +76,7 @@ GameBoard.prototype.getTilePos = function(id) {
     return [column, line];
 }
 
+//Gets the tile's coordinates
 GameBoard.prototype.getTileCoords = function(id) {
     var pos = this.getTilePos(id);
 
@@ -82,12 +86,11 @@ GameBoard.prototype.getTileCoords = function(id) {
     return [x, 0.2, z];
 }
 
-
-
 /**
  *  GAME MECHANICS
  */
 
+//Selects a respective tile
 GameBoard.prototype.selectTile = function(tile) {
     if( tile == null ) {
         this.board.sV = -1;
@@ -99,6 +102,7 @@ GameBoard.prototype.selectTile = function(tile) {
     }
 }
 
+//Converts the board into a string
 GameBoard.prototype.boardToString = function() {
     var str = '[';
     for( var i = 0; i < numTilesBoard; i++ ) {
@@ -158,10 +162,12 @@ GameBoard.prototype.generalDisplay = function( func ){
     this.scene.popMatrix();
 }
 
+//Register for pick function
 GameBoard.prototype.registerForPick = function(){
     this.generalDisplay( Tile.prototype.registerTileForPick );
 }
 
+//Displays the game's board
 GameBoard.prototype.display = function(){
     this.generalDisplay( Tile.prototype.display );
 }

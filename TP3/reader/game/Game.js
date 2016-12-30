@@ -140,9 +140,11 @@ Game.prototype.update = function( dSec ){
 */
 Game.prototype.changeTime = function(dSec){
 	var timePlay = 30;
+	changeMessage(timePlay);
 	
 	while(true){
 		timePlay -= dSec;
+		changeMessage(timePlay);
 		if(timePlay == 0){
 			//Mudar Player
 			break;
@@ -216,38 +218,37 @@ Game.prototype.updateAnimations = function(dSec) {
 /**
  *  GAME MECHANICS
  */
+ 
+/**
+*	Play game
+*/
 Game.prototype.play = function () {
     this.changeState();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 };
 
+/**
+*	Quit game
+*/
 Game.prototype.quit = function () {
     this.init();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 };
 
+/**
+*	End game
+*/
 Game.prototype.end = function () {
     this.init();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 }
 
-Game.prototype.playerMode = function(playerMode){
-	switch(playerMode){
-		case PlayerMode.Player:
-			//Player Mode
-			break;
-		case PlayerMode.Easy:
-			//easy computer
-			break;
-		case PlayerMode.Hard:
-			//hard computer
-			break;
-	}
-}
-
+/**
+*	Gets the current player
+*/
 Game.prototype.getCurrPlayer = function() {
     var player;
 
@@ -259,6 +260,9 @@ Game.prototype.getCurrPlayer = function() {
     return player;
 };
 
+/**
+*	Changes the player's state
+*/
 Game.prototype.changePlayerState = function() {
     this.currMove.player.changeState();
 
@@ -290,6 +294,9 @@ Game.prototype.changePlayerState = function() {
     }
 };
 
+/**
+*	Changes the game's state
+*/
 Game.prototype.changeState = function() {
     switch( this.gameState ) {
         case GameState.Menu:
@@ -333,6 +340,9 @@ Game.prototype.changeState = function() {
     }
 };
 
+/**
+*	Player's next move
+*/
 Game.prototype.nextMove = function() {
     // Wait for input if player mode is player
     if( this.currMove.player.playerMode == PlayerMode.Player )
@@ -342,6 +352,9 @@ Game.prototype.nextMove = function() {
     this.request();
 }
 
+/**
+*	Undo the piece movement
+*/
 Game.prototype.undoMove = function() {
     if( this.currMove.player.state > PlayerState.PieceToTile ) {
         // At this point the player can't undo anything
@@ -360,6 +373,9 @@ Game.prototype.undoMove = function() {
     }
 };
 
+/**
+*	Picks the object
+*/
 Game.prototype.pickObj = function(obj) {
     if( this.currMove.player.state == PlayerState.TileConfirmation )
         this.confirmTile(obj);
@@ -370,6 +386,9 @@ Game.prototype.pickObj = function(obj) {
             this.changePlayerState();
 };
 
+/**
+*	Confirm the tile selected
+*/
 Game.prototype.confirmTile = function(obj) {
     if( this.otrio.waitingResponse || this.otrio.receivedResponse )
         return ;
@@ -385,6 +404,9 @@ Game.prototype.confirmTile = function(obj) {
     }
 };
 
+/**
+*	Chooses the tile to be selected
+*/
 Game.prototype.chooseTile = function(tile) {
     this.gameBoard.selectTile(tile);
     this.currMove.player.changeState();
@@ -396,6 +418,10 @@ Game.prototype.chooseTile = function(tile) {
 /**
  *  ANIMATIONS
  */
+ 
+/**
+*	Animates the piece selected
+*/
 Game.prototype.animatePiece = function () {
     var oldCenter = this.currMove.player.pieces.coords.slice();
     oldCenter[1] += 0.15;
@@ -414,6 +440,9 @@ Game.prototype.animatePiece = function () {
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2], 0.2);
 };
 
+/**
+*	Puts the piece on the board
+*/
 Game.prototype.pieceToBoard = function () {
     var oldCenter = this.currMove.player.pieces.coords.slice();
     oldCenter[1] += 1;
@@ -433,6 +462,9 @@ Game.prototype.pieceToBoard = function () {
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2, c3], 1);
 };
 
+/**
+*	Player's camera animation
+*/
 Game.prototype.animateToPlayer = function() {
     if( this.cameraFirstAnimation ) {
         // Translate
@@ -464,6 +496,9 @@ Game.prototype.animateToPlayer = function() {
     }
 };
 
+/**
+*	Game's camera
+*/
 Game.prototype.gameCamera = function() {
     if( this.cameraAnimation.target[0].toFixed(5) != 0 || 
         this.cameraAnimation.target[1].toFixed(5) != 0.2 ||
@@ -480,6 +515,9 @@ Game.prototype.gameCamera = function() {
         this.cameraAnimation.setRotate([0, 0, 1], Math.PI * 2, 8);
 }
 
+/**
+*	Animates the game's camera
+*/
 Game.prototype.animateCamera = function() {
     if( this.cameraAnimation == null )
         return ;
@@ -501,6 +539,10 @@ Game.prototype.animateCamera = function() {
 /**
  *  SCORE MESSAGES
  */
+
+/**
+*	Increments the player's score
+*/
 Game.prototype.incrementScore = function() {
     if( this.currMove.player.id == 1 ) {
         var element = document.getElementById("Player1Score");
@@ -513,6 +555,9 @@ Game.prototype.incrementScore = function() {
     element.innerHTML = (score+1) + "";
 }
 
+/**
+*	Chnages the message with the score or the player's time
+*/
 Game.prototype.changeMessage = function(message) {
     var statusElem = document.getElementById("StatusMessage");
     statusElem.innerHTML = message;
@@ -521,9 +566,12 @@ Game.prototype.changeMessage = function(message) {
 /**
  *  PROLOG VALIDATIONS
  */
-    /**
-     *  MAKE REQUESTS
-     */
+
+/**
+*  -> MAKE REQUESTS
+*/
+
+//Makes the different requests
 Game.prototype.request = function() {
     switch( this.currMove.player.state ) {
         case PlayerState.TileConfirmation:
@@ -542,6 +590,7 @@ Game.prototype.request = function() {
     }
 };
 
+//Player's movement request
 Game.prototype.playerMove = function() {
     // Get board as array and stringify it to send it to the prolog predicate
     var board = this.gameBoard.boardToString();
@@ -565,6 +614,7 @@ Game.prototype.playerMove = function() {
     this.otrio.getPlayerMove(board, line, column, pair, player, mv, mv2);
 };
 
+//Computer's movement request
 Game.prototype.computerMove = function() {
 	// Get board as array and stringify it to send it to the prolog predicate
     var board = this.gameBoard.boardToString();
@@ -589,6 +639,7 @@ Game.prototype.computerMove = function() {
     this.otrio.getComputerMove(difficulty, board, mv, player, mv2);
 };
 
+//End game request
 Game.prototype.endGame = function() {
 	// Get board as array and stringify it to send it to the prolog predicate
     var board = this.gameBoard.boardToString();
@@ -602,6 +653,7 @@ Game.prototype.endGame = function() {
     this.otrio.getEndGame(board, player);
 };
 
+//Change turn request
 Game.prototype.changeTurn = function() {
     // Get board as array and stringify it to send it to the prolog predicate
     var board = this.gameBoard.boardToString();
@@ -615,9 +667,11 @@ Game.prototype.changeTurn = function() {
 	//TO CONCLUDE
 };
 
-    /**
-     *  RECEIVE RESPONSES
-     */
+/**
+*  -> RECEIVE RESPONSES
+*/
+
+//Receives the different messages
 Game.prototype.receivedResponse = function() {
     switch( this.currMove.player.state ) {
         case PlayerState.TileConfirmation:
@@ -639,6 +693,7 @@ Game.prototype.receivedResponse = function() {
     this.otrio.counter = 0;
 };
 
+//Receives the player's movement response
 Game.prototype.playerMoveResponse = function() {
     // Received response
     var response = this.otrio.playerMove;
@@ -672,6 +727,7 @@ Game.prototype.playerMoveResponse = function() {
     this.gameBoard.selectTile(null);
 };
 
+//Receives the computer's movement response
 Game.prototype.computerMoveResponse = function() {
     // Received response
     var response = this.otrio.computerPlaying;
@@ -720,6 +776,7 @@ Game.prototype.computerMoveResponse = function() {
     this.currMove.tileDst = this.gameBoard.getPosTile(line, column);
 };
 
+//Receives the end game response
 Game.prototype.endGameResponse = function() {
     // Received response
     var response = this.otrio.endGame;
@@ -732,6 +789,7 @@ Game.prototype.endGameResponse = function() {
         this.changeState();
 };
 
+//Receives the change turn response
 Game.prototype.changeTurnResponse = function() {
     // Received response
     var response = this.otrio.playerTurn;
@@ -744,11 +802,11 @@ Game.prototype.changeTurnResponse = function() {
     //PUT CHANGE TURN FUNCTIONS
 };
 
-
-
 /**
- *  DISPLAY FUNCTIONS
- */
+*  -> DISPLAY FUNCTIONS
+*/
+
+//Register for pick function
 Game.prototype.registerForPick = function() {
     if( this.gameState == GameState.EndGame || this.gameState == GameState.Menu ||
         // If it's a computer playing then don't register anything for pick

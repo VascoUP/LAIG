@@ -1,3 +1,6 @@
+/**
+* 	Object's constructor that enables the camera rotation
+*/
 function CameraAnimate(camera) {
     this.camera = camera;
 
@@ -23,6 +26,10 @@ function CameraAnimate(camera) {
 CameraAnimate.prototype = Object.create(Animation.prototype);
 CameraAnimate.prototype.constructor = CameraAnimate;
 
+/**
+*	Sets the camera's translation
+* 	The arguments passed in the function are the new values ​​that the animation will take
+*/
 CameraAnimate.prototype.setTranslate = function(nextPosition, nextTarget, duration) {
     this.time = 0;
     this.translate = true;
@@ -42,6 +49,10 @@ CameraAnimate.prototype.setTranslate = function(nextPosition, nextTarget, durati
     this.duration = duration;
 };
 
+/**
+*	Sets the camera's rotation
+* 	The arguments passed in the function are the new values ​​that the animation will take
+*/
 CameraAnimate.prototype.setRotate = function(axis, rotate_angle, duration) {
     this.time = 0;
     this.translate = false;
@@ -53,7 +64,9 @@ CameraAnimate.prototype.setRotate = function(axis, rotate_angle, duration) {
     this.duration = duration;
 };
 
-//Updates the circular animatipon
+/**
+*	Updates the circular animation
+*/
 CameraAnimate.prototype.update = function( dSec ) {
     if( this.lastFrame )
         return;

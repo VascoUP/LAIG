@@ -1,4 +1,6 @@
-//Interface's constructor
+/**
+*	Interface's constructor
+*/
 function MyInterface() {
 	//call CGFinterface constructor 
 	CGFinterface.call(this);
@@ -7,23 +9,35 @@ function MyInterface() {
 MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
 
+/**
+*	Initiates the interface
+*/
 MyInterface.prototype.init = function(application) {
 	// call CGFinterface init
 	CGFinterface.prototype.init.call(this, application);
 	
 	this.gui = new dat.GUI();
 	
+	//Creates the menu
 	this.createMenu();
 
 	return true;
 };
 
+/**
+*	Function that creates the game's main menu
+*/
 MyInterface.prototype.createMenu = function(){
+	//Adds the change scene button
 	this.gui.add(this.scene, 'changeScene').name("Change Scene");
-
+	
+	//Buttons that interfere with the game
 	this.scene.game.changeButtons();
 };
 
+/**
+* 	Processes the keyboard events
+*/
 MyInterface.prototype.processKeyboard = function(event) {
 	
 	CGFinterface.prototype.processKeyUp.call(this, event);
@@ -34,14 +48,14 @@ MyInterface.prototype.processKeyboard = function(event) {
 
 	switch (String.fromCharCode(code))
 	{
-		case ("M"):
-			this.scene.changeMaterial();
+		case ("H"):
+			this.scene.game.logHistory();
 			break;
 		case ("V"):
-			this.scene.changeView();
+			this.scene.changeScene();
 			break;
 		case ("Q"):
-			this.scene.game.logHistory();
+			this.scene.game.quit();
 			break;
 		case ("U"):
 			this.scene.game.undoMove();

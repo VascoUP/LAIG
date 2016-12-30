@@ -7,6 +7,7 @@ function XMLscene(myInterface) {
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
+//Initiates the scene
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 	
@@ -57,12 +58,14 @@ XMLscene.prototype.init = function (application) {
 	this.setUpdatePeriod(1/60);
 };
 
+//Initiates the lights
 XMLscene.prototype.initLights = function () {
 	this.lights[0].setPosition(2, 3, 3, 1);
     this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
     this.lights[0].update();
 };
 
+//Initiates the cameras
 XMLscene.prototype.initCameras = function () {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
@@ -101,13 +104,14 @@ XMLscene.prototype.onGraphLoaded = function () {
 	this.game.cameraAnimation.setRotate([0, 1, 0], Math.PI * 2, 8);
 };
 
+//Picking function
 XMLscene.prototype.logPicking = function ()	{
 	if (this.pickMode == false) {
 		if (this.pickResults != null && this.pickResults.length > 0) {
 			for (var i=0; i< this.pickResults.length; i++) {
-				var obj = this.pickResults[i][0]; // o objeto seleccionado
+				var obj = this.pickResults[i][0]; // object selected
 				if (obj) {
-					var customId = this.pickResults[i][1]; // o ID do objeto seleccionado
+					var customId = this.pickResults[i][1]; // object selected id
 					this.game.pickObj(obj);
 				}
 			}
@@ -115,8 +119,6 @@ XMLscene.prototype.logPicking = function ()	{
 		}
 	}
 };
-
-
 
 //Changes the cameras
 XMLscene.prototype.changeView = function() {
@@ -145,8 +147,7 @@ XMLscene.prototype.changeMaterial = function() {
 	this.graph.graph.changeMaterials();
 };
 
-
-
+//Updates the scene
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
 	//this.graph.graph.update(dSec);
@@ -154,6 +155,7 @@ XMLscene.prototype.update = function( dTime ) {
 	this.anim.update(dSec);
 };
 
+//Displays the scene
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
 	
@@ -194,6 +196,7 @@ XMLscene.prototype.display = function () {
 	this.logPicking();
 };
 
+//Changes the scene
 XMLscene.prototype.changeScene = function(){
 	newScene();
 }

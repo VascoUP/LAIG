@@ -1,3 +1,7 @@
+/**
+* 	Animation information constructor
+*	This object creates the different informations needed to create a correct key image animation
+*/
 function AnimationInfo ( center, objCoords, scale ) {
     this.center = center;
     this.objCoords = objCoords;
@@ -6,6 +10,9 @@ function AnimationInfo ( center, objCoords, scale ) {
     this.calcInit();
 }
 
+/**
+*	Calculates the initial values of the key image animation
+*/
 AnimationInfo.prototype.calcInit = function () {
     this.radius = Math.sqrt(Math.pow(this.center[0] - this.objCoords[0], 2) + 
                             Math.pow(this.center[1] - this.objCoords[1], 2) +

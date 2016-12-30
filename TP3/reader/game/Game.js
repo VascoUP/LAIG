@@ -1,3 +1,4 @@
+//Game's status
 var GameState = {
     Menu : 0,
     CameraToP2 : 1,
@@ -7,6 +8,7 @@ var GameState = {
     EndGame : 5
 };
 
+//Maximum number of undos
 const MAX_UNDOS = 1;
 
 /**
@@ -30,6 +32,9 @@ function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1,
 	this.material = new CGFappearance(this.scene);
 };
 
+/**
+*	Initiates the game
+*/
 Game.prototype.init = function() {
     this.gameBoard = new GameBoard(this.scene, this.materialBoard);
     this.player1 = new Player(this.scene, 1, PlayerMode.Player, PlayerState.ChoosePiece, [0, 0, -5], this.materialBox1, this.materialPieces1);
@@ -43,11 +48,13 @@ Game.prototype.init = function() {
     this.nUndos = 0;
 };
 
-
-
 /**
  *  INTERFACE
  */
+ 
+/**
+*	Changes the game's buttons
+*/
 Game.prototype.changeButtons = function() {
     switch(this.gameState) {
         case GameState.Menu:
@@ -63,6 +70,9 @@ Game.prototype.changeButtons = function() {
     }
 };
 
+/**
+*	Creates the main menu's buttons
+*/
 Game.prototype.menuButtons = function() {
     if( this.undoButton )
         this.scene.myInterface.gui.remove(this.undoButton);
@@ -77,6 +87,9 @@ Game.prototype.menuButtons = function() {
 	this.modePlayer2 = this.scene.myInterface.gui.add(this.scene.game.player2, 'playerMode', PlayerMode).name("Player 2 Mode");
 };
 
+/**
+*	Creates the game's buttons
+*/
 Game.prototype.gameButtons = function() {
     if( this.playButton )
         this.scene.myInterface.gui.remove(this.playButton);
@@ -94,27 +107,38 @@ Game.prototype.gameButtons = function() {
 /**
  *  MISC
  */
+ 
+/**
+*	Creates the game's history
+*/
 Game.prototype.logHistory = function() {
     this.gameSequence.show();
 };
 
-//Sets the texture's coordinates (in this case this function does nothing)
+/**
+*	Sets the texture's coordinates (in this case this function does nothing)
+*/
 Game.prototype.setTexCoords = function(length_t, length_s){
 };
-
-
 
 /**
  *  UPDATE
  */
+
+/**
+*	Updates the game
+*/
 Game.prototype.update = function( dSec ){
     this.checkRequests(dSec);
     this.updateCamera(dSec);
     this.updateAnimations(dSec);
-	this.changeTime(dSec);
+	//this.changeTime(dSec);
 };
 
-Game.prototype.changeTime = function(dScec){
+/**
+*	Verifies the player turn time
+*/
+Game.prototype.changeTime = function(dSec){
 	var timePlay = 30;
 	
 	while(true){
@@ -126,6 +150,9 @@ Game.prototype.changeTime = function(dScec){
 	}
 }
 
+/**
+*	Checks the prolog requests
+*/
 Game.prototype.checkRequests = function (dSec) {
     if( !this.otrio.waitingResponse && this.otrio.responseReceived )
         this.receivedResponse();
@@ -146,6 +173,9 @@ Game.prototype.checkRequests = function (dSec) {
     }
 };
 
+/**
+*	Updates the camera
+*/
 Game.prototype.updateCamera = function (dSec) {
     if( (   this.gameState == GameState.Menu || 
             this.gameState == GameState.EndGame || 
@@ -160,6 +190,9 @@ Game.prototype.updateCamera = function (dSec) {
     }
 };
 
+/**
+*	Updates the animations
+*/
 Game.prototype.updateAnimations = function(dSec) {
     if( this.currMove.piece && this.currMove.piece.animation ) {
         this.currMove.piece.animation.update(dSec);

@@ -170,9 +170,6 @@ XMLscene.prototype.display = function () {
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 
-	// Draw axis
-	this.axis.display();
-
 	this.setDefaultAppearance();
 	
 	// ---- END Background, camera and axis setup

@@ -15,11 +15,11 @@ function MyTable(scene, length_s, length_t) {
     this.topSizeT = 1 / Math.floor(this.length_s);
 
     this.square = new MyPlane(scene, 1, 1, 50, 50);
-	//this.normalMap = new CGFtexture(this.scene, "resources/normal_maps/rough_wood.png");
+	/*this.normalMap = new CGFtexture(this.scene, "resources/normal_maps/rough_wood.png");
 
     //Creates the shader
-	//this.shader = new CGFshader(this.scene.gl, "shaders/normal_map-vertex.glsl", "shaders/normal_map-fragment.glsl");
-	//this.setValuesShader();
+	this.shader = new CGFshader(this.scene.gl, "shaders/normal_map-vertex.glsl", "shaders/normal_map-fragment.glsl");
+	this.setValuesShader();*/
 };
 
 MyTable.prototype = Object.create(CGFobject.prototype);

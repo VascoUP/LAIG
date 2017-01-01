@@ -43,7 +43,7 @@ MyInterface.prototype.processKeyboard = function(event) {
 	switch (String.fromCharCode(code))
 	{
 		case ("I"):
-			this.scene.game.logHistory();
+			this.scene.game.playReplay();
 			break;
 		case ("V"):
 			this.scene.changeScene();

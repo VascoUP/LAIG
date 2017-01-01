@@ -189,9 +189,10 @@ Game.prototype.changeTime = function(dSec){
 //Checks the prolog requests
 //Returns if the player is waiting for a server response
 Game.prototype.checkRequests = function(dSec) {
-    if( !this.otrio.waitingResponse && this.otrio.responseReceived )
+    if( !this.otrio.waitingResponse && this.otrio.responseReceived ) {
+        this.changeMessageTime(this.timeCounter);
         this.receivedResponse();
-    else if( this.otrio.waitingResponse ) {
+    } else if( this.otrio.waitingResponse ) {
         this.otrio.counter += dSec;
 
         if( this.otrio.counter > MaxSeconds ) {    
@@ -200,7 +201,7 @@ Game.prototype.checkRequests = function(dSec) {
             this.responseReceived = false;
             this.waitingResponse = false;
 
-            console.error("Connection Timeout");
+            this.changeMessage("Connection lost");
 			
             // Try again
             this.request();
@@ -252,6 +253,10 @@ Game.prototype.play = function() {
 
 //Quit game
 Game.prototype.quit = function() {
+    if( this.gameState == GameState.CameraToP1 ||
+        this.gameState == GameState.CameraToP2 )
+        return ;
+
     this.reset();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
@@ -269,7 +274,9 @@ Game.prototype.end = function() {
 Game.prototype.playReplay = function() {
     if( this.gameSequence.sequence.length == 0 ||
         this.currMove.player.playerMode != PlayerMode.Player || 
-        this.currMove.player.state > PlayerState.TileConfirmation ) 
+        this.currMove.player.state > PlayerState.TileConfirmation ||
+        this.gameState == GameState.CameraToP1 ||
+        this.gameState == GameState.CameraToP2 ) 
         return ;
 
     this.storeMove = this.currMove.copy();

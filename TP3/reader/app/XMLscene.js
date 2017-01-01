@@ -93,7 +93,7 @@ XMLscene.prototype.onGraphLoaded = function () {
 
 		if( v.id == this.currentCamera ) {
 			this.camera = new CGFcamera(v.angle, v.near, v.far, v.from , v.to);
-			this.myInterface.setActiveCamera(this.camera);
+			//this.myInterface.setActiveCamera(this.camera);
 		}
 	}
 

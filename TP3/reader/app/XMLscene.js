@@ -187,7 +187,7 @@ XMLscene.prototype.display = function () {
 	}
 	else
 		this.game.registerForPick();
-
+	
 	this.logPicking();
 };
 

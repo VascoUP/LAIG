@@ -208,7 +208,7 @@ Game.prototype.checkRequests = function(dSec) {
 };
 
 //Updates the camera
-Game.prototype.updateCamera = function(dSec) {
+Game.prototype.updateCamera = function (dSec) {
     if( (   this.gameState == GameState.Menu || 
             this.gameState == GameState.EndGame || 
             this.gameState == GameState.CameraToP2 || 

@@ -6,7 +6,7 @@
 
         <perspective id="x1" near="0.4" far="300" angle="10">
 
-            <from x="55" y="55" z="35" />
+            <from x="55" y="65" z="35" />
             <to x="2" y="0" z="0" />
 
         </perspective>
@@ -23,30 +23,21 @@
     
     
     <lights>
-	
-		<omni id="l1" enabled="1" >
+
+        <omni id="l1" enabled="1" >
             <location x="15" y="15" z="15" w="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
-            <diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="0.4" g="0.3" b="0.5" a="1.0" />
         </omni>
 
-<<<<<<< HEAD
-        <omni id="l3" enabled="1" >
-            <location x="15" y="20" z="20" w="1" />
-=======
         <omni id="l2" enabled="1" >
             <location x="-15" y="-20" z="20" w="1" />
->>>>>>> origin/master
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
             <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
             <specular r="0.1" g="0.1" b="0.1" a="1.0" />
         </omni>
 
-<<<<<<< HEAD
-        <omni id="l5" enabled="1" >
-            <location x="30" y="10" z="30" w="1" />
-=======
         <omni id="l3" enabled="1" >
             <location x="1" y="1" z="1" w="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
@@ -63,7 +54,6 @@
         
         <omni id="l5" enabled="1" >
             <location x="0.5" y="0.5" z="2" w="1" />
->>>>>>> origin/master
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
             <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
             <specular r="0.1" g="0.1" b="0.1" a="1.0" />
@@ -73,17 +63,18 @@
     </lights>
         
     <textures>
-        <texture id="g1" file="resources/grass.jpg" length_s="1" length_t="1" />
-		<texture id="g2" file="resources/rough_wood.png" length_s="1" length_t="1" />
+        <texture id="g1" file="resources/sand.jpg" length_s="1" length_t="1" />
+		<texture id="g2" file="resources/beachTowel.jpg" length_s="1" length_t="1" />
+		<texture id="g3" file="resources/ball.jpg" length_s="1" length_t="1" />
     </textures>
     
     <materials>
-        <material id="w1" >
+         <material id="w1" >
             <emission r="0" g="0" b="0" a="1" />
-            <ambient r="0.18" g="0.13" b="0.05" a="1" />
-            <diffuse r="0.89" g="0.55" b="0.09" a="1" />
-            <specular r="0.18" g="0.13" b="0.05" a="1" />
-            <shininess value="3" />
+            <ambient r="0.4" g="0.3" b="0.05" a="1" />
+            <diffuse r="0.89" g="0.95" b="0.99" a="1" />
+            <specular r="0.8" g="0.3" b="0.05" a="1" />
+            <shininess value="6" />
         </material>
 		
 		<!-- Fluorescent blue -->
@@ -98,20 +89,32 @@
     
     <transformations>
 		<transformation id="t1">
-            <translate x="0" y="-4" z="0" />
+            <translate x="0" y="-0.3" z="0" />
 			<rotate axis="x" angle="90"/>
         </transformation>
 		
 		<transformation id="t2">
-			<translate x="0" y="-2" z="10" />
+			<translate x="0" y="-0.25" z="0" />
 			<rotate axis="x" angle="90"/>
+			<scale x="1.5" y="1.8" z="2" />
 		</transformation>
 		
 		<transformation id="t3">
-            <translate x="0" y="-2" z="-10" />
+            <translate x="6" y="0.8" z="-12" />
 			<rotate axis="x" angle="90"/>
         </transformation>
 		
+		<transformation id="t4">
+            <translate x="-3" y="0.8" z="11" />
+			<rotate axis="x" angle="90"/>
+        </transformation>
+		
+		<transformation id="t5">
+            <translate x="8" y="0.85" z="9" />
+			<rotate axis="x" angle="90"/>
+			<rotate axis="z" angle="30"/>
+			<scale x="1.5" y="1.2" z="1"/>
+        </transformation>
     </transformations>
     
     <animations>
@@ -134,14 +137,21 @@
 			<rectangle x1="-15" y1="-15" x2="15" y2="15"/>
 		</primitive>
 		
-		<primitive id="bench">
-			<cylinder base="1" top="1" height="2.5" slices="50" stacks="10" />
+		<primitive id="towel">
+			<rectangle x1="-5" y1="-5" x2="5" y2="5"/>
 		</primitive>
 		
-		<primitive id="table">
-			<table length_s="0.2" length_t="0.5" />
+		<primitive id="ball">
+			<sphere radius="1.2" slices="100" stacks="100" />
 		</primitive>
-	
+		
+		<primitive id="boia">
+			<torus inner="0.5" outer="1.5" slices="100" loops="100" /> 
+		</primitive>
+		
+		<primitive id="vehicle">
+			<vehicle/> 
+		</primitive>
     </primitives>
        
     <components>
@@ -159,21 +169,11 @@
                 <componentref id="tab"/>
 				<componentref id="sky"/>
 				<componentref id="floor"/>
-				<componentref id="bench1"/>
-				<componentref id="bench2"/>
+				<componentref id="towel"/>
+				<componentref id="ball"/>
+				<componentref id="boia"/>
+				<componentref id="vehicle"/>
             </children>       
-        </component>
-		
-		<component id="sky">   
-            <transformation>
-            </transformation>
-            <materials>
-                <material id="s1" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <primitiveref id="sky" />
-            </children>            
         </component>
 		
 		<component id="tab">        
@@ -188,6 +188,18 @@
             <children>
                 <primitiveref id="chess"/>
             </children>       
+        </component>
+		
+		<component id="sky">   
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="s1" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="sky" />
+            </children>            
         </component>
 		
 		<component id="floor">        
@@ -205,7 +217,7 @@
             </children>       
         </component>
 		
-		<component id="bench1">        
+		<component id="towel">        
             <transformation>
 				<transformationref id="t2"/>
             </transformation>
@@ -216,11 +228,11 @@
             </materials>
             <texture id="g2" />
             <children>
-				<primitiveref id="bench"/>
+				<primitiveref id="towel"/>
             </children>       
         </component>
 		
-		<component id="bench2">        
+		<component id="ball">        
             <transformation>
 				<transformationref id="t3"/>
             </transformation>
@@ -229,9 +241,39 @@
             <materials>
                 <material id="w1" />
             </materials>
-            <texture id="g2" />
+            <texture id="g3" />
             <children>
-				<primitiveref id="bench"/>
+				<primitiveref id="ball"/>
+            </children>       
+        </component>
+		
+		<component id="boia">        
+            <transformation>
+				<transformationref id="t4"/>
+            </transformation>
+            <animation>
+            </animation>
+            <materials>
+                <material id="w1" />
+            </materials>
+            <texture id="g3" />
+            <children>
+				<primitiveref id="boia"/>
+            </children>       
+        </component>
+		
+		<component id="vehicle">        
+            <transformation>
+				<transformationref id="t5"/>
+            </transformation>
+            <animation>
+            </animation>
+            <materials>
+                <material id="w1" />
+            </materials>
+            <texture id="g3" />
+            <children>
+				<primitiveref id="vehicle"/>
             </children>       
         </component>
     </components>

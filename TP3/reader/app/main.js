@@ -46,8 +46,8 @@ main=function() {
 	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
 	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 	
-	var filename=getUrlVars()['file'] || "Chess.dsx";
-	this.scenes = ["Chess.dsx", "scene2.dsx"];
+	var filename=getUrlVars()['file'] || "Scene1.dsx";
+	this.scenes = ["Scene1.dsx", "Scene2.dsx"];
 	this.indexScene = 0;
 
 	// create and load graph, and associate it to scene. 

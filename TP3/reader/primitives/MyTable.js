@@ -14,7 +14,10 @@ function MyTable(scene, length_s, length_t) {
     this.topSizeS = 1 / Math.floor(this.length_s);
     this.topSizeT = 1 / Math.floor(this.length_s);
 
-    this.square = new MyRectangle(scene, -0.5, -0.5, 0.5, 0.5);
+    this.tableTop = new MyRectangle(scene, -0.5, -0.5, 0.5, 0.5);
+    this.tableSide = new MyRectangle(scene, -0.5, -0.5, 0.5, 0.5);
+    this.tableLeg = new MyRectangle(scene, -0.5, -0.5, 0.5, 0.5);
+
     /*
     this.square = new MyPlane(scene, 1, 1, 20, 20);
 	this.normalMap = new CGFtexture(this.scene, "resources/normal_maps/rough_wood.png");
@@ -40,41 +43,41 @@ MyTable.prototype.setValuesShader = function() {
 MyTable.prototype.displayTop = function() { 
     this.scene.pushMatrix();
     this.scene.translate(0, 0, topH / 2);  
-    this.square.display();
+    this.tableTop.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
     this.scene.translate(0, 0, -topH / 2);
     this.scene.rotate(Math.PI, 1, 0, 0);
-    this.square.display();
+    this.tableTop.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
     this.scene.translate(0, -0.5, 0);
     this.scene.scale(1, 1, topH);
     this.scene.rotate(Math.PI / 2, 1, 0, 0);
-    this.square.display();
+    this.tableSide.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
     this.scene.translate(0, 0.5, 0);
     this.scene.scale(1, 1, topH);
     this.scene.rotate(-Math.PI / 2, 1, 0, 0);
-    this.square.display();
+    this.tableSide.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
     this.scene.translate(0.5, 0, 0);
     this.scene.scale(1, 1, topH);
     this.scene.rotate(Math.PI / 2, 0, 1, 0);
-    this.square.display();
+    this.tableSide.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
     this.scene.translate(-0.5, 0, 0);
     this.scene.scale(1, 1, topH);
     this.scene.rotate(-Math.PI / 2, 0, 1, 0);
-    this.square.display();
+    this.tableSide.display();
     this.scene.popMatrix();
 };
 
@@ -84,21 +87,21 @@ MyTable.prototype.displayLeg = function() {
     this.scene.translate(0, 0, -legH / 2);
     this.scene.scale(legD, legD, 1);
     this.scene.rotate(Math.PI, 1, 0, 0);
-    this.square.display();
+    this.tableLeg.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
     this.scene.translate(0, -legD / 2, 0);
     this.scene.scale(legD, 1, legH);
     this.scene.rotate(Math.PI / 2, 1, 0, 0);
-    this.square.display();
+    this.tableLeg.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
     this.scene.translate(0, legD / 2, 0);
     this.scene.scale(legD, 1, legH);
     this.scene.rotate(-Math.PI / 2, 1, 0, 0);
-    this.square.display();
+    this.tableLeg.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
@@ -106,7 +109,7 @@ MyTable.prototype.displayLeg = function() {
     this.scene.scale(1, legD, legH);
     this.scene.rotate(Math.PI / 2, 0, 1, 0);
     this.scene.rotate(-Math.PI / 2, 0, 0, 1);
-    this.square.display();
+    this.tableLeg.display();
     this.scene.popMatrix();
 
     this.scene.pushMatrix();
@@ -114,7 +117,7 @@ MyTable.prototype.displayLeg = function() {
     this.scene.scale(1, legD, legH);
     this.scene.rotate(-Math.PI / 2, 0, 1, 0);
     this.scene.rotate(-Math.PI / 2, 0, 0, 1);
-    this.square.display();
+    this.tableLeg.display();
     this.scene.popMatrix();
 };
 
@@ -135,4 +138,7 @@ MyTable.prototype.display = function() {
 
 //Sets the texture's coordinates (in this case this function does nothing)
 MyTable.prototype.setTexCoords = function (length_s, length_t) {
+    this.tableTop.setTexCoords(length_s, length_t);
+    this.tableSide.setTexCoords(length_s / topH, length_t);
+    this.tableLeg.setTexCoords(length_s / legD, length_t / legH);
 };

@@ -65,6 +65,7 @@
     <textures>
         <texture id="g1" file="resources/grass.jpg" length_s="5" length_t="5" />
 		<texture id="g2" file="resources/rough_wood.png" length_s="4" length_t="2" />
+		<texture id="g3" file="resources/rough_wood.png" length_s="0.5" length_t="0.5" />
     </textures>
     
     <materials>
@@ -153,7 +154,7 @@
             <materials>
                 <material id="w1" />
             </materials>
-            <texture id="g2" />
+            <texture id="g3" />
             <children>
 				<primitiveref id="table"/>
             </children>       

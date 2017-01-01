@@ -50,7 +50,7 @@ XMLscene.prototype.init = function (application) {
 
 	this.loaded = false;
 	
-	this.game = new Game(this, this.material, this.material2, this.material1, this.material1, this.material2);
+	this.game = new Game(this, this.material, this.material1, this.material2);
 
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);
@@ -88,15 +88,11 @@ XMLscene.prototype.onGraphLoaded = function () {
 
 		if( v.id == this.currentCamera ) {
 			this.camera = new CGFcamera(v.angle, v.near, v.far, v.from , v.to);
-			//this.myInterface.setActiveCamera(this.camera);
 		}
 	}
 
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
 	this.setGlobalAmbientLight(this.graph.ambient[0], this.graph.ambient[1], this.graph.ambient[2], this.graph.ambient[3]);
-
-    for(var i = 0; i < this.graph.nLights; i++)
-    	this.lights[i].setVisible(true);
 
 	this.game.onGraphLoaded();
 };
@@ -133,7 +129,6 @@ XMLscene.prototype.changeView = function() {
 			}
 			
 			this.camera = new CGFcamera(this.graph.views[indice].angle, this.graph.views[indice].near, this.graph.views[indice].far, this.graph.views[indice].from , this.graph.views[indice].to);
-			//this.myInterface.setActiveCamera(this.camera);
 			break;
 		}
 	}

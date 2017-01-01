@@ -291,15 +291,14 @@ Game.prototype.endReplay = function() {
     this.replay = false;
     this.storeMove.updateMove(this);
 
+    this.changeMessageTime(this.timeCounter);
+
     if( this.currMove.player.id == this.storeMove.player.id ) {
         this.currMove = this.storeMove.copy();
         this.currMove.player.state = PlayerState.ChoosePiece;
         this.nextMove();
-    } else {
+    } else
         this.changeState();
-    }
-
-    this.changeMessageTime(this.timeCounter);
 };
 
 //Gets the current player
@@ -319,7 +318,10 @@ Game.prototype.changePlayerState = function() {
     this.currMove.player.changeState();
 
     if( this.currMove.player.state == PlayerState.EndGame ) {
-        this.request();
+        if( this.replay )
+            this.changeState();
+        else
+            this.request();
         return ;
     } else if( this.currMove.player.state == PlayerState.PieceAnimation ) {
         this.animatePiece();
@@ -441,6 +443,8 @@ Game.prototype.nextMove = function() {
 //Calculates what should happen on the next fase of the replay
 //Returns true if it should change players
 Game.prototype.nextReplay = function() {
+    console.debug(this.gameSequence.sequence.length);
+    console.debug(this.gameSequence.replayIndexMove + 1);
     if( this.gameSequence.sequence.length <= this.gameSequence.replayIndexMove + 1 ) {
         // End the replay
         this.endReplay();
@@ -454,7 +458,7 @@ Game.prototype.nextReplay = function() {
     } else
         return true;
     return false;
-}
+};
 
 //Undo the piece movement
 Game.prototype.undoMove = function() {

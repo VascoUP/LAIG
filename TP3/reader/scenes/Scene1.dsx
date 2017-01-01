@@ -6,8 +6,8 @@
 
         <perspective id="x1" near="0.4" far="300" angle="10">
 
-            <from x="55" y="65" z="35" />
-            <to x="2" y="0" z="0" />
+            <from x="35" y="40" z="35" />
+            <to x="0" y="0.2" z="0" />
 
         </perspective>
 
@@ -63,8 +63,8 @@
     </lights>
         
     <textures>
-        <texture id="g1" file="resources/sand.jpg" length_s="1" length_t="1" />
-		<texture id="g2" file="resources/beachTowel.jpg" length_s="1" length_t="1" />
+        <texture id="g1" file="resources/sand.jpg" length_s="5" length_t="5" />
+		<texture id="g2" file="resources/beachTowel.jpg" length_s="2.5" length_t="2.5" />
 		<texture id="g3" file="resources/ball.jpg" length_s="1" length_t="1" />
     </textures>
     
@@ -120,21 +120,9 @@
     <animations>
     </animations>
 
-    <primitives>
-		<primitive id="chess">
-			<chessboard du="16" dv="16" textureref="g1" su="0" sv="0">
-                   <c1 r="1.0" g="0.0" b="0.0" a="1.0" />
-                   <c2 r="0.0" g="0.0" b="1.0" a="1" />
-                   <cs r="0.0" g="1.0" b="0.0" a="1" />
-			</chessboard>
-		</primitive>
-		
-		<primitive id="sky">
-            <sphere radius="-50" slices="50" stacks="50" />        
-        </primitive>
-		
+    <primitives>				
 		<primitive id="floor">
-			<rectangle x1="-15" y1="-15" x2="15" y2="15"/>
+			<rectangle x1="-30" y1="-30" x2="30" y2="30"/>
 		</primitive>
 		
 		<primitive id="towel">
@@ -142,11 +130,11 @@
 		</primitive>
 		
 		<primitive id="ball">
-			<sphere radius="1.2" slices="100" stacks="100" />
+			<sphere radius="1.2" slices="8" stacks="8" />
 		</primitive>
 		
 		<primitive id="boia">
-			<torus inner="0.5" outer="1.5" slices="100" loops="100" /> 
+			<torus inner="0.5" outer="1.5" slices="10" loops="10" /> 
 		</primitive>
 		
 		<primitive id="vehicle">
@@ -166,40 +154,12 @@
             </materials>
             <texture id="g1" />
             <children>
-                <componentref id="tab"/>
-				<componentref id="sky"/>
 				<componentref id="floor"/>
 				<componentref id="towel"/>
 				<componentref id="ball"/>
 				<componentref id="boia"/>
 				<componentref id="vehicle"/>
             </children>       
-        </component>
-		
-		<component id="tab">        
-            <transformation>
-            </transformation>
-            <animation>
-            </animation>
-            <materials>
-                <material id="w1" />
-            </materials>
-            <texture id="g1" />
-            <children>
-                <primitiveref id="chess"/>
-            </children>       
-        </component>
-		
-		<component id="sky">   
-            <transformation>
-            </transformation>
-            <materials>
-                <material id="s1" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <primitiveref id="sky" />
-            </children>            
         </component>
 		
 		<component id="floor">        

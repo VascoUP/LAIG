@@ -4,17 +4,17 @@
 function MyGameBoard(scene) {
     CGFobject.call(this,scene);
 
-    this.corner = new MyPatch(scene, 1, 2, 1, 10, [
+    this.corner = new MyPatch(scene, 1, 2, 1, 5, [
         [0.5, -0.5, 0.0, 1.0], [-0.5, -0.5, 0.0, 1.0], [-0.5, 0.5, 0.0, 1.0],
         [0.5, -0.5, 1.0, 1.0], [-0.5, -0.5, 1.0, 1.0], [-0.5, 0.5, 1.0, 1.0]
     ]);    
     
-    this.cornerTop = new MyPatch(scene, 1, 2, 1, 10, [
+    this.cornerTop = new MyPatch(scene, 1, 2, 1, 5, [
         [-0.5, 0.5, 1.0, 1.0], [-0.5, 0.5, 2.0, 1.0], [0.5, 0.5, 2.0, 1.0],
         [-0.5, -0.5, 1.0, 1.0], [-0.5, -0.5, 2.0, 1.0], [0.5, -0.5, 2.0, 1.0]
     ]);
 
-    this.cornerIntersection = new MyPatch(scene, 2, 2, 10, 10, [
+    this.cornerIntersection = new MyPatch(scene, 2, 2, 5, 5, [
         [0.5, 0.5, 2.0, 1.0], [0.5, 0.5, 2.0, 1.0], [0.5, 0.5, 2.0, 1.0],
         [-0.5, 0.5, 2.0, 1.0], [-0.5, -0.5, 2.0, 1.0], [0.5, -0.5, 2.0, 1.0],
         [-0.5, 0.5, 1.0, 1.0], [-0.5, -0.5, 1.0, 1.0], [0.5, -0.5, 1.0, 1.0]

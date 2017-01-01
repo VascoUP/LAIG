@@ -181,7 +181,7 @@ XMLscene.prototype.display = function () {
 		if (this.graph.loadedOk) {
 			for(var i = 0; i < this.graph.nLights; i++)
 				this.lights[i].update();
-			//this.graph.graph.drawScene();
+			this.graph.graph.drawScene();
 			this.game.display(this.material);
 		}
 	}

@@ -6,8 +6,8 @@
 
         <perspective id="x1" near="0.4" far="300" angle="10">
 
-            <from x="55" y="55" z="35" />
-            <to x="2" y="0" z="0" />
+            <from x="35" y="40" z="35" />
+            <to x="0" y="0.2" z="0" />
 
         </perspective>
 
@@ -31,22 +31,13 @@
             <specular r="0.4" g="0.3" b="0.5" a="1.0" />
         </omni>
 
-<<<<<<< HEAD
-        <omni id="l3" enabled="1" >
-            <location x="15" y="20" z="20" w="1" />
-=======
         <omni id="l2" enabled="1" >
             <location x="-15" y="-20" z="20" w="1" />
->>>>>>> origin/master
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
             <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
             <specular r="0.1" g="0.1" b="0.1" a="1.0" />
         </omni>
 
-<<<<<<< HEAD
-        <omni id="l5" enabled="1" >
-            <location x="30" y="10" z="30" w="1" />
-=======
         <omni id="l3" enabled="1" >
             <location x="1" y="1" z="1" w="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
@@ -63,7 +54,6 @@
         
         <omni id="l5" enabled="1" >
             <location x="0.5" y="0.5" z="2" w="1" />
->>>>>>> origin/master
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
             <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
             <specular r="0.1" g="0.1" b="0.1" a="1.0" />
@@ -73,8 +63,8 @@
     </lights>
         
     <textures>
-        <texture id="g1" file="resources/grass.jpg" length_s="1" length_t="1" />
-		<texture id="g2" file="resources/rough_wood.png" length_s="1" length_t="1" />
+        <texture id="g1" file="resources/grass.jpg" length_s="5" length_t="5" />
+		<texture id="g2" file="resources/rough_wood.png" length_s="4" length_t="2" />
     </textures>
     
     <materials>
@@ -118,24 +108,13 @@
     </animations>
 
     <primitives>
-		<primitive id="chess">
-			<chessboard du="16" dv="16" textureref="g1" su="0" sv="0">
-                   <c1 r="1.0" g="0.0" b="0.0" a="1.0" />
-                   <c2 r="0.0" g="0.0" b="1.0" a="1" />
-                   <cs r="0.0" g="1.0" b="0.0" a="1" />
-			</chessboard>
-		</primitive>
-		
-		<primitive id="sky">
-            <sphere radius="-50" slices="50" stacks="50" />        
-        </primitive>
 		
 		<primitive id="floor">
-			<rectangle x1="-15" y1="-15" x2="15" y2="15"/>
+			<rectangle x1="-30" y1="-30" x2="30" y2="30"/>
 		</primitive>
 		
 		<primitive id="bench">
-			<cylinder base="1" top="1" height="2.5" slices="50" stacks="10" />
+			<cylinder base="1" top="1" height="2.5" slices="15" stacks="5" />
 		</primitive>
 		
 		<primitive id="table">
@@ -156,37 +135,27 @@
             </materials>
             <texture id="g1" />
             <children>
-                <componentref id="tab"/>
-				<componentref id="sky"/>
 				<componentref id="floor"/>
 				<componentref id="bench1"/>
 				<componentref id="bench2"/>
+                <componentref id="table"/>
             </children>       
         </component>
 		
-		<component id="sky">   
+		<component id="table">        
             <transformation>
-            </transformation>
-            <materials>
-                <material id="s1" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <primitiveref id="sky" />
-            </children>            
-        </component>
-		
-		<component id="tab">        
-            <transformation>
+				<translate x="0" y="-0.5" z="0" />
+                <scale x="10" y="10" z="17" />
+                <rotate axis="x" angle="-90" />
             </transformation>
             <animation>
             </animation>
             <materials>
                 <material id="w1" />
             </materials>
-            <texture id="g1" />
+            <texture id="g2" />
             <children>
-                <primitiveref id="chess"/>
+				<primitiveref id="table"/>
             </children>       
         </component>
 		

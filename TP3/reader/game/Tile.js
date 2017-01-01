@@ -1,4 +1,3 @@
-
 //  Used to identify the tiles (autoincremented in the constructor)
 var tileId = 1;
 
@@ -121,6 +120,7 @@ Tile.prototype.getPieceType = function(typePiece) {
     return null;
 }
 
+//Gets the piece by ud
 Tile.prototype.getPieceById = function(id) {
     for( var i = 0; i < this.pieces.length; i++ ){
         if( this.pieces[i].id == id )

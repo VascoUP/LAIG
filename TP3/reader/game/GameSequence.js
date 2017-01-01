@@ -52,10 +52,12 @@ GameSequence.prototype.updateSequence = function() {
         this.sequence[i].updateMove(this.game);
 };
 
+//Replay the game movement's sequence
 GameSequence.prototype.replay = function() {
     this.replayIndexMove = -1;
 };
 
+//Verifies what is the next move to do on the replay mode
 GameSequence.prototype.nextReplayMove = function() {
     this.replayIndexMove++;
     return this.replayIndexMove < this.sequence.length ? this.sequence[this.replayIndexMove] : null;

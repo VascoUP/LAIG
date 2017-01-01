@@ -82,6 +82,7 @@ GameBoard.prototype.getTileCoords = function(id) {
     return [x, 0.2, z];
 }
 
+//Gets the tyle by id
 GameBoard.prototype.getTileById = function(id) {
     for( var i = 0; i < numTilesBoard; i++ ) {
         for( var j = 0; j < numTilesBoard; j++ ) {

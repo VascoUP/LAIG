@@ -10,6 +10,7 @@ function GameMove(player, piece, tileSrc, tileDst) {
     this.auto = false;
 }
 
+//Resets the movement
 GameMove.prototype.reset = function() {
     this.piece = null;
     this.tileSrc = null;
@@ -23,7 +24,7 @@ GameMove.prototype.moveTile = function() {
     this.piece.animation = null;
 }
 
-//Remove piece
+//Removes piece
 GameMove.prototype.removePiece = function() {
     if( !this.tileSrc )
         return ;
@@ -62,6 +63,7 @@ GameMove.prototype.copy = function() {
     return new GameMove(this.player, this.piece, this.tileSrc, this.tileDst);
 }
 
+//Updates the movement
 GameMove.prototype.updateMove = function(game) {
     var tmp = this.player.id;
     if( tmp == 1 )

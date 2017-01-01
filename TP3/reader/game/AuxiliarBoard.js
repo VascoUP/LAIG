@@ -57,6 +57,7 @@ AuxiliarBoard.prototype.getTileCoords = function(id) {
     return [x, this.coords[1], z];
 };
 
+//Gets the respective piece by id
 AuxiliarBoard.prototype.getPieceById = function(id) {
     var piece;
     for( var i = 0; i < numTilesAux; i++ )
@@ -65,6 +66,7 @@ AuxiliarBoard.prototype.getPieceById = function(id) {
     return null;
 }
 
+//Gets the respective tile by id
 AuxiliarBoard.prototype.getTileById = function(id) {
     for( var i = 0; i < numTilesAux; i++ ) {
         if( this.tiles[i].id == id )

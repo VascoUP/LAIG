@@ -47,6 +47,7 @@ Game.prototype.init = function() {
     this.animateCamera();
 };
 
+//Initiates the players, tiles, pieces and game sequence
 Game.prototype.initGame = function() {
     tileId = 1;
     pieceId = 1;
@@ -58,6 +59,7 @@ Game.prototype.initGame = function() {
         this.gameSequence.updateSequence();
 };
 
+//Reset function
 Game.prototype.reset = function() {
     this.resetGame();
 
@@ -69,6 +71,7 @@ Game.prototype.reset = function() {
     this.animateCamera();
 };
 
+//Resets the game
 Game.prototype.resetGame = function() {
     tileId = 1;
     pieceId = 1;
@@ -80,6 +83,7 @@ Game.prototype.resetGame = function() {
         this.gameSequence.updateSequence();
 }
 
+//Loads the animated camera
 Game.prototype.onGraphLoaded = function() {
     this.cameraAnimation = new CameraAnimate(this.scene.camera);
 };
@@ -527,7 +531,7 @@ Game.prototype.autoPlay = function(move) {
     this.animatePiece();
 };
 
-//
+//Replays the movements from game sequence
 Game.prototype.replayMove = function() {
     var move = this.gameSequence.nextReplayMove();
     if( move == null )
@@ -579,6 +583,7 @@ Game.prototype.pieceToBoard = function () {
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2, c3], 1);
 };
 
+//Verifies what player state to after create the respetive animation
 Game.prototype.onAnimationEnd = function () {
     if( this.currMove.player.state == PlayerState.PieceAnimation ) 
         this.changePlayerState();

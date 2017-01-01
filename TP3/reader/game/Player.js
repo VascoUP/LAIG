@@ -32,6 +32,7 @@ function Player(scene, id, playerMode, state, coords, materialPieces) {
     this.materialPieces = materialPieces;
 };
 
+//Resets the player's state and pieces
 Player.prototype.reset = function(state) {
     this.state = state;
     this.pieces.init(this.materialPieces);

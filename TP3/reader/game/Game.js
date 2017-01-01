@@ -159,7 +159,7 @@ Game.prototype.checkRequests = function (dSec) {
 
 //Updates the camera
 Game.prototype.updateCamera = function (dSec) {
-    if( (   this.gameState == GameState.Menu || 
+    /*if( (   this.gameState == GameState.Menu || 
             this.gameState == GameState.EndGame || 
             this.gameState == GameState.CameraToP2 || 
             this.gameState == GameState.CameraToP1 ) 
@@ -169,7 +169,7 @@ Game.prototype.updateCamera = function (dSec) {
 
         if( this.cameraAnimation.lastFrame )
             this.animateCamera();
-    }
+    }*/
 };
 
 //Updates the animations

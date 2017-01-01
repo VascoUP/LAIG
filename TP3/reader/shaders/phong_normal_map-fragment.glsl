@@ -2,6 +2,7 @@
 precision highp float;
 #endif
 
+
 #define NUMBER_OF_LIGHTS 4
 
 struct lightProperties {
@@ -42,15 +43,18 @@ uniform materialProperties uBackMaterial;
 varying vec2 vTextureCoord;
 
 uniform sampler2D uSampler;
+uniform sampler2D normalMap;
+
 uniform bool uUseTexture;
 
+varying vec4 vPosition;
 varying vec3 vNormal;
 varying vec3 vLightDir[NUMBER_OF_LIGHTS];
 varying vec3 vEyeVec;
 
 
 vec4 calcDirectionalLight(lightProperties light, vec3 E, vec3 L, vec3 N) {
-    float lambertTerm = dot(N, -L);
+    float lambertTerm = max(dot(N, -L), 0.0);
 
     vec4 Ia = light.ambient * uFrontMaterial.ambient;
 
@@ -66,7 +70,7 @@ vec4 calcDirectionalLight(lightProperties light, vec3 E, vec3 L, vec3 N) {
 
         Is = light.specular * uFrontMaterial.specular * specular;
     }
-    return Ia + Id + Is;
+    return (Ia + Id + Is) /*/ distance(light.position, vPosition)*/;
 }
 
 vec4 calcPointLight(lightProperties light, vec3 lightDir, vec3 E, vec3 N) {
@@ -117,12 +121,13 @@ vec4 lighting(vec3 E, vec3 N) {
 void main() {
 
     // Transformed normal position
-	vec3 N = normalize(vNormal);
+    vec2 texturePosition;
+    texturePosition.x = vPosition.x + 0.5;
+    texturePosition.y = vPosition.y - 0.5;
+	vec3 N = normalize(texture2D(normalMap, texturePosition).xyz * 2.0 - 1.0);
+    //vec3 N = normalize(vNormal);
 
     vec3 E = normalize(vEyeVec);
-
-    //gl_FragColor = vec4(1, 0, 0, 1);
-    //gl_FragColor = lighting(E, N);
 
     vec4 vFinalColor = lighting(E, N);
     

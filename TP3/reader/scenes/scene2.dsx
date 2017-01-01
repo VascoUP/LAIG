@@ -24,7 +24,7 @@
     
     <lights>
 	
-	 <omni id="l1" enabled="1" >
+		<omni id="l1" enabled="1" >
             <location x="15" y="15" z="15" w="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />

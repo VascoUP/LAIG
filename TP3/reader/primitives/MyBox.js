@@ -4,7 +4,7 @@
 function MyBox(scene) {
     CGFobject.call(this,scene);
 
-    this.square = new MyPlane(scene, 1, 1, 1, 50);
+    this.square = new MyRectangle(scene, -0.5, -0.5, 0.5, 0.5);
 };
 
 MyBox.prototype = Object.create(CGFobject.prototype);

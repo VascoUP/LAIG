@@ -122,7 +122,3 @@ parse_input(e_play(Difficulty, Board, Mv, Player, Mv2),
 parse_input(end_game(Board, Player), 'true') :-
 	end_game(Board, Player).
 parse_input(end_game(Board, Player), 'false').
-
-% Change turn (this tells us who's the next player, their pieces and the type of player (Mode))
-parse_input(change_turn(Replay, Board, Player, NPlayer, NMv1, NMv2, ModeGame1, ModeGame2), ['NPlayer' : NextPlayer]) :-
-	change_turn(Replay, Board, Player, NPlayer, NMv1, NMv2, ModeGame1, ModeGame2, NextPlayer, _, _, _, _).

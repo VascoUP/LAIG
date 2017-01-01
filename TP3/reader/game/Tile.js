@@ -67,6 +67,7 @@ Tile.prototype.addPiece = function(piece) {
 //Remove piece placed on a tile
 Tile.prototype.removePiece = function(piece) {
     var index = this.pieces.indexOf(piece);
+
     if( index > -1 ) {
         this.pieces.splice(index, 1); //Removed one element from an index
         return true;
@@ -115,6 +116,14 @@ Tile.prototype.countPieces = function () {
 Tile.prototype.getPieceType = function(typePiece) {
     for( var i = 0; i < this.pieces.length; i++ ) {
         if( this.pieces[i].type == typePiece )
+            return this.pieces[i];
+    }
+    return null;
+}
+
+Tile.prototype.getPieceById = function(id) {
+    for( var i = 0; i < this.pieces.length; i++ ){
+        if( this.pieces[i].id == id )
             return this.pieces[i];
     }
     return null;

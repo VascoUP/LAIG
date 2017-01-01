@@ -1,4 +1,4 @@
-const MaxSeconds = 5; //Maximum time to receive the correct response
+const MaxSeconds = 1; //Maximum time to receive the correct response
 
 /**
 *	Otrio's constructor
@@ -48,21 +48,6 @@ Otrio.prototype.getEndGame = function(board, player) {
 	//Prolog request to receive the information about the predicate "end_game"
 	this.client.getPrologRequest("end_game(" + board + "," + player + ")", function(data) {
 		otrio.endGame = data.target.response;
-		otrio.waitingResponse = false;
-		otrio.responseReceived = true;
-	});
-}
-
-//Gets the change turn
-Otrio.prototype.getChangeTurn = function(replay, board, player, nPlayer, nMV1, nMV2, modeGame1, modeGame2) {
-	var otrio = this;
-	this.waitingResponse = true;
-	
-	//Prolog request to receive the information about the predicate "change_turn"
-	this.client.getPrologRequest("change_turn(" + replay + "," + board + "," + player + "," +
-									nPlayer + "," + nMV1 + "," + nMV2 + "," + modeGame1 + "," +
-									modeGame2 + ")", function(data) {
-		otrio.playerTurn = data.target.response;
 		otrio.waitingResponse = false;
 		otrio.responseReceived = true;
 	});

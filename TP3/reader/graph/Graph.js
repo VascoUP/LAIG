@@ -94,8 +94,6 @@ Graph.prototype.connectedGraphNode = function( node, texture ) {
 //Draws the scene represenetd by the graph
 Graph.prototype.drawScene = function( ) {
 	var head = this.nodes[this.idHead];
-	if( head == undefined )
-		return ;
 	this.drawSceneNode( head, 
 						head.idMaterials[head.currMaterialIndex],
 						head.idTexture );

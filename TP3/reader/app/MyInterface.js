@@ -42,7 +42,7 @@ MyInterface.prototype.processKeyboard = function(event) {
 
 	switch (String.fromCharCode(code))
 	{
-		case ("H"):
+		case ("I"):
 			this.scene.game.logHistory();
 			break;
 		case ("V"):

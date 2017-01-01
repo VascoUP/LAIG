@@ -4,25 +4,23 @@
 function MyGameBoard(scene) {
     CGFobject.call(this,scene);
 
-    this.cylinder = new MyCylinder(scene, 0.8, 0.6, 1.4, 5, 10);
-
-    this.corner = new MyPatch(scene, 1, 2, 1, 50, [
+    this.corner = new MyPatch(scene, 1, 2, 1, 10, [
         [0.5, -0.5, 0.0, 1.0], [-0.5, -0.5, 0.0, 1.0], [-0.5, 0.5, 0.0, 1.0],
         [0.5, -0.5, 1.0, 1.0], [-0.5, -0.5, 1.0, 1.0], [-0.5, 0.5, 1.0, 1.0]
     ]);    
     
-    this.cornerTop = new MyPatch(scene, 1, 2, 1, 50, [
+    this.cornerTop = new MyPatch(scene, 1, 2, 1, 10, [
         [-0.5, 0.5, 1.0, 1.0], [-0.5, 0.5, 2.0, 1.0], [0.5, 0.5, 2.0, 1.0],
         [-0.5, -0.5, 1.0, 1.0], [-0.5, -0.5, 2.0, 1.0], [0.5, -0.5, 2.0, 1.0]
     ]);
 
-    this.cornerIntersection = new MyPatch(scene, 2, 2, 50, 50, [
+    this.cornerIntersection = new MyPatch(scene, 2, 2, 10, 10, [
         [0.5, 0.5, 2.0, 1.0], [0.5, 0.5, 2.0, 1.0], [0.5, 0.5, 2.0, 1.0],
         [-0.5, 0.5, 2.0, 1.0], [-0.5, -0.5, 2.0, 1.0], [0.5, -0.5, 2.0, 1.0],
         [-0.5, 0.5, 1.0, 1.0], [-0.5, -0.5, 1.0, 1.0], [0.5, -0.5, 1.0, 1.0]
     ]);
 
-    this.side = new MyPlane(scene, 1, 1, 1, 50);
+    this.side = new MyPlane(scene, 1, 1, 1, 10);
 };
 
 MyGameBoard.prototype = Object.create(CGFobject.prototype);

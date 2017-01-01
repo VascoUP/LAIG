@@ -3,7 +3,7 @@ const numTilesAux = 6; //Number of tiles
 /**
  *  AuxiliarBoard's constructor
  */
-function AuxiliarBoard(scene, coords, materialBoard, materialPieces) {
+function AuxiliarBoard(scene, coords, materialPieces) {
     CGFobject.call(this,scene);
     this.init(materialPieces);
 
@@ -12,8 +12,6 @@ function AuxiliarBoard(scene, coords, materialBoard, materialPieces) {
     this.rotation = 0;
     //this.rotation = -Math.PI / 4;
     this.scale = [1, 1, 1];
-
-    this.material = materialBoard;
 
     this.box = new MyBox(scene);
 };
@@ -35,15 +33,15 @@ AuxiliarBoard.prototype.init = function(material) {
         this.tiles.push(tile);
         x += 1;
     }
-}
+};
 
 //Updates the AuxiliarBoard
 AuxiliarBoard.prototype.update = function( dSec ){
-}
+};
 
 //Sets the texture's coordinates (in this case this function does nothing)
 AuxiliarBoard.prototype.setTexCoords = function(length_t, length_s){
-}
+};
 
 //Gets the tiles' coordinates
 AuxiliarBoard.prototype.getTileCoords = function(id) {
@@ -57,6 +55,22 @@ AuxiliarBoard.prototype.getTileCoords = function(id) {
     var z = line - 0.5 + this.coords[2];
 
     return [x, this.coords[1], z];
+};
+
+AuxiliarBoard.prototype.getPieceById = function(id) {
+    var piece;
+    for( var i = 0; i < numTilesAux; i++ )
+        if( (piece = this.tiles[i].getPieceById(id)) != null )
+            return piece;
+    return null;
+}
+
+AuxiliarBoard.prototype.getTileById = function(id) {
+    for( var i = 0; i < numTilesAux; i++ ) {
+        if( this.tiles[i].id == id )
+            return this.tiles[i];
+    }
+    return null;
 }
 
 
@@ -123,7 +137,7 @@ AuxiliarBoard.prototype.generalDisplay = function( func ){
     if( func == Tile.prototype.display ) {
         this.scene.pushMatrix();
 
-        this.material.apply();
+        //this.material.apply();
         this.scene.scale(4, 0.5, 3);
         this.box.display();
 
@@ -144,6 +158,7 @@ AuxiliarBoard.prototype.registerForPick = function(){
 }
 
 //Displays the auxiliar board
-AuxiliarBoard.prototype.display = function(){
+AuxiliarBoard.prototype.display = function(material){
+    material.apply();
     this.generalDisplay( Tile.prototype.display );
 }

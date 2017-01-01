@@ -12,10 +12,10 @@ function MyBoard(scene, dU, dV, textureref, sU, sV, rgbaC1, rgbaC2, rgbaCS) {
 	this.rgbaC2 = rgbaC2;
 	this.rgbaCS = rgbaCS;
 
-	var UPARTS= 30;
+	var UPARTS= 4;
 	this.partsU = dU * UPARTS;
 
-	var VPARTS = 30;
+	var VPARTS = 4;
 	this.partsV = dV * VPARTS;
 
 	this.time = 0;

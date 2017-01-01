@@ -1,15 +1,17 @@
 /**
 *	Game sequence's constructor
 */
-function GameSequence() {
+function GameSequence(game) {
+    this.game = game;
     this.sequence = [];
-}
+};
 
 //Add a movement to the game's sequence
 GameSequence.prototype.addMove = function(move) {
     var m = move.copy();
+    m.auto = true;
     this.sequence.push( m );
-}
+};
 
 //Undo the movement and updates the game's sequence
 GameSequence.prototype.undoMove = function(player) {
@@ -25,7 +27,7 @@ GameSequence.prototype.undoMove = function(player) {
     }
     this.undoMoves(n);
     return n > 0;
-}
+};
 
 //Undo movements and updates the game's sequence
 GameSequence.prototype.undoMoves = function(n) {
@@ -35,11 +37,26 @@ GameSequence.prototype.undoMoves = function(n) {
         this.sequence[this.sequence.length - 1].undoMove();
         this.sequence.pop();
     }
-}
+};
 
 //Shows the game's sequence
 GameSequence.prototype.show = function() {
     console.debug(this.sequence);
     for( var i = 0; i < this.sequence.length; i++ )
         this.sequence[i].show();
+};
+
+//Updates the variables in each move stored on the sequence
+GameSequence.prototype.updateSequence = function() {
+    for( var i = 0; i < this.sequence.length; i++ )
+        this.sequence[i].updateMove(this.game);
+};
+
+GameSequence.prototype.replay = function() {
+    this.replayIndexMove = -1;
+};
+
+GameSequence.prototype.nextReplayMove = function() {
+    this.replayIndexMove++;
+    return this.replayIndexMove < this.sequence.length ? this.sequence[this.replayIndexMove] : null;
 }

@@ -21,14 +21,21 @@ var PlayerMode = {
 /**
 *	Player's constructor
 */
-function Player(scene, id, playerMode, state, coords, materialBox, materialPieces) {
+function Player(scene, id, playerMode, state, coords, materialPieces) {
     this.scene = scene;
     this.state = state;
     this.id = id;
     this.playerMode = playerMode;
 
-    this.pieces = new AuxiliarBoard(scene, coords, materialBox, materialPieces);
+    this.pieces = new AuxiliarBoard(scene, coords, materialPieces);
+    
+    this.materialPieces = materialPieces;
 };
+
+Player.prototype.reset = function(state) {
+    this.state = state;
+    this.pieces.init(this.materialPieces);
+}
 
 //Gets the player's color
 Player.prototype.getColor = function() {
@@ -89,18 +96,6 @@ Player.prototype.choosePiece = function (piece, move) {
     return true;
 }
 
-//Function that allows the computer to choose a piece
-Player.prototype.computerChoosePiece = function (typePiece, move) {
-    var piece = this.pieces.getPieceType(typePiece);
-    if( !piece )
-        return false;
-
-    move.piece = piece;
-    move.tileSrc = this.pieces.getTilePiece(piece.id);
-
-    return true;
-}
-
 //Confirms the piece selected
 Player.prototype.confirmPiece = function (piece, move) {
     move.piece.selected = false;
@@ -111,7 +106,7 @@ Player.prototype.confirmPiece = function (piece, move) {
         this.state = PlayerState.ChoosePiece;
         return false;
     }
-
+    
     move.removePiece();
 
     return true;

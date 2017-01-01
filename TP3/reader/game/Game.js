@@ -11,39 +11,77 @@ var GameState = {
 //Maximum number of undos
 const MAX_UNDOS = 1;
 
+//Number of seconds that the player has to play before changing to the other player
+const MAX_TIME = 5;
+
 /**
  *  Game's constructor
  */
-function Game(scene, materialBoard, materialBox1, materialBox2, materialPieces1, materialPieces2) {
+function Game(scene, materialBoard, materialPieces1, materialPieces2) {
     this.scene = scene;
+    this.replay = false;
 
     this.materialBoard = materialBoard;
-    this.materialBox1 = materialBox1;
-    this.materialBox2 = materialBox2;
     this.materialPieces1 = materialPieces1;
     this.materialPieces2 = materialPieces2;
 
-    this.init();
 	this.otrio = new Otrio();
 
     this.cameraAnimation = null;
     this.cameraFirstAnimation = true;
 
 	this.material = new CGFappearance(this.scene);
+
+    this.init();
 };
 
 //Initiates the game
 Game.prototype.init = function() {
-    this.gameBoard = new GameBoard(this.scene, this.materialBoard);
-    this.player1 = new Player(this.scene, 1, PlayerMode.Player, PlayerState.ChoosePiece, [0, 0, -5], this.materialBox1, this.materialPieces1);
-    this.player2 = new Player(this.scene, 2, PlayerMode.Player, PlayerState.Wait, [0, 0, 5], this.materialBox2, this.materialPieces2);
+    this.initGame();
 
     this.gameState = GameState.Menu;
-    this.gameSequence = new GameSequence();
-
+    this.gameSequence = new GameSequence(this);
     this.currMove = new GameMove( this.player1 );
 
     this.nUndos = 0;
+    this.animateCamera();
+};
+
+Game.prototype.initGame = function() {
+    tileId = 1;
+    pieceId = 1;
+    this.gameBoard = new GameBoard(this.scene, this.materialBoard);
+    this.player1 = new Player(this.scene, 1, PlayerMode.Player, PlayerState.ChoosePiece, [0, 0, -5], this.materialPieces1);
+    this.player2 = new Player(this.scene, 2, PlayerMode.Player, PlayerState.Wait, [0, 0, 5], this.materialPieces2);
+
+    if( this.gameSequence )
+        this.gameSequence.updateSequence();
+};
+
+Game.prototype.reset = function() {
+    this.resetGame();
+
+    this.gameState = GameState.Menu;
+    this.gameSequence = new GameSequence(this);
+    this.currMove = new GameMove( this.player1 );
+
+    this.nUndos = 0;
+    this.animateCamera();
+};
+
+Game.prototype.resetGame = function() {
+    tileId = 1;
+    pieceId = 1;
+    this.gameBoard.init();
+    this.player1.reset(PlayerState.ChoosePiece);
+    this.player2.reset(PlayerState.Wait);
+
+    if( this.gameSequence )
+        this.gameSequence.updateSequence();
+}
+
+Game.prototype.onGraphLoaded = function() {
+    this.cameraAnimation = new CameraAnimate(this.scene.camera);
 };
 
 /**
@@ -70,8 +108,8 @@ Game.prototype.changeButtons = function() {
 Game.prototype.menuButtons = function() {
     if( this.undoButton )
         this.scene.myInterface.gui.remove(this.undoButton);
-    if( this.redoButton )
-        this.scene.myInterface.gui.remove(this.redoButton);
+    if( this.replayButton )
+        this.scene.myInterface.gui.remove(this.replayButton);
     if( this.quitButton )
         this.scene.myInterface.gui.remove(this.quitButton);
 
@@ -91,10 +129,9 @@ Game.prototype.gameButtons = function() {
 	}
 
     this.undoButton = this.scene.myInterface.gui.add(this.scene.game,'undoMove').name("Undo");
+    this.replayButton = this.scene.myInterface.gui.add(this.scene.game, 'playReplay').name("Replay");
     this.quitButton = this.scene.myInterface.gui.add(this.scene.game,'quit').name("Quit");
 };
-
-
 
 /**
  *  MISC
@@ -114,30 +151,40 @@ Game.prototype.setTexCoords = function(length_t, length_s){
  */
 
 //Updates the game
-Game.prototype.update = function( dSec ){
-    this.checkRequests(dSec);
+Game.prototype.update = function(dSec){
+    var isWaiting = this.checkRequests(dSec);
     this.updateCamera(dSec);
     this.updateAnimations(dSec);
-	//this.changeTime(dSec);
+    if( !isWaiting && !this.replay)
+    //If is waiting then don't countdown
+	    this.changeTime(dSec);
 };
 
 //Verifies the player turn time
 Game.prototype.changeTime = function(dSec){
-	var timePlay = 30;
-	changeMessage(timePlay);
-	
-	while(true){
-		timePlay -= dSec;
-		changeMessage(timePlay);
-		if(timePlay == 0){
-			//Mudar Player
-			break;
-		}
-	}
+    if( ( this.gameState != GameState.Player1 && this.gameState != GameState.Player2 ) ||
+            this.currMove.player.state > PlayerState.TileConfirmation ||
+            this.replay )
+        return ;
+
+    var tmp = this.timeCounter - dSec;
+
+    if(tmp < 0) {
+        //Mudar Player
+        this.changeMessageTime(0);
+        this.changePlayer();
+        return ;
+    }
+
+    if( Math.ceil(this.timeCounter) != Math.ceil(tmp) )
+        this.changeMessageTime(tmp);
+
+    this.timeCounter = tmp;
 }
 
 //Checks the prolog requests
-Game.prototype.checkRequests = function (dSec) {
+//Returns if the player is waiting for a server response
+Game.prototype.checkRequests = function(dSec) {
     if( !this.otrio.waitingResponse && this.otrio.responseReceived )
         this.receivedResponse();
     else if( this.otrio.waitingResponse ) {
@@ -154,12 +201,15 @@ Game.prototype.checkRequests = function (dSec) {
             // Try again
             this.request();
         }
+
+        return true;
     }
+    return false;
 };
 
 //Updates the camera
-Game.prototype.updateCamera = function (dSec) {
-    /*if( (   this.gameState == GameState.Menu || 
+Game.prototype.updateCamera = function(dSec) {
+    if( (   this.gameState == GameState.Menu || 
             this.gameState == GameState.EndGame || 
             this.gameState == GameState.CameraToP2 || 
             this.gameState == GameState.CameraToP1 ) 
@@ -169,25 +219,17 @@ Game.prototype.updateCamera = function (dSec) {
 
         if( this.cameraAnimation.lastFrame )
             this.animateCamera();
-    }*/
+    }
 };
 
 //Updates the animations
 Game.prototype.updateAnimations = function(dSec) {
     if( this.currMove.piece && this.currMove.piece.animation ) {
+        
         this.currMove.piece.animation.update(dSec);
 
-        if( this.currMove.piece.animation.lastFrame ) {
-            if( this.currMove.player.state == PlayerState.PieceAnimation ) 
-                this.changePlayerState();
-
-            else if( this.currMove.player.state == PlayerState.PieceToTile ) {
-                    this.currMove.moveTile();
-                    this.gameSequence.addMove(this.currMove);
-
-                    this.changePlayerState();
-            }
-        }
+        if( this.currMove.piece.animation.lastFrame )
+            this.onAnimationEnd();
     }
 };
 
@@ -198,25 +240,67 @@ Game.prototype.updateAnimations = function(dSec) {
  */
  
 //Play game
-Game.prototype.play = function () {
+Game.prototype.play = function() {
     this.changeState();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 };
 
 //Quit game
-Game.prototype.quit = function () {
-    this.init();
+Game.prototype.quit = function() {
+    this.reset();
+    this.changeButtons();
+    this.cameraAnimation.lastFrame = true;
+    this.changeMessage("");
+};
+
+//End game
+Game.prototype.end = function() {
+    this.reset();
     this.changeButtons();
     this.cameraAnimation.lastFrame = true;
 };
 
-//End game
-Game.prototype.end = function () {
-    this.init();
-    this.changeButtons();
-    this.cameraAnimation.lastFrame = true;
-}
+//Replay the whole game
+Game.prototype.playReplay = function() {
+    if( this.gameSequence.sequence.length == 0 ||
+        this.currMove.player.playerMode != PlayerMode.Player || 
+        this.currMove.player.state > PlayerState.TileConfirmation ) 
+        return ;
+
+    this.storeMove = this.currMove.copy();
+
+    this.resetGame();
+    this.replay = true;
+    this.gameSequence.replay();
+
+    this.currMove.reset();
+    if( this.gameSequence.sequence[0].player.id == 1 ) {
+        this.currMove.player = this.player1;
+        this.gameState = GameState.CameraToP1;
+    } else {
+        this.currMove.player = this.player2;
+        this.gameState = GameState.CameraToP2;
+    }
+
+    this.changeMessage("REPLAY");
+};
+
+//Ends the replay
+Game.prototype.endReplay = function() {
+    this.replay = false;
+    this.storeMove.updateMove(this);
+
+    if( this.currMove.player.id == this.storeMove.player.id ) {
+        this.currMove = this.storeMove.copy();
+        this.currMove.player.state = PlayerState.ChoosePiece;
+        this.nextMove();
+    } else {
+        this.changeState();
+    }
+
+    this.changeMessageTime(this.timeCounter);
+};
 
 //Gets the current player
 Game.prototype.getCurrPlayer = function() {
@@ -241,63 +325,71 @@ Game.prototype.changePlayerState = function() {
         this.animatePiece();
         return ;
     }
-
-    if( this.currMove.player.playerMode == PlayerMode.Player )
+    
+    if( !this.currMove.auto )
         return ;
 
-    switch(this.currMove.player.state) {
-        case PlayerState.ChoosePiece:
-            this.request();
-            break;
-        case PlayerState.ChooseTile:
-            // Choose given tile
-            this.chooseTile(this.currMove.tileDst);
-            this.gameBoard.selectTile(null);
-            // Confirmed tile
-            this.currMove.player.changeState();
+    if(this.currMove.player.state == PlayerState.ChooseTile) {
+        // Choose given tile
+        this.chooseTile(this.currMove.tileDst);
+        this.gameBoard.selectTile(null);
+        // Confirmed tile
+        this.currMove.player.changeState();
 
-            //Add animation to the piece
-            this.pieceToBoard();
-            break;
+        //Add animation to the piece
+        this.pieceToBoard();
     }
 };
 
 //Changes the game's state
 Game.prototype.changeState = function() {
+
     switch( this.gameState ) {
         case GameState.Menu:
             this.gameState = GameState.CameraToP1;
             break;
         case GameState.Player1:
-            this.gameState = GameState.CameraToP2;
-
-            this.player1.changeState();
-            this.player2.changeState();
-
-            this.currMove.player = this.getCurrPlayer();
-            this.nUndos = 0;
-
-            break;
-        case GameState.CameraToP2:
-            this.gameState = GameState.Player2;
-            this.nextMove();
-
-            break;
         case GameState.Player2:
-            this.gameState = GameState.CameraToP1;
 
-            this.player1.changeState();
-            this.player2.changeState();
+            if( this.replay && !this.nextReplay() )
+                    return ;
 
+            if( this.gameState == GameState.Player1 ) {
+                this.gameState = GameState.CameraToP2;
+                var p1 = PlayerState.Wait;
+                var p2 = PlayerState.ChoosePiece;
+            } else {
+                this.gameState = GameState.CameraToP1;
+                var p1 = PlayerState.ChoosePiece;
+                var p2 = PlayerState.Wait;
+            }
+
+            this.player1.state = p1;
+            this.player2.state = p2;
+
+            this.currMove.reset();
             this.currMove.player = this.getCurrPlayer();
+            this.currMove.auto = false;
             this.nUndos = 0;
 
             break;
+
         case GameState.CameraToP1:
-            this.gameState = GameState.Player1;
+        case GameState.CameraToP2:
+
+            if( this.gameState == GameState.CameraToP1 )
+                this.gameState = GameState.Player1;
+            else
+                this.gameState = GameState.Player2;
+
+            this.timeCounter = MAX_TIME;
+            if( !this.replay )
+                this.changeMessageTime(this.timeCounter);
+
             this.nextMove();
 
             break;
+
         case GameState.EndGame:
             this.gameState = GameState.Menu;
             break;
@@ -306,14 +398,62 @@ Game.prototype.changeState = function() {
     }
 };
 
+//Changes the current player
+Game.prototype.changePlayer = function() {
+    this.gameBoard.selectTile(null);
+    this.currMove.revertTile();
+    this.currMove.revertPiece();
+
+    // Reset player states
+    if( this.currMove.player.id == this.player1.id ) {
+        // Change game state
+        this.changeState();
+        this.player1.state = PlayerState.Wait;
+        this.player2.state = PlayerState.ChoosePiece;
+    } else {
+        // Change game state
+        this.changeState();
+        this.player2.state = PlayerState.Wait;
+        this.player1.state = PlayerState.ChoosePiece;
+    }
+
+    // Reset currMove
+    this.currMove.reset();
+    this.currMove.player = this.getCurrPlayer();
+};
+
 //Player's next move
 Game.prototype.nextMove = function() {
+    // Move on to the next move on the sequence
+    if( this.replay ) {
+        this.replayMove();
+        return ;
+    }
+
     // Wait for input if player mode is player
     if( this.currMove.player.playerMode == PlayerMode.Player )
         return ;
 
     // If it's computer then request a play to the prolog program
     this.request();
+};
+
+//Calculates what should happen on the next fase of the replay
+//Returns true if it should change players
+Game.prototype.nextReplay = function() {
+    if( this.gameSequence.sequence.length <= this.gameSequence.replayIndexMove + 1 ) {
+        // End the replay
+        this.endReplay();
+    }
+    else if( this.gameSequence.sequence.length > this.gameSequence.replayIndexMove + 1 &&
+        this.gameSequence.sequence[this.gameSequence.replayIndexMove + 1].player.id == this.currMove.player.id ) {
+        // Keep the camera on the player if the next move was made by the same one
+        this.currMove.player.state = PlayerState.ChoosePiece;
+
+        this.nextMove();
+    } else
+        return true;
+    return false;
 }
 
 //Undo the piece movement
@@ -369,6 +509,31 @@ Game.prototype.chooseTile = function(tile) {
     this.currMove.tileDst = tile;
 };
 
+//Automaticly plays a given move
+Game.prototype.autoPlay = function(move) {
+    this.currMove = move.copy();
+    this.currMove.auto = true;
+
+    // Select piece
+    this.currMove.player.changeState();
+
+    // And confirm it
+    this.currMove.player.changeState();
+    this.currMove.removePiece();
+
+    // Let the animation run
+    this.animatePiece();
+};
+
+//
+Game.prototype.replayMove = function() {
+    var move = this.gameSequence.nextReplayMove();
+    if( move == null )
+        this.endReplay();
+    else 
+        this.autoPlay(move);
+};
+
 /**
  *  ANIMATIONS
  */
@@ -410,6 +575,18 @@ Game.prototype.pieceToBoard = function () {
     var c3 = new AnimationInfo(newCenter, newCoords, [sizeTile, sizeTile, 1]);
 
     this.currMove.piece.animation = new CompleteAnimation("mvPiece", [c1, c2, c3], 1);
+};
+
+Game.prototype.onAnimationEnd = function () {
+    if( this.currMove.player.state == PlayerState.PieceAnimation ) 
+        this.changePlayerState();
+
+    else if( this.currMove.player.state == PlayerState.PieceToTile ) {
+        this.currMove.moveTile();
+        if( !this.replay )
+            this.gameSequence.addMove(this.currMove);
+        this.changePlayerState();
+    }
 };
 
 //Player's camera animation
@@ -495,13 +672,27 @@ Game.prototype.incrementScore = function() {
     }
 
     element.innerHTML = (score+1) + "";
-}
+};
+
+//Changes the message with the score or the player's time
+Game.prototype.changeMessageTime = function(secs) {    
+    var time = Math.ceil(secs);
+
+    var minutes = Math.floor(time / 60);
+    var seconds = time - minutes * 60;
+    
+    var messageMin = minutes < 10 ? "0" + minutes : minutes;
+    var messageSec = seconds < 10 ? "0" + seconds : seconds;
+    var messageTime = messageMin + ":" + messageSec;
+
+    this.changeMessage(messageTime);
+};
 
 //Changes the message with the score or the player's time
 Game.prototype.changeMessage = function(message) {
     var statusElem = document.getElementById("StatusMessage");
     statusElem.innerHTML = message;
-}
+};
 
 /**
  *  PROLOG VALIDATIONS
@@ -513,13 +704,15 @@ Game.prototype.changeMessage = function(message) {
 
 //Makes the different requests
 Game.prototype.request = function() {
+    if( this.replay )
+        return ;
+
     switch( this.currMove.player.state ) {
         case PlayerState.TileConfirmation:
             this.playerMove();
             break;
 		case PlayerState.ChoosePiece:
-			if(this.currMove.player.playerMode != PlayerMode.Player)
-				this.computerMove();
+            this.computerMove();
 			break;
 		case PlayerState.EndGame:
 			this.endGame();
@@ -702,18 +895,11 @@ Game.prototype.computerMoveResponse = function() {
         }
     }
 
-    // Select piece
-    this.currMove.player.computerChoosePiece(piece, this.currMove);
-    this.currMove.player.changeState();
-
-    // And confirm it
-    this.currMove.player.confirmPiece(this.currMove.piece, this.currMove);
-    this.currMove.player.changeState();
-    // Let the animation run
-    this.animatePiece();
-
-    // Store the destination tile
+    this.currMove.piece = this.currMove.player.pieces.getPieceType(piece);
+    this.currMove.tileSrc = this.currMove.player.pieces.getTilePiece(this.currMove.piece.id);
     this.currMove.tileDst = this.gameBoard.getPosTile(line, column);
+    this.currMove.auto = true;
+    this.autoPlay(this.currMove);
 };
 
 //Receives the end game response
@@ -729,18 +915,6 @@ Game.prototype.endGameResponse = function() {
         this.changeState();
 };
 
-//Receives the change turn response
-Game.prototype.changeTurnResponse = function() {
-    // Received response
-    var response = this.otrio.playerTurn;
-    response = response.substring(1, response.length - 1);
-    response = response.split(',');
-
-	var values = response[0].split(':');
-	var newPlayer = values[1];
-
-    //PUT CHANGE TURN FUNCTIONS
-};
 
 /**
 *  -> DISPLAY FUNCTIONS
@@ -750,10 +924,9 @@ Game.prototype.changeTurnResponse = function() {
 Game.prototype.registerForPick = function() {
     if( this.gameState == GameState.EndGame || this.gameState == GameState.Menu ||
         // If it's a computer playing then don't register anything for pick
-        this.currMove.player.playerMode != PlayerMode.Player )
+        this.currMove.player.playerMode != PlayerMode.Player ||
+        this.replay )
         return ;
-        
-    this.scene.pushMatrix();
 
     if( this.currMove.player.state == PlayerState.ChoosePiece || 
         this.currMove.player.state == PlayerState.PieceConfirmation ) {
@@ -764,20 +937,15 @@ Game.prototype.registerForPick = function() {
             this.currMove.player.state == PlayerState.TileConfirmation ) {
         this.gameBoard.registerForPick();
     }
-
-    this.scene.popMatrix();
 };
 
 //Displays the Game with the respective shader
-Game.prototype.display = function(){
-    this.scene.pushMatrix();
+Game.prototype.display = function(material){
+    this.player1.pieces.display(material);
+    this.player2.pieces.display(material);
 
     this.gameBoard.display();
-    this.player1.pieces.display();
-    this.player2.pieces.display();
     
     if( this.currMove.piece && this.currMove.piece.animation != null )
             this.currMove.piece.display();
-
-    this.scene.popMatrix();
 };

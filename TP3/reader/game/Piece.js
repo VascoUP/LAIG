@@ -111,7 +111,7 @@ RoundPiece.prototype.constructor = RoundPiece;
 //Initiates a round piece
 RoundPiece.prototype.init = function() {
     var coord = this.getCoord();
-    this.obj = new MyTorus( this.scene, 0.05, coord, 40, 40 );
+    this.obj = new MyTorus( this.scene, 0.05, coord, 20, 5 );
 }
 
 /**
@@ -159,6 +159,6 @@ Piece.prototype.registerForPick = function(){
 }
 
 //Displays the Piece with the respective shader
-Piece.prototype.display = function(){
+Piece.prototype.display = function() {
     this.generalDisplay( Piece.prototype.display );
 }

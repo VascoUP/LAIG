@@ -10,7 +10,7 @@ XMLscene.prototype.constructor = XMLscene;
 //Initiates the scene
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
-	
+	this.time = 0;
 	this.setPickEnabled(true);
 
     this.initCameras();
@@ -30,20 +30,20 @@ XMLscene.prototype.init = function (application) {
 
 	this.material = new CGFappearance(this);
     this.material.setAmbient(0, 0, 0, 1);
-    this.material.setDiffuse(1, 1, 1, 1);
-    this.material.setSpecular(0, 0, 0, 1);    
+    this.material.setDiffuse(0.6, 0.6, 0.6, 1);
+    this.material.setSpecular(0.1, 0.1, 0.1, 1);    
     this.material.setShininess(1);
 
 	this.material1 = new CGFappearance(this);
     this.material1.setAmbient(0.2, 0, 0, 1);
-    this.material1.setDiffuse(1, 0, 0, 1);
-    this.material1.setSpecular(0.6, 0, 0, 1);    
+    this.material1.setDiffuse(0.5, 0, 0, 1);
+    this.material1.setSpecular(0.2, 0, 0, 1);    
     this.material1.setShininess(10);
 
 	this.material2 = new CGFappearance(this);
     this.material2.setAmbient(0, 0.1, 0.1, 1);
-    this.material2.setDiffuse(0, 0.8, 0.8, 1);
-    this.material2.setSpecular(0, 0.3, 0.3, 1);    
+    this.material2.setDiffuse(0, 0.5, 0.5, 1);
+    this.material2.setSpecular(0, 0.1, 013, 1);    
     this.material2.setShininess(10);
 
     this.currentCamera = 0;
@@ -51,11 +51,6 @@ XMLscene.prototype.init = function (application) {
 	this.loaded = false;
 	
 	this.game = new Game(this, this.material, this.material2, this.material1, this.material1, this.material2);
-
-	this.shader = new CGFshader(this.gl, "../lib/CGF/shaders/Phong/multiple_light-phong-vertex.glsl",
-										"../lib/CGF/shaders/Phong/multiple_light-phong-fragment.glsl");
-	this.defaultShader = this.shader;
-	this.setActiveShader(this.defaultShader);
 
 	/* 60 frames per second */
 	this.setUpdatePeriod(1/60);
@@ -85,7 +80,7 @@ XMLscene.prototype.setDefaultAppearance = function () {
 XMLscene.prototype.onGraphLoaded = function () {
 	this.loaded = true;
 	//Set axis length with the correspondent values
-	this.axis = new CGFaxis(this, this.graph.axis_length);
+	//this.axis = new CGFaxis(this, this.graph.axis_length);
 	this.currentCamera = this.graph.default_view;
 
 	for(var i = 0; i < this.graph.views.length; i++) {
@@ -93,7 +88,7 @@ XMLscene.prototype.onGraphLoaded = function () {
 
 		if( v.id == this.currentCamera ) {
 			this.camera = new CGFcamera(v.angle, v.near, v.far, v.from , v.to);
-			this.myInterface.setActiveCamera(this.camera);
+			//this.myInterface.setActiveCamera(this.camera);
 		}
 	}
 
@@ -103,8 +98,7 @@ XMLscene.prototype.onGraphLoaded = function () {
     for(var i = 0; i < this.graph.nLights; i++)
     	this.lights[i].setVisible(true);
 
-	this.game.cameraAnimation = new CameraAnimate(this.camera);
-	this.game.cameraAnimation.setRotate([0, 1, 0], Math.PI * 2, 8);
+	this.game.onGraphLoaded();
 };
 
 //Picking function
@@ -153,7 +147,8 @@ XMLscene.prototype.changeMaterial = function() {
 //Updates the scene
 XMLscene.prototype.update = function( dTime ) {
 	var dSec = dTime * Math.pow(10, -14);
-	//this.graph.graph.update(dSec);
+	
+	this.graph.graph.update(dSec);
 	this.game.update(dSec);
 };
 
@@ -186,8 +181,8 @@ XMLscene.prototype.display = function () {
 		if (this.graph.loadedOk) {
 			for(var i = 0; i < this.graph.nLights; i++)
 				this.lights[i].update();
-			this.graph.graph.drawScene();
-			this.game.display();
+			//this.graph.graph.drawScene();
+			this.game.display(this.material);
 		}
 	}
 	else

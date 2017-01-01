@@ -9,10 +9,6 @@ const sizeTile = scaleXZ / 3;  //Tiles' size
  */
 function GameBoard(scene, material) {
     CGFobject.call(this,scene);
-
-    // Don't take this out of here
-    pieceId = 1;
-    tileId = 1;
     
     this.board = new MyBoard(scene, 3, 3, null, -1, -1, 
                                 [0.9, 0.9, 0.9, 1], 
@@ -85,6 +81,17 @@ GameBoard.prototype.getTileCoords = function(id) {
 
     return [x, 0.2, z];
 }
+
+GameBoard.prototype.getTileById = function(id) {
+    for( var i = 0; i < numTilesBoard; i++ ) {
+        for( var j = 0; j < numTilesBoard; j++ ) {
+            if( this.tiles[i][j].id == id )
+                return this.tiles[i][j];
+        }
+    }
+    return null;
+}
+
 
 /**
  *  GAME MECHANICS

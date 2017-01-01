@@ -443,8 +443,6 @@ Game.prototype.nextMove = function() {
 //Calculates what should happen on the next fase of the replay
 //Returns true if it should change players
 Game.prototype.nextReplay = function() {
-    console.debug(this.gameSequence.sequence.length);
-    console.debug(this.gameSequence.replayIndexMove + 1);
     if( this.gameSequence.sequence.length <= this.gameSequence.replayIndexMove + 1 ) {
         // End the replay
         this.endReplay();
